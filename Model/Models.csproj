@@ -7,14 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Csv" Version="2.0.93" />
     <PackageReference Include="Google.OrTools" Version="9.11.4210" />
     <PackageReference Include="ReactiveProperty.WPF" Version="9.7.0">
       <NoWarn>1701</NoWarn>
     </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Data\" />
   </ItemGroup>
 
 </Project>

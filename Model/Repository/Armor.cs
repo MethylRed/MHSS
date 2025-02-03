@@ -8,6 +8,9 @@ namespace Models.Repository
 {
     public class Armor
     {
+
+        public Category Category { get; set; }
+
         /// <summary>
         /// 防具の名前
         /// </summary>
@@ -22,6 +25,7 @@ namespace Models.Repository
         /// スロット1つ目
         /// </summary>
         public int Slot1 { get; set; }
+
 
         /// <summary>
         /// スロット2つ目
@@ -66,6 +70,6 @@ namespace Models.Repository
         /// <summary>
         /// スキル
         /// </summary>
-        
+        public List<Skill> Skill { get; set; } = new();
     }
 }

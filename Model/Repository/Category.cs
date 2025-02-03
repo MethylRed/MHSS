@@ -6,8 +6,14 @@ using System.Threading.Tasks;
 
 namespace Models.Repository
 {
-    public class Master
+    public enum Category
     {
-        public static List<Skill> Skills { get; set; } = new();
+        head,
+        body,
+        arm,
+        waist,
+        leg,
+        deco,
+        charm,
     }
 }
