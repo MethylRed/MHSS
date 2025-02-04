@@ -5,10 +5,16 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Csv" Version="2.0.93" />
     <PackageReference Include="Google.OrTools" Version="9.11.4210" />
     <PackageReference Include="Prism.Unity" Version="8.1.97" />
     <PackageReference Include="ReactiveProperty.WPF" Version="9.7.0">
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Models\Config\Config.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

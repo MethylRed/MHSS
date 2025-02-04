@@ -19,14 +19,16 @@ namespace Models.Repository
         public int Level { get; set; } = 0;
 
         /// <summary>
-        /// スキルの上限値(極意なし)
+        /// 普通のスキル：スキルの上限値(極意なし)
+        /// シリーズスキル：発動に必要なシリーズスキルの数(少ない方)
         /// </summary>
-        public int MaxLevel1 { get; set; }
+        public int MaxLevel1 { get; set; } = 0;
 
         /// <summary>
-        /// スキルの上限値(極意あり)
+        /// 普通のスキル：スキルの上限値(極意あり)
+        /// シリーズスキル：発動に必要なシリーズスキルの数(多い方)
         /// </summary>
-        public int MaxLevel2 { get; set; }
+        public int MaxLevel2 { get; set; } = 0;
 
         ///// <summary>
         ///// コンストラクタ
