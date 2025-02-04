@@ -6,10 +6,7 @@ using System.Threading.Tasks;
 
 namespace Models.Repository
 {
-    public class Master
+    internal class Deco
     {
-        public static List<Skill> Skills { get; set; } = new();
-
-        public static List<Armor> Head { get; set; } = new();
     }
 }

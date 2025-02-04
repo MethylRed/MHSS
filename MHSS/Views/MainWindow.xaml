@@ -6,5 +6,13 @@
         Title="{Binding Title}" Height="350" Width="525" >
     <Grid>
         <ContentControl prism:RegionManager.RegionName="ContentRegion" />
+        <StackPanel>
+            <Button
+                Name="ForDebugButton"
+                Command="{Binding ClickCommand}"
+                Height="50" Width="100"
+                Content="Click Here"
+                Margin="0,50,0,0"/>
+        </StackPanel>
     </Grid>
 </Window>

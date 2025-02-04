@@ -1,10 +1,14 @@
-﻿using Prism.Mvvm;
+﻿using Prism.Commands;
+using Prism.Mvvm;
+using System;
+using System.Diagnostics;
 
 namespace MHSS.ViewModels
 {
     public class MainWindowViewModel : BindableBase
     {
-        private string _title = "Prism Application";
+        private string _title = "MHSS";
+        public DelegateCommand ClickCommand { get; set; }
         public string Title
         {
             get { return _title; }
@@ -13,7 +17,13 @@ namespace MHSS.ViewModels
 
         public MainWindowViewModel()
         {
+            ClickCommand = new DelegateCommand(OnClick);
+        }
 
+        private void OnClick()
+        {
+            Debug.WriteLine("TEST");
+            Models.Utility.CSVLoader.LoadCsvSkill();
         }
     }
 }

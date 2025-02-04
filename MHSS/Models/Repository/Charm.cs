@@ -6,14 +6,7 @@ using System.Threading.Tasks;
 
 namespace Models.Repository
 {
-    public enum Category
+    internal class Charm
     {
-        head,
-        body,
-        arm,
-        waist,
-        leg,
-        deco,
-        charm,
     }
 }
