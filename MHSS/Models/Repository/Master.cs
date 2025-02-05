@@ -10,6 +10,20 @@ namespace Models.Repository
     {
         public static List<Skill> Skills { get; set; } = new();
 
-        public static List<Armor> Head { get; set; } = new();
+        public static List<Equip> Weapon { get; set; } = new();
+
+        public static List<Equip> Head { get; set; } = new();
+
+        public static List<Equip> Body { get; set; } = new();
+        
+        public static List<Equip> Arm { get; set; } = new();
+        
+        public static List<Equip> Waist { get; set; } = new();
+        
+        public static List<Equip> Leg { get; set; } = new();
+
+        public static List<Equip> Charm { get; set; } = new();
+        
+        public static List<Equip> Deco { get; set; } = new();
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Models.Repository
 {
-    public class Armor
+    public class Equip
     {
         /// <summary>
         /// 防具の種類(頭とか)
@@ -72,23 +72,5 @@ namespace Models.Repository
         /// スキル
         /// </summary>
         public List<Skill> Skill { get; set; } = new();
-
-
-        //public Armor(string name, string seriesName, int slot1, int slot2, int slot3, int def,
-        //             int resFire, int resWater, int resThunder, int resIce, int resDragon, List<Skill> skill)
-        //{
-        //    Name = name;
-        //    SeriesName = seriesName;
-        //    Slot1 = slot1;
-        //    Slot2 = slot2;
-        //    Slot3 = slot3;
-        //    Def = def;
-        //    ResFire = resFire;
-        //    ResWater = resWater;
-        //    ResThunder = resThunder;
-        //    ResIce = resIce;
-        //    ResDragon = resDragon;
-        //    Skill = skill;
-        //}
     }
 }

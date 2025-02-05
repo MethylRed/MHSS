@@ -14,9 +14,19 @@ namespace Models.Utility
 {
     public class CSVLoader
     {
-        private const string CsvSkill = "./Models/Data/Skill.csv";
-        private const string CsvHead = "./Models/Data/MHW_EQUIP_HEAD.csv";
+        // ファイルパス定数
+        private const string CsvSkill = "./Models/Data/MHWs_SKILL.csv";
+        private const string CsvHead = "./Models/Data/MHWs_HEAD.csv";
+        private const string CsvBody = "./Models/Data/MHWs_BODY.csv";
+        private const string CsvArm = "./Models/Data/MHWs_ARM.csv";
+        private const string CsvWaist = "./Models/Data/MHWs_WST.csv";
+        private const string CsvLeg = "./Models/Data/MHWs_LEG.csv";
+        private const string CsvDeco = "./Models/Data/MHWs_DECO.csv";
+        private const string CsvCharm = "./Models/Data/MHWs_CHARM.csv";
 
+        /// <summary>
+        /// スキルのリストを読み込む
+        /// </summary>
         public static void LoadCsvSkill()
         {
             Master.Skills = new();
@@ -34,24 +44,143 @@ namespace Models.Utility
             }
         }
 
+        /// <summary>
+        /// 頭防具の読み込み
+        /// </summary>
         public static void LoadCsvHead()
         {
             Master.Head = new();
             LoadCsvArmor(CsvHead, Master.Head, EquipKind.head);
         }
 
-        private static void LoadCsvArmor(string fileName, List<Armor> armors, EquipKind equipKind)
+        /// <summary>
+        /// 胴防具の読み込み
+        /// </summary>
+        public static void LoadCsvBody()
+        {
+            Master.Body = new();
+            LoadCsvArmor(CsvBody, Master.Body, EquipKind.body);
+        }
+
+        /// <summary>
+        /// 腕防具の読み込み
+        /// </summary>
+        public static void LoadCsvArm()
+        {
+            Master.Arm = new();
+            LoadCsvArmor(CsvArm, Master.Arm, EquipKind.arm);
+        }
+
+        /// <summary>
+        /// 腰防具の読み込み
+        /// </summary>
+        public static void LoadCsvWaist()
+        {
+            Master.Waist = new();
+            LoadCsvArmor(CsvWaist, Master.Waist, EquipKind.waist);
+        }
+
+        /// <summary>
+        /// 脚防具の読み込み
+        /// </summary>
+        public static void LoadCsvLeg()
+        {
+            Master.Leg = new();
+            LoadCsvArmor(CsvLeg, Master.Leg, EquipKind.leg);
+        }
+
+        public static void LoadCsvCharm()
+        {
+            Master.Charm = new();
+            string str = File.ReadAllText(CsvCharm);
+            foreach (ICsvLine line in CsvReader.ReadFromText(str))
+            {
+                Equip charm = new()
+                {
+                    EquipKind = EquipKind.charm,
+                    Name = line[@"名前"],
+                    SeriesName = "",
+                    Slot1 = int.Parse(line[@"スロット1"]),
+                    Slot2 = int.Parse(line[@"スロット2"]),
+                    Slot3 = int.Parse(line[@"スロット3"]),
+                    Def = 0,
+                    ResFire = 0,
+                    ResWater = 0,
+                    ResThunder = 0,
+                    ResIce = 0,
+                    ResDragon = 0
+                };
+
+                List<Skill> skill = new();
+                for (int i = 1; i <= Config.Config.Instance.MaxCharmSkillCount; i++)
+                {
+                    string skillName = line[@"スキル系統" + i];
+                    if (string.IsNullOrWhiteSpace(skillName)) break;
+                    int skillLevel = int.Parse(line[@"スキル値" + i]);
+                    skill.Add(new Skill
+                    {
+                        Name = skillName,
+                        Level = skillLevel
+                    });
+                }
+                charm.Skill = skill;
+
+                Master.Charm.Add(charm);
+            }
+        }
+
+        public static void LoadCsvDeco()
+        {
+            Master.Deco = new();
+            string str = File.ReadAllText(CsvDeco);
+            foreach (ICsvLine line in CsvReader.ReadFromText(str))
+            {
+                Equip deco = new()
+                {
+                    EquipKind = EquipKind.deco,
+                    Name = line[@"名前"],
+                    SeriesName = "",
+                    Slot1 = int.Parse(line[@"スロットサイズ"]),
+                    Slot2 = 0,
+                    Slot3 = 0,
+                    Def = 0,
+                    ResFire = 0,
+                    ResWater = 0,
+                    ResThunder = 0,
+                    ResIce = 0,
+                    ResDragon = 0
+                };
+
+                List<Skill> skill = new();
+                for (int i = 1; i <= Config.Config.Instance.MaxDecoSkillCount; i++)
+                {
+                    string skillName = line[@"スキル系統" + i];
+                    if (string.IsNullOrWhiteSpace(skillName)) break;
+                    int skillLevel = int.Parse(line[@"スキル値" + i]);
+                    skill.Add(new Skill
+                    {
+                        Name = skillName,
+                        Level = skillLevel
+                    });
+                }
+                deco.Skill = skill;
+
+                Master.Deco.Add(deco);
+            }
+        }
+
+        /// <summary>
+        /// 防具読み込み
+        /// </summary>
+        /// <param name="fileName">ファイル名</param>
+        /// <param name="armors">格納先</param>
+        /// <param name="equipKind">部位</param>
+        private static void LoadCsvArmor(string fileName, List<Equip> armors, EquipKind equipKind)
         {
             string str = File.ReadAllText(fileName);
-            int j = 0;
             foreach(ICsvLine line in CsvReader.ReadFromText(str))
             {
-                j++;
-                if (j == 100)
-                {
-                    Debug.Write("");
-                }
-                Armor armor = new()
+                Equip armor = new()
                 {
                     EquipKind = equipKind,
                     Name = line[@"名前"],

@@ -20,7 +20,21 @@ namespace Models.Config
             }
         }
         private const string CsvConfig = "./Models/Config/Config.csv";
+
+        /// <summary>
+        /// 防具に付くスキルの最大個数
+        /// </summary>
         public int MaxArmorSkillCount { get; set; }
+
+        /// <summary>
+        /// 護石に付くスキルの最大個数
+        /// </summary>
+        public int MaxCharmSkillCount { get; set; }
+
+        /// <summary>
+        /// 装飾品に付くスキルの最大個数
+        /// </summary>
+        public int MaxDecoSkillCount { get; set; }
 
         private Config()
         {
@@ -30,6 +44,8 @@ namespace Models.Config
             foreach (ICsvLine line in CsvReader.ReadFromText(str))
             {
                 MaxArmorSkillCount = int.Parse(line[@"防具に付くスキルの最大個数"]);
+                MaxCharmSkillCount = int.Parse(line[@"護石に付くスキルの最大個数"]);
+                MaxDecoSkillCount = int.Parse(line[@"装飾品に付くスキルの最大個数"]);
             }
         }
     }

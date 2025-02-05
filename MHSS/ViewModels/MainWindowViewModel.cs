@@ -1,11 +1,12 @@
 ﻿using System.Reflection;
-using Models.Repository;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Documents;
-using static Google.Protobuf.WellKnownTypes.Field.Types;
+using Models.Repository;
+using Models.Utility;
 
 namespace MHSS.ViewModels
 {
@@ -27,23 +28,46 @@ namespace MHSS.ViewModels
         private void OnClick()
         {
 #if DEBUG
-            //Models.Utility.CSVLoader.LoadCsvSkill();
-            //foreach (var item in Master.Skills)
-            //{
-            //    Debug.WriteLine(item);
-            //}
-
-            Models.Utility.CSVLoader.LoadCsvHead();
-            var x = Master.Head[100];
-            Debug.WriteLine(
-                //EquipKinds.EquipKindsToString(x.EquipKind), 
-                x.Name, x.SeriesName,
-                            x.Slot1, x.Slot2, x.Slot3, x.Def, x.ResFire, x.ResWater,
-                            x.ResThunder, x.ResIce, x.ResDragon);
-
-            foreach (var item in x.Skill)
+            CSVLoader.LoadCsvSkill();
+            foreach (var item in Master.Skills)
             {
                 Debug.WriteLine(item);
+            }
+
+            CSVLoader.LoadCsvHead();
+            CSVLoader.LoadCsvBody();
+            CSVLoader.LoadCsvArm();
+            CSVLoader.LoadCsvWaist();
+            CSVLoader.LoadCsvLeg();
+            CSVLoader.LoadCsvCharm();
+            CSVLoader.LoadCsvDeco();
+
+            var x = Master.Head[100];
+            string s = "";
+            for (int i = 0; i < 7; i++)
+            {
+                x = i switch
+                {
+                    0 => Master.Head[100],
+                    1 => Master.Body[100],
+                    2 => Master.Arm[100],
+                    3 => Master.Waist[100],
+                    4 => Master.Leg[100],
+                    5 => Master.Charm[100],
+                    6 => Master.Deco[100],
+                    _ => Master.Head[100],
+                };
+                s = "";
+                foreach (PropertyInfo prop in x.GetType().GetProperties())
+                {
+                    if (prop.Name != "Skill") s += prop.GetValue(x) + ",";
+                    else
+                    {
+                        foreach (var item in x.Skill) s += "\n" + item;
+                    }
+                }
+                Debug.WriteLine(s);
+                Debug.WriteLine("\n");
             }
 #endif
         }
