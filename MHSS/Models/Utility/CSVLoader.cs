@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Data;
 using Csv;
-using Models.Repository;
 using System.Diagnostics;
 using System.Xml.Linq;
+using MHSS.Models.Repository;
+using MHSS.Models.Config;
 
-namespace Models.Utility
+namespace MHSS.Models.Utility
 {
     public class CSVLoader
     {
@@ -32,14 +33,14 @@ namespace Models.Utility
             Master.Skills = new();
 
             string str = File.ReadAllText(CsvSkill);
-            foreach(ICsvLine line in CsvReader.ReadFromText(str))
+            foreach (ICsvLine line in CsvReader.ReadFromText(str))
             {
                 Skill skill = new();
                 skill.Name = line[@"名前"];
                 skill.Level = 0;
                 skill.MaxLevel1 = int.Parse(line[@"上限1"]);
                 skill.MaxLevel2 = int.Parse(line[@"上限2"]);
-                
+
                 Master.Skills.Add(skill);
             }
         }
@@ -89,6 +90,9 @@ namespace Models.Utility
             LoadCsvArmor(CsvLeg, Master.Leg, EquipKind.leg);
         }
 
+        /// <summary>
+        /// 護石の読み込み
+        /// </summary>
         public static void LoadCsvCharm()
         {
             Master.Charm = new();
@@ -99,7 +103,7 @@ namespace Models.Utility
                 {
                     EquipKind = EquipKind.charm,
                     Name = line[@"名前"],
-                    SeriesName = "",
+                    //SeriesName = "",
                     Slot1 = int.Parse(line[@"スロット1"]),
                     Slot2 = int.Parse(line[@"スロット2"]),
                     Slot3 = int.Parse(line[@"スロット3"]),
@@ -129,6 +133,9 @@ namespace Models.Utility
             }
         }
 
+        /// <summary>
+        /// 装飾品の読み込み
+        /// </summary>
         public static void LoadCsvDeco()
         {
             Master.Deco = new();
@@ -141,6 +148,7 @@ namespace Models.Utility
                     Name = line[@"名前"],
                     SeriesName = "",
                     Slot1 = int.Parse(line[@"スロットサイズ"]),
+                    SlotType1 = int.Parse(line[@"スロットタイプ"]),
                     Slot2 = 0,
                     Slot3 = 0,
                     Def = 0,
@@ -178,13 +186,13 @@ namespace Models.Utility
         private static void LoadCsvArmor(string fileName, List<Equip> armors, EquipKind equipKind)
         {
             string str = File.ReadAllText(fileName);
-            foreach(ICsvLine line in CsvReader.ReadFromText(str))
+            foreach (ICsvLine line in CsvReader.ReadFromText(str))
             {
                 Equip armor = new()
                 {
                     EquipKind = equipKind,
                     Name = line[@"名前"],
-                    SeriesName = "",
+                    //SeriesName = "",
                     Slot1 = int.Parse(line[@"スロット1"]),
                     Slot2 = int.Parse(line[@"スロット2"]),
                     Slot3 = int.Parse(line[@"スロット3"]),
@@ -197,7 +205,7 @@ namespace Models.Utility
                 };
 
                 List<Skill> skill = new();
-                for(int i = 1; i <= Config.Config.Instance.MaxArmorSkillCount; i++)
+                for (int i = 1; i <= Config.Config.Instance.MaxArmorSkillCount; i++)
                 {
                     string skillName = line[@"スキル系統" + i];
                     if (string.IsNullOrWhiteSpace(skillName)) break;
@@ -210,7 +218,7 @@ namespace Models.Utility
                 }
                 armor.Skill = skill;
 
-                armors.Add( armor );
+                armors.Add(armor);
             }
         }
     }

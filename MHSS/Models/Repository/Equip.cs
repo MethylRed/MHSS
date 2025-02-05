@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.Repository
+namespace MHSS.Models.Repository
 {
     public class Equip
     {
@@ -12,7 +12,7 @@ namespace Models.Repository
         /// 防具の種類(頭とか)
         /// </summary>
         public EquipKind EquipKind { get; set; }
-        
+
         /// <summary>
         /// 防具の名前
         /// </summary>
@@ -27,6 +27,11 @@ namespace Models.Repository
         /// スロット1つ目
         /// </summary>
         public int Slot1 { get; set; }
+
+        /// <summary>
+        /// スロットタイプ1つ目(0:防具スキル,1:武器スキル,2:両対応)
+        /// </summary>
+        public int SlotType1 { get; set; } = 0;
 
         /// <summary>
         /// スロット2つ目

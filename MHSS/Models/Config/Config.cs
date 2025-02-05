@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using Csv;
 
-namespace Models.Config
+namespace MHSS.Models.Config
 {
     public class Config
     {
@@ -38,7 +38,7 @@ namespace Models.Config
 
         private Config()
         {
-            string str = File.ReadAllText(CsvConfig,Encoding.UTF8);
+            string str = File.ReadAllText(CsvConfig, Encoding.UTF8);
 
 
             foreach (ICsvLine line in CsvReader.ReadFromText(str))

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MHSS.Models.Repository
 {
-    internal class Weapon
+    public class Weapon
     {
     }
 }

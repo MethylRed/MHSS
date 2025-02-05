@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.Repository
+namespace MHSS.Models.Repository
 {
     public enum EquipKind
     {
@@ -22,25 +22,17 @@ namespace Models.Repository
     {
         public static string EquipKindsToString(this EquipKind kind)
         {
-            switch (kind)
+            return kind switch
             {
-                case EquipKind.head:
-                    return "頭";
-                case EquipKind.body:
-                    return "胴";
-                case EquipKind.arm:
-                    return "腕";
-                case EquipKind.waist:
-                    return "腰";
-                case EquipKind.leg:
-                    return "足";
-                case EquipKind.deco:
-                    return "装飾品";
-                case EquipKind.charm:
-                    return "護石";
-                default:
-                    return string.Empty;
-            }
+                EquipKind.head => "頭",
+                EquipKind.body => "胴",
+                EquipKind.arm => "腕",
+                EquipKind.waist => "腰",
+                EquipKind.leg => "足",
+                EquipKind.deco => "装飾品",
+                EquipKind.charm => "護石",
+                _ => string.Empty,
+            };
         }
     }
 }

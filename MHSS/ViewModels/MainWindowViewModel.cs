@@ -5,8 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Documents;
-using Models.Repository;
-using Models.Utility;
+using MHSS.Models.Repository;
+using MHSS.Models.Utility;
 
 namespace MHSS.ViewModels
 {
@@ -14,6 +14,7 @@ namespace MHSS.ViewModels
     {
         private string _title = "MHSS";
         public DelegateCommand ClickCommand { get; set; }
+        private Solve solve {  get; set; }
         public string Title
         {
             get { return _title; }
@@ -69,6 +70,10 @@ namespace MHSS.ViewModels
                 Debug.WriteLine(s);
                 Debug.WriteLine("\n");
             }
+
+            solve = new();
+            Debug.WriteLine(solve.EquipVariables.Count);
+            Debug.WriteLine(solve.DecoVariables.Count);
 #endif
         }
     }
