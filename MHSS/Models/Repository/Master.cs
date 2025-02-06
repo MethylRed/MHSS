@@ -10,7 +10,7 @@ namespace MHSS.Models.Repository
     {
         public static List<Skill> Skills { get; set; } = new();
 
-        public static List<Weapon> Weapons { get; set; } = new();
+        public static List<Weapon> Weapon { get; set; } = new();
 
         public static List<Equip> Head { get; set; } = new();
 

@@ -24,6 +24,7 @@ namespace MHSS.Models.Utility
         private const string CsvLeg = "./Models/Data/MHWs_LEG.csv";
         private const string CsvDeco = "./Models/Data/MHWs_DECO.csv";
         private const string CsvCharm = "./Models/Data/MHWs_CHARM.csv";
+        private const string CsvWeapon = "./Models/Data/MHWs_WEAPON.csv";
 
         /// <summary>
         /// スキルのリストを読み込む
@@ -35,11 +36,14 @@ namespace MHSS.Models.Utility
             string str = File.ReadAllText(CsvSkill);
             foreach (ICsvLine line in CsvReader.ReadFromText(str))
             {
-                Skill skill = new();
-                skill.Name = line[@"名前"];
-                skill.Level = 0;
-                skill.MaxLevel1 = int.Parse(line[@"上限1"]);
-                skill.MaxLevel2 = int.Parse(line[@"上限2"]);
+                Skill skill = new()
+                {
+                    Name = line[@"名前"],
+                    Type = int.Parse(line[@"タイプ"]),
+                    Level = 0,
+                    MaxLevel1 = int.Parse(line[@"上限1"]),
+                    MaxLevel2 = int.Parse(line[@"上限2"])
+                };
 
                 Master.Skills.Add(skill);
             }
@@ -146,9 +150,8 @@ namespace MHSS.Models.Utility
                 {
                     EquipKind = EquipKind.deco,
                     Name = line[@"名前"],
-                    SeriesName = "",
+                    //SeriesName = "",
                     Slot1 = int.Parse(line[@"スロットサイズ"]),
-                    SlotType1 = int.Parse(line[@"スロットタイプ"]),
                     Slot2 = 0,
                     Slot3 = 0,
                     Def = 0,
@@ -174,6 +177,23 @@ namespace MHSS.Models.Utility
                 deco.Skill = skill;
 
                 Master.Deco.Add(deco);
+            }
+        }
+
+        /// <summary>
+        /// 武器読み込み
+        /// </summary>
+        public static void LoadCsvWeapon()
+        {
+            Master.Weapon = new();
+            string str = File.ReadAllText(CsvWeapon);
+            foreach(ICsvLine line in CsvReader.ReadFromText(str))
+            {
+                Weapon weapon = new()
+                {
+                    EquipKind = EquipKind.weapon,
+                    //WeaponKind = WeaponKind.
+                };
             }
         }
 

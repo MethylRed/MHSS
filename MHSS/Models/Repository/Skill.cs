@@ -14,6 +14,16 @@ namespace MHSS.Models.Repository
         public string Name { get; set; } = string.Empty;
 
         /// <summary>
+        /// スキルタイプ
+        /// 0:武器スキル
+        /// 1:防具スキル
+        /// 2:シリーズスキル
+        /// 3:グループスキル
+        /// 4:その他
+        /// </summary>
+        public int Type { get; set; }
+
+        /// <summary>
         /// スキルレベル
         /// </summary>
         public int Level { get; set; } = 0;

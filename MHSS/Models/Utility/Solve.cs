@@ -22,10 +22,11 @@ namespace MHSS.Models.Utility
 
         private const int DecoCount = 0;
 
+        public List<Dictionary<string, Variable>> EquipVariablesList { get; set; } = new();
+        public List<Constraint> EquipConstraintList { get; set; } = new();
 
-        public Dictionary<string, Variable> EquipVariables { get; set; }
-        public Dictionary<string, Variable> DecoVariables { get; set; }
-        private Dictionary<string, Variable> WeaponVariables { get; set; }
+        private Dictionary<string, Variable> DecoVariables { get; set; } = new();
+        private Dictionary<string, Variable> WeaponVariables { get; set; } = new();
 
         public Solve()
         {
@@ -33,33 +34,44 @@ namespace MHSS.Models.Utility
             Solver = Solver.CreateSolver("SCIP");
             if (Solver is null) return;
 
-            EquipVariables = new();
-            DecoVariables = new();
-
             #region Define Variables
-            // 防具と護石のデータを読み込んで結合
-            Head = Master.Head;
-            Body = Master.Body;
-            Arm = Master.Arm;
-            Waist = Master.Waist;
-            Leg = Master.Leg;
-            Charm = Master.Charm;
-            var x = Head.Union(Body).Union(Arm).Union(Waist).Union(Leg).Union(Charm);
-
-            // 防具・護石の個数変数を定義
-            foreach (var item in x)
+            // 防具と護石の個数変数を定義
+            foreach (var equipList in new List<List<Equip>> { Master.Head, Master.Body, Master.Arm, Master.Waist, Master.Leg, Master.Charm})
             {
-                EquipVariables.Add(item.Name, Solver.MakeBoolVar(item.Name));
+                if (equipList is List<Equip> deco)
+                EquipVariablesList.Add(equipList.ToDictionary(e => e.Name, e => Solver.MakeBoolVar(e.Name)));
             }
 
             // 装飾品の個数変数を定義
-            Deco = Master.Deco;
-            foreach (var item in Deco)
+            foreach (var item in Master.Deco)
             {
                 DecoVariables.Add(item.Name,Solver.MakeIntVar(0.0, DecoCount, item.Name));
             }
+            EquipVariablesList.Add(DecoVariables);
+
+            //foreach (var item in Master.Weapon)
+            //{
+            //    WeaponVariables.Add(item);
+            //}
             #endregion
 
+
+            #region Define Constraint
+
+            // 防具・護石は最大1個まで装備可能
+            // => 防具・護石それぞれの個数変数の総和は 0 か 1
+            EquipConstraintList.Add(Solver.MakeConstraint(0.0, 1.0, "Head"));
+
+            //foreach (var item in Head)
+            //{
+                
+            //}
+            //foreach (var item in EquipVariablesList[0].Values)
+            //{
+            //    constraintHead.SetCoefficient(item, 1.0);
+            //}
+
+            #endregion
         }
     }
 }

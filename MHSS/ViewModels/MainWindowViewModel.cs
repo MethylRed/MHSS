@@ -72,8 +72,13 @@ namespace MHSS.ViewModels
             }
 
             solve = new();
-            Debug.WriteLine(solve.EquipVariables.Count);
-            Debug.WriteLine(solve.DecoVariables.Count);
+            int a = 0;
+            for (int i = 0; i < solve.EquipVariablesList.Count; i++)
+            {
+                Debug.WriteLine(solve.EquipVariablesList[i].Count);
+                a += solve.EquipVariablesList[i].Count;
+            }
+            Debug.WriteLine(a);
 #endif
         }
     }

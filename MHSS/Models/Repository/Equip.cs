@@ -9,29 +9,24 @@ namespace MHSS.Models.Repository
     public class Equip
     {
         /// <summary>
-        /// 防具の種類(頭とか)
+        /// 装備の種類
         /// </summary>
         public EquipKind EquipKind { get; set; }
 
         /// <summary>
-        /// 防具の名前
+        /// 装備の名前
         /// </summary>
         public string Name { get; set; } = string.Empty;
 
         /// <summary>
-        /// 防具のシリーズ名
+        /// 装備のシリーズ名
         /// </summary>
-        public string SeriesName { get; set; } = string.Empty;
+        //public string SeriesName { get; set; } = string.Empty;
 
         /// <summary>
         /// スロット1つ目
         /// </summary>
         public int Slot1 { get; set; }
-
-        /// <summary>
-        /// スロットタイプ1つ目(0:防具スキル,1:武器スキル,2:両対応)
-        /// </summary>
-        public int SlotType1 { get; set; } = 0;
 
         /// <summary>
         /// スロット2つ目
