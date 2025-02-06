@@ -11,7 +11,7 @@ namespace MHSS.Models.Repository
         /// <summary>
         /// 装備の種類(頭とか)
         /// </summary>
-        public EquipKind EquipKind { get; set; } = EquipKind.weapon;
+        public EquipKind EquipKind { get; set; } = EquipKind.Weapon;
 
         /// <summary>
         /// 武器の種類

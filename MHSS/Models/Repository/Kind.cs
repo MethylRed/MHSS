@@ -9,32 +9,45 @@ namespace MHSS.Models.Repository
 {
     public enum EquipKind
     {
-        weapon,
-        head,
-        body,
-        arm,
-        waist,
-        leg,
-        deco,
-        charm,
+        Weapon,
+        Head,
+        Body,
+        Arm,
+        Waist,
+        Leg,
+        Deco,
+        Charm,
     }
 
     public enum WeaponKind
     {
-
+        GreatSword,
+        LondSword,
+        SwordAndShield,
+        DualBlades,
+        Hammer,
+        HuntingHorn,
+        Lance,
+        Gunlance,
+        SwitchAxe,
+        ChargeBlade,
+        InsectGlaive,
+        LightBowgun,
+        HeavyBowgun,
+        Bow
     }
 
     public enum Element
     {
-        fire,
-        water,
-        thunder,
-        ice,
-        dragon,
-        poison,
-        blast,
-        sleep,
-        paralysis
+        Fire,
+        Water,
+        Thunder,
+        Ice,
+        Dragon,
+        Poison,
+        Blast,
+        Sleep,
+        Paralysis
     }
 
     public static class EquipKinds
@@ -43,15 +56,38 @@ namespace MHSS.Models.Repository
         {
             return kind switch
             {
-                EquipKind.weapon => "武器",
-                EquipKind.head => "頭",
-                EquipKind.body => "胴",
-                EquipKind.arm => "腕",
-                EquipKind.waist => "腰",
-                EquipKind.leg => "足",
-                EquipKind.charm => "護石",
-                EquipKind.deco => "装飾品",
-                _ => string.Empty,
+                EquipKind.Weapon => "武器",
+                EquipKind.Head => "頭",
+                EquipKind.Body => "胴",
+                EquipKind.Arm => "腕",
+                EquipKind.Waist => "腰",
+                EquipKind.Leg => "足",
+                EquipKind.Charm => "護石",
+                EquipKind.Deco => "装飾品",
+                _ => string.Empty
+            };
+        }
+
+
+        public static string WeaponKindsToString(this WeaponKind kind)
+        {
+            return kind switch
+            {
+                WeaponKind.GreatSword => "大剣",
+                WeaponKind.LondSword => "太刀",
+                WeaponKind.SwordAndShield => "片手剣",
+                WeaponKind.DualBlades => "双剣",
+                WeaponKind.Hammer => "ハンマー",
+                WeaponKind.HuntingHorn => "狩猟笛",
+                WeaponKind.Lance => "ランス",
+                WeaponKind.Gunlance => "ガンランス",
+                WeaponKind.SwitchAxe => "スラッシュアックス",
+                WeaponKind.ChargeBlade => "チャージアックス",
+                WeaponKind.InsectGlaive => "操虫棍",
+                WeaponKind.LightBowgun => "ライトボウガン",
+                WeaponKind.HeavyBowgun => "ヘビィボウガン",
+                WeaponKind.Bow => "弓",
+                _ => string.Empty
             };
         }
     }

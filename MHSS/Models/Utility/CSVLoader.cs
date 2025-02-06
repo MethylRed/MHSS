@@ -24,7 +24,27 @@ namespace MHSS.Models.Utility
         private const string CsvLeg = "./Models/Data/MHWs_LEG.csv";
         private const string CsvDeco = "./Models/Data/MHWs_DECO.csv";
         private const string CsvCharm = "./Models/Data/MHWs_CHARM.csv";
-        private const string CsvWeapon = "./Models/Data/MHWs_WEAPON.csv";
+
+        private static readonly string[] CsvWeapons =
+        {
+            "./Models/Data/Weapon/MHWs_GREATSWORD.csv",
+            "./Models/Data/Weapon/MHWs_LONGSWORD.csv"
+        };
+
+        private const string CsvGS = "./Models/Data/Weapon/MHWs_GREATSWORD.csv";
+        private const string CsvLS = "./Models/Data/Weapon/MHWs_LONGSWORD.csv";
+        private const string CsvSnS = "./Models/Data/Weapon/MHWs_SWORDANDSHIELD.csv";
+        private const string CsvDB = "./Models/Data/Weapon/MHWs_DUALBLADES.csv";
+        private const string CsvHM = "./Models/Data/Weapon/MHWs_HAMMER.csv";
+        private const string CsvHH = "./Models/Data/Weapon/MHWs_HUNTINGHORN.csv";
+        private const string CsvLC = "./Models/Data/Weapon/MHWs_LANCE.csv";
+        private const string CsvGL = "./Models/Data/Weapon/MHWs_GUNLANCE.csv";
+        private const string CsvSA = "./Models/Data/Weapon/MHWs_SWITCHAXE.csv";
+        private const string CsvCB = "./Models/Data/Weapon/MHWs_CHARGEBLADE.csv";
+        private const string CsvIG = "./Models/Data/Weapon/MHWs_INSECTGLAIVE.csv";
+        private const string CsvLBG = "./Models/Data/Weapon/MHWs_LIGHTBOWGUN.csv";
+        private const string CsvHBG = "./Models/Data/Weapon/MHWs_HEAVYBOWGUN.csv";
+        private const string CsvBOW = "./Models/Data/Weapon/MHWs_BOW.csv";
 
         /// <summary>
         /// スキルのリストを読み込む
@@ -55,7 +75,7 @@ namespace MHSS.Models.Utility
         public static void LoadCsvHead()
         {
             Master.Head = new();
-            LoadCsvArmor(CsvHead, Master.Head, EquipKind.head);
+            LoadCsvArmor(CsvHead, Master.Head, EquipKind.Head);
         }
 
         /// <summary>
@@ -64,7 +84,7 @@ namespace MHSS.Models.Utility
         public static void LoadCsvBody()
         {
             Master.Body = new();
-            LoadCsvArmor(CsvBody, Master.Body, EquipKind.body);
+            LoadCsvArmor(CsvBody, Master.Body, EquipKind.Body);
         }
 
         /// <summary>
@@ -73,7 +93,7 @@ namespace MHSS.Models.Utility
         public static void LoadCsvArm()
         {
             Master.Arm = new();
-            LoadCsvArmor(CsvArm, Master.Arm, EquipKind.arm);
+            LoadCsvArmor(CsvArm, Master.Arm, EquipKind.Arm);
         }
 
         /// <summary>
@@ -82,7 +102,7 @@ namespace MHSS.Models.Utility
         public static void LoadCsvWaist()
         {
             Master.Waist = new();
-            LoadCsvArmor(CsvWaist, Master.Waist, EquipKind.waist);
+            LoadCsvArmor(CsvWaist, Master.Waist, EquipKind.Waist);
         }
 
         /// <summary>
@@ -91,7 +111,7 @@ namespace MHSS.Models.Utility
         public static void LoadCsvLeg()
         {
             Master.Leg = new();
-            LoadCsvArmor(CsvLeg, Master.Leg, EquipKind.leg);
+            LoadCsvArmor(CsvLeg, Master.Leg, EquipKind.Leg);
         }
 
         /// <summary>
@@ -105,7 +125,7 @@ namespace MHSS.Models.Utility
             {
                 Equip charm = new()
                 {
-                    EquipKind = EquipKind.charm,
+                    EquipKind = EquipKind.Charm,
                     Name = line[@"名前"],
                     //SeriesName = "",
                     Slot1 = int.Parse(line[@"スロット1"]),
@@ -148,7 +168,7 @@ namespace MHSS.Models.Utility
             {
                 Equip deco = new()
                 {
-                    EquipKind = EquipKind.deco,
+                    EquipKind = EquipKind.Deco,
                     Name = line[@"名前"],
                     //SeriesName = "",
                     Slot1 = int.Parse(line[@"スロットサイズ"]),
@@ -185,16 +205,21 @@ namespace MHSS.Models.Utility
         /// </summary>
         public static void LoadCsvWeapon()
         {
-            Master.Weapon = new();
-            string str = File.ReadAllText(CsvWeapon);
-            foreach(ICsvLine line in CsvReader.ReadFromText(str))
+            Master.Weapons = new();
+            foreach(var csvWeapon in CsvWeapons)
             {
-                Weapon weapon = new()
+                List<Weapon> weapon = new();
+                string str = File.ReadAllText(csvWeapon);
+                foreach (ICsvLine line in CsvReader.ReadFromText(str))
                 {
-                    EquipKind = EquipKind.weapon,
-                    //WeaponKind = WeaponKind.
-                };
+                    Weapon w = new Weapon()
+                    {
+                        EquipKind = EquipKind.Weapon,
+                        WeaponKind = 
+                    };
+                }
             }
+
         }
 
         /// <summary>
