@@ -15,8 +15,8 @@ namespace MHSS.Models.Repository
         Arm,
         Waist,
         Leg,
-        Deco,
         Charm,
+        Deco
     }
 
     public enum WeaponKind
@@ -39,6 +39,7 @@ namespace MHSS.Models.Repository
 
     public enum Element
     {
+        None,
         Fire,
         Water,
         Thunder,
@@ -50,8 +51,23 @@ namespace MHSS.Models.Repository
         Paralysis
     }
 
-    public static class EquipKinds
+    public static class Kind
     {
+        public static Dictionary<string, int> ElementType = new()
+        {
+            {"無", 0},
+            {"火", 1},
+            {"水", 2},
+            {"雷", 3},
+            {"氷", 4},
+            {"龍", 5},
+            {"毒", 6},
+            {"爆破", 7},
+            {"睡眠", 8},
+            {"麻痺", 9}
+        };
+
+
         public static string EquipKindsToString(this EquipKind kind)
         {
             return kind switch

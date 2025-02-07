@@ -28,7 +28,8 @@ namespace MHSS.Models.Utility
         private static readonly string[] CsvWeapons =
         {
             "./Models/Data/Weapon/MHWs_GREATSWORD.csv",
-            "./Models/Data/Weapon/MHWs_LONGSWORD.csv"
+            "./Models/Data/Weapon/MHWs_LONGSWORD.csv",
+            "./Models/Data/Weapon/MHWs_SWORDANDSHIELD.csv"
         };
 
         private const string CsvGS = "./Models/Data/Weapon/MHWs_GREATSWORD.csv";
@@ -206,20 +207,43 @@ namespace MHSS.Models.Utility
         public static void LoadCsvWeapon()
         {
             Master.Weapons = new();
-            foreach(var csvWeapon in CsvWeapons)
+            for(int i = 0; i < CsvWeapons.Length; i++)
             {
                 List<Weapon> weapon = new();
-                string str = File.ReadAllText(csvWeapon);
+                string str = File.ReadAllText(CsvWeapons[i]);
                 foreach (ICsvLine line in CsvReader.ReadFromText(str))
                 {
-                    Weapon w = new Weapon()
+                    Weapon w = new()
                     {
                         EquipKind = EquipKind.Weapon,
-                        WeaponKind = 
+                        WeaponKind = (WeaponKind)i,
+                        Name = line[@"名前"],
+                        Attack = int.Parse(line[@"攻撃力"]),
+                        Affinity = int.Parse(line[@"会心率"]),
+                        ElementType = (Element)Kind.ElementType[line[@"属性"]],
+                        ElementValue = int.Parse(line[@"属性値"]),
+                        Slot1 = int.Parse(line[@"スロット1"]),
+                        Slot2 = int.Parse(line[@"スロット2"]),
+                        Slot3 = int.Parse(line[@"スロット3"])
                     };
-                }
-            }
+                    List<Skill> skill = new();
+                    for (int j = 1; j <= Config.Config.Instance.MaxWeaponSkillCount; j++)
+                    {
+                        string skillName = line[@"スキル系統" + i];
+                        if (string.IsNullOrWhiteSpace(skillName)) break;
+                        int skillLevel = int.Parse(line[@"スキル値" + i]);
+                        skill.Add(new Skill
+                        {
+                            Name = skillName,
+                            Level = skillLevel
+                        });
+                    }
+                    w.Skill = skill;
 
+                    weapon.Add(w);
+                }
+                Master.Weapons.Add(weapon);
+            }
         }
 
         /// <summary>

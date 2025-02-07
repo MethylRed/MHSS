@@ -23,10 +23,10 @@ namespace MHSS.Models.Utility
         private const int DecoCount = 0;
 
         public List<Dictionary<string, Variable>> EquipVariablesList { get; set; } = new();
-        public List<Constraint> EquipConstraintList { get; set; } = new();
-
         private Dictionary<string, Variable> DecoVariables { get; set; } = new();
-        private Dictionary<string, Variable> WeaponVariables { get; set; } = new();
+        public List<Dictionary<string, Variable>> WeaponVariablesList { get; set; } = new();
+
+        public List<Constraint> EquipConstraintList { get; set; } = new();
 
         public Solve()
         {
@@ -38,7 +38,6 @@ namespace MHSS.Models.Utility
             // 防具と護石の個数変数を定義
             foreach (var equipList in new List<List<Equip>> { Master.Head, Master.Body, Master.Arm, Master.Waist, Master.Leg, Master.Charm})
             {
-                if (equipList is List<Equip> deco)
                 EquipVariablesList.Add(equipList.ToDictionary(e => e.Name, e => Solver.MakeBoolVar(e.Name)));
             }
 
@@ -49,10 +48,11 @@ namespace MHSS.Models.Utility
             }
             EquipVariablesList.Add(DecoVariables);
 
-            //foreach (var item in Master.Weapon)
-            //{
-            //    WeaponVariables.Add(item);
-            //}
+            // 武器の個数変数を定義
+            foreach (var weaponList in Master.Weapons)
+            {
+                WeaponVariablesList.Add(weaponList.ToDictionary(e => e.Name, e => Solver.MakeBoolVar(e.Name)));
+            }
             #endregion
 
 
@@ -62,14 +62,10 @@ namespace MHSS.Models.Utility
             // => 防具・護石それぞれの個数変数の総和は 0 か 1
             EquipConstraintList.Add(Solver.MakeConstraint(0.0, 1.0, "Head"));
 
-            //foreach (var item in Head)
-            //{
-                
-            //}
-            //foreach (var item in EquipVariablesList[0].Values)
-            //{
-            //    constraintHead.SetCoefficient(item, 1.0);
-            //}
+            for (int i = 0; i < EquipVariablesList; i++)
+            {
+
+            }
 
             #endregion
         }
