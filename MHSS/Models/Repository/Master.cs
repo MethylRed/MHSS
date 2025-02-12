@@ -24,6 +24,6 @@ namespace MHSS.Models.Repository
 
         public static List<Equip> Charm { get; set; } = new();
 
-        public static List<Equip> Deco { get; set; } = new();
+        public static List<Deco> Deco { get; set; } = new();
     }
 }

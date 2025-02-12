@@ -167,7 +167,7 @@ namespace MHSS.Models.Utility
             string str = File.ReadAllText(CsvDeco);
             foreach (ICsvLine line in CsvReader.ReadFromText(str))
             {
-                Equip deco = new()
+                Deco deco = new()
                 {
                     EquipKind = EquipKind.Deco,
                     Name = line[@"名前"],
