@@ -38,6 +38,7 @@ namespace MHSS.Models.Utility
             Solver = Solver.CreateSolver("SCIP");
             if (Solver is null) return;
 
+
             #region Define Variables
             // 防具と護石の個数変数を定義
             foreach (var equipList in new List<List<Equip>> { Master.Head, Master.Body, Master.Arm, Master.Waist, Master.Leg, Master.Charm})
@@ -45,10 +46,14 @@ namespace MHSS.Models.Utility
                 EquipVariablesList.Add(equipList.ToDictionary(e => e.Name, e => Solver.MakeBoolVar(e.Name)));
             }
 
+            Variables = EquipVariablesList.SelectMany(dict => dict).ToDictionary(kv => kv.Key, kv => kv.Value);
+
+
             // 装飾品の個数変数を定義
             foreach (var item in Master.Deco)
             {
                 DecoVariables.Add(item.Name,Solver.MakeIntVar(0.0, DecoCount, item.Name));
+                Variables.Add(item.Name,Solver.MakeIntVar(0.0, DecoCount, item.Name));
             }
 
             // 武器の個数変数を定義
@@ -56,6 +61,8 @@ namespace MHSS.Models.Utility
             {
                 WeaponVariablesList.Add(weaponList.ToDictionary(e => e.Name, e => Solver.MakeBoolVar(e.Name)));
             }
+            Variables = Variables.Concat(WeaponVariablesList.SelectMany(dict =>dict)).ToDictionary(kv => kv.Key, kv => kv.Value);
+
             #endregion
 
 
@@ -72,9 +79,12 @@ namespace MHSS.Models.Utility
             }
 
             // スキルの制約
-            var equips = Master.Head.Union(Master.Body).Union(Master.Arm).Union(Master.Waist).Union(Master.Leg).Union(Master.Charm).Union(Master.Deco);
-            foreach (var skill in Master.Skills) { SkillConstraints.Add(skill.Name, Solver.MakeConstraint(0.0, double.PositiveInfinity, skill.Name)); }
+            foreach (var skill in Master.Skills)
+            {
+                SkillConstraints.Add(skill.Name, Solver.MakeConstraint(0.0, double.PositiveInfinity, skill.Name));
+            }
 
+            var equips = Master.Head.Union(Master.Body).Union(Master.Arm).Union(Master.Waist).Union(Master.Leg).Union(Master.Charm).Union(Master.Deco);
             foreach (var skill in Master.Skills)
             {
                 foreach (var equip in equips)
@@ -83,9 +93,14 @@ namespace MHSS.Models.Utility
                     {
                         if (equipSkill.Name.Equals(skill.Name))
                         {
-                            SkillConstraints[skill.Name].SetCoefficient()
+                            SkillConstraints[skill.Name].SetCoefficient(Variables[equip.Name], equipSkill.Level);
                         }
                     }
+                }
+
+                foreach (var item in equips)
+                {
+                    
                 }
 
             }

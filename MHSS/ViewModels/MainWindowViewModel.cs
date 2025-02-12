@@ -94,11 +94,13 @@ namespace MHSS.ViewModels
             // 制約式の定義を確認
             
             double b = 0;
+            string[] EquipNameList = { "Head", "Body", "Arm", "Waist", "Leg", "Charm" };
+
             for (int i = 0; i < solve.EquipVariablesList.Count; i++)
             {
                 foreach (var equip in solve.EquipVariablesList[i])
                 {
-                    b += solve.EquipConstraintsList[i].GetCoefficient(equip.Value);
+                    b += solve.EquipConstraints[EquipNameList[i]].GetCoefficient(equip.Value);
                 }
             }
             Debug.WriteLine(b);
