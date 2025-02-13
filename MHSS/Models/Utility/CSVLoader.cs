@@ -71,7 +71,7 @@ namespace MHSS.Models.Utility
                 Skill skill = new()
                 {
                     Name = line[@"名前"],
-                    Type = int.Parse(line[@"タイプ"]),
+                    Category = line["カテゴリ"],
                     Level = 0,
                     MaxLevel1 = int.Parse(line[@"上限1"]),
                     MaxLevel2 = int.Parse(line[@"上限2"])

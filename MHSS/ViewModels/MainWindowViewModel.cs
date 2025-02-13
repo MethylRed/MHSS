@@ -9,6 +9,8 @@ using MHSS.Models.Data;
 using MHSS.Models.Utility;
 using Google.OrTools.LinearSolver;
 using System.Linq;
+using Reactive.Bindings;
+using System.Collections.ObjectModel;
 
 namespace MHSS.ViewModels
 {
@@ -17,6 +19,9 @@ namespace MHSS.ViewModels
         private string _title = "MHSS";
         public DelegateCommand ClickCommand { get; set; }
         private Solve Solve {  get; set; }
+        public List<Skill> Skill { get; set; }
+
+
         public string Title
         {
             get { return _title; }
@@ -25,6 +30,16 @@ namespace MHSS.ViewModels
 
         public MainWindowViewModel()
         {
+            CSVLoader.LoadCsvSkill();
+            CSVLoader.LoadCsvHead();
+            CSVLoader.LoadCsvBody();
+            CSVLoader.LoadCsvArm();
+            CSVLoader.LoadCsvWaist();
+            CSVLoader.LoadCsvLeg();
+            CSVLoader.LoadCsvCharm();
+            CSVLoader.LoadCsvDeco();
+            Skill = Master.Skills;
+            Solve = new();
             ClickCommand = new DelegateCommand(OnClick);
         }
 
@@ -94,15 +109,15 @@ namespace MHSS.ViewModels
             }
 
 
-            CSVLoader.LoadCsvSkill();
-            CSVLoader.LoadCsvHead();
-            CSVLoader.LoadCsvBody();
-            CSVLoader.LoadCsvArm();
-            CSVLoader.LoadCsvWaist();
-            CSVLoader.LoadCsvLeg();
-            CSVLoader.LoadCsvCharm();
-            CSVLoader.LoadCsvDeco();
-            Solve = new();
+            //CSVLoader.LoadCsvSkill();
+            //CSVLoader.LoadCsvHead();
+            //CSVLoader.LoadCsvBody();
+            //CSVLoader.LoadCsvArm();
+            //CSVLoader.LoadCsvWaist();
+            //CSVLoader.LoadCsvLeg();
+            //CSVLoader.LoadCsvCharm();
+            //CSVLoader.LoadCsvDeco();
+            //Solve = new();
 
             Solver.ResultStatus resultStatus = Solve.Solver.Solve();
 
@@ -113,18 +128,8 @@ namespace MHSS.ViewModels
             else
             {
                 Debug.WriteLine(Solve.Solver.Objective().Value());
-
                 Debug.WriteLine(string.Join("\n", 
                     Solve.Variables.Where(v => v.Value.SolutionValue() == 1).Select(k => k.Key)));
-
-
-                //foreach (var variable in Solve.Variables)
-                //{
-                //    if (variable.Value.SolutionValue() == 1)
-                //    {
-                //        Debug.WriteLine(variable.Key);
-                //    }
-                //}
             }
 
             Debug.WriteLine("\n Check is finished.");

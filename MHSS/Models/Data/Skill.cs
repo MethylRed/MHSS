@@ -14,14 +14,9 @@ namespace MHSS.Models.Data
         public string Name { get; set; } = string.Empty;
 
         /// <summary>
-        /// スキルタイプ
-        /// 0:武器スキル
-        /// 1:防具スキル
-        /// 2:シリーズスキル
-        /// 3:グループスキル
-        /// 4:その他
+        /// スキルのカテゴリ
         /// </summary>
-        public int Type { get; set; }
+        public string Category { get; set; } = string.Empty;
 
         /// <summary>
         /// スキルレベル
@@ -40,20 +35,10 @@ namespace MHSS.Models.Data
         /// </summary>
         public int MaxLevel2 { get; set; } = 0;
 
-        ///// <summary>
-        ///// コンストラクタ
-        ///// </summary>
-        ///// <param name="name">スキル名</param>
-        ///// <param name="level">装備についているスキルのレベル</param>
-        ///// <param name="maxLevel1">スキルの上限値(極意なし)</param>
-        ///// <param name="maxLevel2">スキルの上限値(極意あり)</param>
-        //public Skill(string name, int level = 0, int maxLevel1 = 0, int maxLevel2 = 0)
-        //{
-        //    Name = name;
-        //    Level = level;
-        //    MaxLevel1 = maxLevel1;
-        //    MaxLevel2 = maxLevel2;
-        //}
+        /// <summary>
+        /// 検索条件:スキルレベルの固定
+        /// </summary>
+        public bool IsFixed { get; set; } = false;
 
     }
 }

@@ -1,18 +1,47 @@
 ﻿<Window x:Class="MHSS.Views.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:prism="http://prismlibrary.com/"
+        xmlns:local="clr-namespace:MHSS.ViewModels"
+        d:DataContext="{d:DesignInstance Type=local:MainWindowViewModel}"
         prism:ViewModelLocator.AutoWireViewModel="True"
         Title="{Binding Title}" Height="350" Width="525" >
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <TabControl Grid.Column="0">
+            <TabItem Header="SkillSelect">
+                <ScrollViewer VerticalAlignment="Stretch">
+                    <ItemsControl ItemsSource="{Binding Skill}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Name}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="WeaponSelect">
+            </TabItem>
+        </TabControl>
+
+        <Button
+            x:Name="ForDebugButton"
+            Command="{Binding ClickCommand}"
+            Height="50" Width="100"
+            Content="Click Here"
+            Grid.Column="1"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            />
         <ContentControl prism:RegionManager.RegionName="ContentRegion" />
-        <StackPanel>
-            <Button
-                Name="ForDebugButton"
-                Command="{Binding ClickCommand}"
-                Height="50" Width="100"
-                Content="Click Here"
-                Margin="0,50,0,0"/>
-        </StackPanel>
     </Grid>
 </Window>
