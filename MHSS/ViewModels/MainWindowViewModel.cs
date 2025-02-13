@@ -5,9 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Documents;
-using MHSS.Models.Repository;
+using MHSS.Models.Data;
 using MHSS.Models.Utility;
 using Google.OrTools.LinearSolver;
+using System.Linq;
 
 namespace MHSS.ViewModels
 {
@@ -15,7 +16,7 @@ namespace MHSS.ViewModels
     {
         private string _title = "MHSS";
         public DelegateCommand ClickCommand { get; set; }
-        private Solve solve {  get; set; }
+        private Solve Solve {  get; set; }
         public string Title
         {
             get { return _title; }
@@ -32,12 +33,68 @@ namespace MHSS.ViewModels
 #if DEBUG
             // logic部分の確認
 
-            #region LoadCSV
-            // CSVファイルの読み込み
-            // 全スキルの情報を表示
-            // 装備は代表として101番目の情報を表示
+            if (false)
+            {
+                #region LoadCSV
+                // CSVファイルの読み込み
+                // 全スキルの情報を表示
+                // 装備は代表として101番目の情報を表示
+                CSVLoader.LoadCsvSkill();
+                foreach (var item in Master.Skills) { Debug.WriteLine(item); }
+                CSVLoader.LoadCsvHead();
+                CSVLoader.LoadCsvBody();
+                CSVLoader.LoadCsvArm();
+                CSVLoader.LoadCsvWaist();
+                CSVLoader.LoadCsvLeg();
+                CSVLoader.LoadCsvCharm();
+                CSVLoader.LoadCsvDeco();
+
+                var x = Master.Head[100];
+                string s = "";
+                for (int i = 0; i < 7; i++)
+                {
+                    x = i switch
+                    {
+                        0 => Master.Head[100],
+                        1 => Master.Body[100],
+                        2 => Master.Arm[100],
+                        3 => Master.Waist[100],
+                        4 => Master.Leg[100],
+                        5 => Master.Charm[100],
+                        6 => Master.Deco[100],
+                        _ => Master.Head[100],
+                    };
+                    s = "";
+                    foreach (PropertyInfo prop in x.GetType().GetProperties())
+                    {
+                        if (prop.Name != "Skill") s += prop.GetValue(x) + ",";
+                        else
+                        {
+                            foreach (var item in x.Skill) s += "\n" + item;
+                        }
+                    }
+                    Debug.WriteLine(s);
+                    Debug.WriteLine("\n");
+                }
+                #endregion
+
+                #region DefineVariables
+                // 個数変数の定義を確認
+                // 各装備種類について、個数変数の数 = 装備の数と総和を表示
+                Solve = new();
+                Debug.WriteLine(Solve.Variables.Count);
+                Debug.WriteLine(string.Join("\n", Solve.Variables.Keys));
+                #endregion
+
+                #region DefineConstraint
+                // 制約式の定義を確認
+                Debug.WriteLine(Solve.Constraints.Count);
+                Debug.WriteLine(string.Join("\n", Solve.Constraints.Keys));
+                #endregion
+            }
+
+
             CSVLoader.LoadCsvSkill();
-            foreach (var item in Master.Skills) { Debug.WriteLine(item); }
             CSVLoader.LoadCsvHead();
             CSVLoader.LoadCsvBody();
             CSVLoader.LoadCsvArm();
@@ -45,66 +102,32 @@ namespace MHSS.ViewModels
             CSVLoader.LoadCsvLeg();
             CSVLoader.LoadCsvCharm();
             CSVLoader.LoadCsvDeco();
+            Solve = new();
 
-            var x = Master.Head[100];
-            string s = "";
-            for (int i = 0; i < 7; i++)
+            Solver.ResultStatus resultStatus = Solve.Solver.Solve();
+
+            if (resultStatus != Solver.ResultStatus.OPTIMAL)
             {
-                x = i switch
-                {
-                    0 => Master.Head[100],
-                    1 => Master.Body[100],
-                    2 => Master.Arm[100],
-                    3 => Master.Waist[100],
-                    4 => Master.Leg[100],
-                    5 => Master.Charm[100],
-                    6 => Master.Deco[100],
-                    _ => Master.Head[100],
-                };
-                s = "";
-                foreach (PropertyInfo prop in x.GetType().GetProperties())
-                {
-                    if (prop.Name != "Skill") s += prop.GetValue(x) + ",";
-                    else
-                    {
-                        foreach (var item in x.Skill) s += "\n" + item;
-                    }
-                }
-                Debug.WriteLine(s);
-                Debug.WriteLine("\n");
+                Debug.WriteLine("NOT OPTIMAL SOLUTION!");
             }
-            #endregion
-
-            #region DefineVariables
-            // 個数変数の定義を確認
-            // 各装備種類について、個数変数の数 = 装備の数と総和を表示
-            solve = new();
-            int a = 0;
-            for (int i = 0; i < solve.EquipVariablesList.Count; i++)
+            else
             {
-                Debug.WriteLine(solve.EquipVariablesList[i].Count);
-                a += solve.EquipVariablesList[i].Count;
-            }
-            Debug.WriteLine(solve.DecoVariables.Count);
-            a += solve.DecoVariables.Count;
-            Debug.WriteLine(a);
-            #endregion
+                Debug.WriteLine(Solve.Solver.Objective().Value());
 
-            #region DefineConstraint
-            // 制約式の定義を確認
-            
-            double b = 0;
-            string[] EquipNameList = { "Head", "Body", "Arm", "Waist", "Leg", "Charm" };
+                Debug.WriteLine(string.Join("\n", 
+                    Solve.Variables.Where(v => v.Value.SolutionValue() == 1).Select(k => k.Key)));
 
-            for (int i = 0; i < solve.EquipVariablesList.Count; i++)
-            {
-                foreach (var equip in solve.EquipVariablesList[i])
-                {
-                    b += solve.EquipConstraints[EquipNameList[i]].GetCoefficient(equip.Value);
-                }
+
+                //foreach (var variable in Solve.Variables)
+                //{
+                //    if (variable.Value.SolutionValue() == 1)
+                //    {
+                //        Debug.WriteLine(variable.Key);
+                //    }
+                //}
             }
-            Debug.WriteLine(b);
-            #endregion
+
+            Debug.WriteLine("\n Check is finished.");
 #endif
         }
     }

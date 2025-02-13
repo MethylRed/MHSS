@@ -8,7 +8,7 @@ using System.Data;
 using Csv;
 using System.Diagnostics;
 using System.Xml.Linq;
-using MHSS.Models.Repository;
+using MHSS.Models.Data;
 using MHSS.Models.Config;
 
 namespace MHSS.Models.Utility
@@ -16,36 +16,47 @@ namespace MHSS.Models.Utility
     public class CSVLoader
     {
         // ファイルパス定数
-        private const string CsvSkill = "./Models/Data/MHWs_SKILL.csv";
-        private const string CsvHead = "./Models/Data/MHWs_HEAD.csv";
-        private const string CsvBody = "./Models/Data/MHWs_BODY.csv";
-        private const string CsvArm = "./Models/Data/MHWs_ARM.csv";
-        private const string CsvWaist = "./Models/Data/MHWs_WST.csv";
-        private const string CsvLeg = "./Models/Data/MHWs_LEG.csv";
-        private const string CsvDeco = "./Models/Data/MHWs_DECO.csv";
-        private const string CsvCharm = "./Models/Data/MHWs_CHARM.csv";
+        private const string CsvSkill = "./Models/Data/CSV/MHWs_SKILL.csv";
+        private const string CsvHead = "./Models/Data/CSV/MHWs_HEAD.csv";
+        private const string CsvBody = "./Models/Data/CSV/MHWs_BODY.csv";
+        private const string CsvArm = "./Models/Data/CSV/MHWs_ARM.csv";
+        private const string CsvWaist = "./Models/Data/CSV/MHWs_WST.csv";
+        private const string CsvLeg = "./Models/Data/CSV/MHWs_LEG.csv";
+        private const string CsvDeco = "./Models/Data/CSV/MHWs_DECO.csv";
+        private const string CsvCharm = "./Models/Data/CSV/MHWs_CHARM.csv";
 
         private static readonly string[] CsvWeapons =
         {
-            "./Models/Data/Weapon/MHWs_GREATSWORD.csv",
-            "./Models/Data/Weapon/MHWs_LONGSWORD.csv",
-            "./Models/Data/Weapon/MHWs_SWORDANDSHIELD.csv"
+            "./Models/Data/CSV/Weapon/MHWs_GREATSWORD.csv",
+            "./Models/Data/CSV/Weapon/MHWs_LONGSWORD.csv",
+            "./Models/Data/CSV/Weapon/MHWs_SWORDANDSHIELD.csv",
+            "./Models/Data/CSV/Weapon/MHWs_DUALBLADES.csv",
+            "./Models/Data/CSV/Weapon/MHWs_HAMMER.csv",
+            "./Models/Data/CSV/Weapon/MHWs_HUNTINGHORN.csv",
+            "./Models/Data/CSV/Weapon/MHWs_LANCE.csv",
+            "./Models/Data/CSV/Weapon/MHWs_GUNLANCE.csv",
+            "./Models/Data/CSV/Weapon/MHWs_SWITCHAXE.csv",
+            "./Models/Data/CSV/Weapon/MHWs_CHARGEBLADE.csv",
+            "./Models/Data/CSV/Weapon/MHWs_INSECTGLAIVE.csv",
+            "./Models/Data/CSV/Weapon/MHWs_LIGHTBOWGUN.csv",
+            "./Models/Data/CSV/Weapon/MHWs_HEAVYBOWGUN.csv",
+            "./Models/Data/CSV/Weapon/MHWs_BOW.csv"
         };
 
-        private const string CsvGS = "./Models/Data/Weapon/MHWs_GREATSWORD.csv";
-        private const string CsvLS = "./Models/Data/Weapon/MHWs_LONGSWORD.csv";
-        private const string CsvSnS = "./Models/Data/Weapon/MHWs_SWORDANDSHIELD.csv";
-        private const string CsvDB = "./Models/Data/Weapon/MHWs_DUALBLADES.csv";
-        private const string CsvHM = "./Models/Data/Weapon/MHWs_HAMMER.csv";
-        private const string CsvHH = "./Models/Data/Weapon/MHWs_HUNTINGHORN.csv";
-        private const string CsvLC = "./Models/Data/Weapon/MHWs_LANCE.csv";
-        private const string CsvGL = "./Models/Data/Weapon/MHWs_GUNLANCE.csv";
-        private const string CsvSA = "./Models/Data/Weapon/MHWs_SWITCHAXE.csv";
-        private const string CsvCB = "./Models/Data/Weapon/MHWs_CHARGEBLADE.csv";
-        private const string CsvIG = "./Models/Data/Weapon/MHWs_INSECTGLAIVE.csv";
-        private const string CsvLBG = "./Models/Data/Weapon/MHWs_LIGHTBOWGUN.csv";
-        private const string CsvHBG = "./Models/Data/Weapon/MHWs_HEAVYBOWGUN.csv";
-        private const string CsvBOW = "./Models/Data/Weapon/MHWs_BOW.csv";
+        //private const string CsvGS = "./Models/Data/CSV/Weapon/MHWs_GREATSWORD.csv";
+        //private const string CsvLS = "./Models/Data/CSV/Weapon/MHWs_LONGSWORD.csv";
+        //private const string CsvSnS = "./Models/Data/CSV/Weapon/MHWs_SWORDANDSHIELD.csv";
+        //private const string CsvDB = "./Models/Data/CSV/Weapon/MHWs_DUALBLADES.csv";
+        //private const string CsvHM = "./Models/Data/CSV/Weapon/MHWs_HAMMER.csv";
+        //private const string CsvHH = "./Models/Data/CSV/Weapon/MHWs_HUNTINGHORN.csv";
+        //private const string CsvLC = "./Models/Data/CSV/Weapon/MHWs_LANCE.csv";
+        //private const string CsvGL = "./Models/Data/CSV/Weapon/MHWs_GUNLANCE.csv";
+        //private const string CsvSA = "./Models/Data/CSV/Weapon/MHWs_SWITCHAXE.csv";
+        //private const string CsvCB = "./Models/Data/CSV/Weapon/MHWs_CHARGEBLADE.csv";
+        //private const string CsvIG = "./Models/Data/CSV/Weapon/MHWs_INSECTGLAIVE.csv";
+        //private const string CsvLBG = "./Models/Data/CSV/Weapon/MHWs_LIGHTBOWGUN.csv";
+        //private const string CsvHBG = "./Models/Data/CSV/Weapon/MHWs_HEAVYBOWGUN.csv";
+        //private const string CsvBOW = "./Models/Data/CSV/Weapon/MHWs_BOW.csv";
 
         /// <summary>
         /// スキルのリストを読み込む
@@ -129,6 +140,7 @@ namespace MHSS.Models.Utility
                     EquipKind = EquipKind.Charm,
                     Name = line[@"名前"],
                     //SeriesName = "",
+                    SlotType = 0,
                     Slot1 = int.Parse(line[@"スロット1"]),
                     Slot2 = int.Parse(line[@"スロット2"]),
                     Slot3 = int.Parse(line[@"スロット3"]),
@@ -172,6 +184,7 @@ namespace MHSS.Models.Utility
                     EquipKind = EquipKind.Deco,
                     Name = line[@"名前"],
                     //SeriesName = "",
+                    SlotType = int.Parse(line[@"スロットタイプ"]),
                     Slot1 = int.Parse(line[@"スロットサイズ"]),
                     Slot2 = 0,
                     Slot3 = 0,
@@ -222,9 +235,16 @@ namespace MHSS.Models.Utility
                         Affinity = int.Parse(line[@"会心率"]),
                         ElementType = (Element)Kind.ElementType[line[@"属性"]],
                         ElementValue = int.Parse(line[@"属性値"]),
+                        SlotType = 0,
                         Slot1 = int.Parse(line[@"スロット1"]),
                         Slot2 = int.Parse(line[@"スロット2"]),
-                        Slot3 = int.Parse(line[@"スロット3"])
+                        Slot3 = int.Parse(line[@"スロット3"]),
+                        Def = int.Parse(line[@"防御力ボーナス"]),
+                        ResFire = 0,
+                        ResWater = 0,
+                        ResThunder = 0,
+                        ResIce = 0,
+                        ResDragon = 0
                     };
                     List<Skill> skill = new();
                     for (int j = 1; j <= Config.Config.Instance.MaxWeaponSkillCount; j++)
@@ -262,6 +282,7 @@ namespace MHSS.Models.Utility
                     EquipKind = equipKind,
                     Name = line[@"名前"],
                     //SeriesName = "",
+                    SlotType = 0,
                     Slot1 = int.Parse(line[@"スロット1"]),
                     Slot2 = int.Parse(line[@"スロット2"]),
                     Slot3 = int.Parse(line[@"スロット3"]),

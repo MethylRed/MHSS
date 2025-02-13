@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MHSS.Models.Repository
+namespace MHSS.Models.Data
 {
     public class Equip
     {
@@ -22,6 +22,13 @@ namespace MHSS.Models.Repository
         /// 装備のシリーズ名
         /// </summary>
         //public string SeriesName { get; set; } = string.Empty;
+
+
+        /// <summary>
+        /// 武器スキル装飾品か防具スキル装飾品か
+        /// 0: 武器スキル 1: 防具スキル 2: 区別なし
+        /// </summary>
+        public int SlotType { get; set; }
 
         /// <summary>
         /// スロット1つ目

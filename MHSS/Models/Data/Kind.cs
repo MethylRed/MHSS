@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MHSS.Models.Repository
+namespace MHSS.Models.Data
 {
     public enum EquipKind
     {
@@ -68,7 +68,7 @@ namespace MHSS.Models.Repository
         };
 
 
-        public static string EquipKindsToString(this EquipKind kind)
+        public static string EquipKindsToJpString(this EquipKind kind)
         {
             return kind switch
             {
@@ -80,6 +80,22 @@ namespace MHSS.Models.Repository
                 EquipKind.Leg => "足",
                 EquipKind.Charm => "護石",
                 EquipKind.Deco => "装飾品",
+                _ => string.Empty
+            };
+        }
+
+        public static string EquipKindsToEnString(this EquipKind kind)
+        {
+            return kind switch
+            {
+                EquipKind.Weapon => "Weapon",
+                EquipKind.Head => "Head",
+                EquipKind.Body => "Body",
+                EquipKind.Arm => "Arm",
+                EquipKind.Waist => "Waist",
+                EquipKind.Leg => "Leg",
+                EquipKind.Charm => "Charm",
+                EquipKind.Deco => "Deco",
                 _ => string.Empty
             };
         }

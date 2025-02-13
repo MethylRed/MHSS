@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MHSS.Models.Repository
+namespace MHSS.Models.Data
 {
-    public class Deco : Equip
+    public class Condition
     {
-        public int HaveCount { get; set; } = 0;
     }
 }

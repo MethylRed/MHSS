@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MHSS.Models.Repository
+namespace MHSS.Models.Data
 {
     public class Master
     {

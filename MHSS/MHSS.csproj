@@ -16,28 +16,28 @@
     <None Update="Models\Config\Config.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Models\Data\MHWs_CHARM.csv">
+    <None Update="Models\Data\CSV\MHWs_CHARM.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Models\Data\MHWs_DECO.csv">
+    <None Update="Models\Data\CSV\MHWs_DECO.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Models\Data\MHWs_ARM.csv">
+    <None Update="Models\Data\CSV\MHWs_ARM.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Models\Data\MHWs_BODY.csv">
+    <None Update="Models\Data\CSV\MHWs_BODY.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Models\Data\MHWs_HEAD.csv">
+    <None Update="Models\Data\CSV\MHWs_HEAD.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Models\Data\MHWs_LEG.csv">
+    <None Update="Models\Data\CSV\MHWs_LEG.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Models\Data\MHWs_WST.csv">
+    <None Update="Models\Data\CSV\MHWs_WST.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Models\Data\MHWs_SKILL.csv">
+    <None Update="Models\Data\CSV\MHWs_SKILL.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
