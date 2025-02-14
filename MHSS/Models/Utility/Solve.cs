@@ -22,6 +22,8 @@ namespace MHSS.Models.Utility
                             .Union(Master.Leg).Union(Master.Charm).Union(Master.Deco)
                             .Union(Master.Weapons.SelectMany(w => w));
 
+            
+
             // MIPソルバーを宣言
             Solver = Solver.CreateSolver("SCIP");
             if (Solver is null) return;

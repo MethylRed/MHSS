@@ -1,0 +1,27 @@
+﻿<UserControl x:Class="MHSS.Views.SubViews.SkillSelectView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:local="clr-namespace:MHSS.Views.SubViews"
+             xmlns:subviewmodels="clr-namespace:MHSS.ViewModels.SubView"
+             d:DataContext="{d:DesignInstance Type=subviewmodels:SkillSelectViewModel}"
+             Height="Auto" Width="Auto"
+             >
+    <Grid>
+        <!--<TextBlock Text="test" FontSize="16"/>-->
+        <ScrollViewer VerticalAlignment="Stretch">
+                    <ItemsControl ItemsSource="{Binding CategorizedSkill}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Name}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+    </Grid>
+</UserControl>

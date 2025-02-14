@@ -51,8 +51,19 @@ namespace MHSS.Models.Data
         Paralysis
     }
 
+
+
     public static class Kind
     {
+        public static List<string> SkillCategory = new()
+        {
+            "クエスト", "アイテム", "戦闘(生存)", "特殊攻撃耐性", "パラメータ変化",
+            "戦闘(属性・異常)", "戦闘(攻撃)", "グループスキル", "シリーズスキル"
+        };
+
+        public const string a = "クエスト";
+
+
         public static Dictionary<string, int> ElementType = new()
         {
             {"無", 0},
@@ -66,7 +77,6 @@ namespace MHSS.Models.Data
             {"睡眠", 8},
             {"麻痺", 9}
         };
-
 
         public static string EquipKindsToJpString(this EquipKind kind)
         {
@@ -121,6 +131,11 @@ namespace MHSS.Models.Data
                 WeaponKind.Bow => "弓",
                 _ => string.Empty
             };
+        }
+
+        static Kind()
+        {
+
         }
     }
 }

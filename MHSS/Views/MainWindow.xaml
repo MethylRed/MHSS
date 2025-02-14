@@ -5,10 +5,10 @@
         mc:Ignorable="d"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:prism="http://prismlibrary.com/"
-        xmlns:local="clr-namespace:MHSS.ViewModels"
-        d:DataContext="{d:DesignInstance Type=local:MainWindowViewModel}"
-        prism:ViewModelLocator.AutoWireViewModel="True"
-        Title="{Binding Title}" Height="350" Width="525" >
+        xmlns:subviews="clr-namespace:MHSS.Views.SubViews"
+        xmlns:viewmodels="clr-namespace:MHSS.ViewModels"
+        d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowViewModel}"
+        Title="MHSS" Height="350" Width="525" >
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -17,17 +17,9 @@
 
         <TabControl Grid.Column="0">
             <TabItem Header="SkillSelect">
-                <ScrollViewer VerticalAlignment="Stretch">
-                    <ItemsControl ItemsSource="{Binding Skill}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel>
-                                    <TextBlock Text="{Binding Name}" />
-                                </StackPanel>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ScrollViewer>
+                <Grid>
+                    <subviews:SkillSelectView DataContext="{Binding SkillSelectVM.Value, Mode=OneWay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                </Grid>
             </TabItem>
             <TabItem Header="WeaponSelect">
             </TabItem>

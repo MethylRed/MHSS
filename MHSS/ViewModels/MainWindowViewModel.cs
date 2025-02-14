@@ -5,31 +5,30 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Documents;
-using MHSS.Models.Data;
-using MHSS.Models.Utility;
 using Google.OrTools.LinearSolver;
 using System.Linq;
 using Reactive.Bindings;
 using System.Collections.ObjectModel;
+using MHSS.Models.Data;
+using MHSS.Models.Utility;
+using MHSS.ViewModels.SubView;
 
 namespace MHSS.ViewModels
 {
     public class MainWindowViewModel : BindableBase
     {
-        private string _title = "MHSS";
         public DelegateCommand ClickCommand { get; set; }
         private Solve Solve {  get; set; }
         public List<Skill> Skill { get; set; }
 
+        public ReactivePropertySlim<SkillSelectViewModel> SkillSelectVM { get; } = new();
 
-        public string Title
-        {
-            get { return _title; }
-            set { SetProperty(ref _title, value); }
-        }
+
 
         public MainWindowViewModel()
         {
+            SkillSelectVM.Value = new();
+
             CSVLoader.LoadCsvSkill();
             CSVLoader.LoadCsvHead();
             CSVLoader.LoadCsvBody();
@@ -48,7 +47,7 @@ namespace MHSS.ViewModels
 #if DEBUG
             // logic部分の確認
 
-            if (false)
+            if (true)
             {
                 #region LoadCSV
                 // CSVファイルの読み込み
@@ -93,19 +92,19 @@ namespace MHSS.ViewModels
                 }
                 #endregion
 
-                #region DefineVariables
+                //#region DefineVariables
                 // 個数変数の定義を確認
                 // 各装備種類について、個数変数の数 = 装備の数と総和を表示
-                Solve = new();
-                Debug.WriteLine(Solve.Variables.Count);
-                Debug.WriteLine(string.Join("\n", Solve.Variables.Keys));
-                #endregion
+                //Solve = new();
+                //Debug.WriteLine(Solve.Variables.Count);
+                //Debug.WriteLine(string.Join("\n", Solve.Variables.Keys));
+                //#endregion
 
-                #region DefineConstraint
-                // 制約式の定義を確認
-                Debug.WriteLine(Solve.Constraints.Count);
-                Debug.WriteLine(string.Join("\n", Solve.Constraints.Keys));
-                #endregion
+                //#region DefineConstraint
+                //// 制約式の定義を確認
+                //Debug.WriteLine(Solve.Constraints.Count);
+                //Debug.WriteLine(string.Join("\n", Solve.Constraints.Keys));
+                //#endregion
             }
 
 
