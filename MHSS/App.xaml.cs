@@ -11,6 +11,11 @@ namespace MHSS
     {
         protected override Window CreateShell()
         {
+            var font = new System.Windows.Media.FontFamily("MS Gothic");
+            var style = new Style(typeof(Window));
+            style.Setters.Add(new Setter(Window.FontFamilyProperty, font));
+            FrameworkElement.StyleProperty.OverrideMetadata(typeof(Window), new FrameworkPropertyMetadata(style));
+
             return Container.Resolve<MainWindow>();
         }
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MHSS.ViewModels.Controls
 {
-    internal class SkillLevelSelectorItems
+    internal class SkillLevelSelectorItems : SubViewModelBase
     {
         /// <summary>
         /// ComboBoxのItemに表示させる文字列

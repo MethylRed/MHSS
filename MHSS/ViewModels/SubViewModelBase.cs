@@ -1,12 +1,22 @@
-﻿using Prism.Mvvm;
+﻿using MHSS.ViewModels.SubView;
+using Prism.Mvvm;
 using Prism.Navigation;
 using System;
 using System.Reactive.Disposables;
 
 namespace MHSS.ViewModels
 {
-    public abstract class ViewModelBase : BindableBase, IDisposable, IDestructible
+    internal class SubViewModelBase : BindableBase, IDisposable, IDestructible
     {
+        /// <summary>
+        /// MainWindowViewModelのインスタンス
+        /// </summary>
+        protected MainWindowViewModel MainWindowVM { get => MainWindowViewModel.Instance; }
+
+
+        protected SkillSelectViewModel SkillSelectVM { get => MainWindowVM.SkillSelectVM.Value; }
+
+
         /// ReactiveProperty一括破棄用フィールド
         protected CompositeDisposable _disposables = new();
         /// 二重破棄防止用フラグ
@@ -31,7 +41,7 @@ namespace MHSS.ViewModels
             _disposed = true;
         }
         /// ファイナライザ
-        ~ViewModelBase() => Dispose(false);
+        ~SubViewModelBase() => Dispose(false);
         /// ViewModel破棄
         public void Destroy() => Dispose();
     }

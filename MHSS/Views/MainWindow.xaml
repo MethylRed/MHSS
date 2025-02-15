@@ -8,14 +8,14 @@
         xmlns:subviews="clr-namespace:MHSS.Views.SubViews"
         xmlns:viewmodels="clr-namespace:MHSS.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowViewModel}"
-        Title="MHSS" Height="350" Width="525" >
+        Title="MHSS" Height="720" Width="1280" >
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <TabControl Grid.Column="0">
+        <TabControl Grid.Column="0" Margin="5,5,0,5">
             <TabItem Header="SkillSelect">
                 <Grid>
                     <subviews:SkillSelectView DataContext="{Binding SkillSelectVM.Value, Mode=OneWay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>

@@ -6,55 +6,79 @@ using System.Linq;
 using MHSS.Models.Data;
 using Reactive.Bindings;
 using System.Collections.ObjectModel;
+using System.Windows.Media;
+using System.Reactive.Disposables;
 
 namespace MHSS.ViewModels.Controls
 {
-    internal class SkillLevelSelectorViewModel : BindableBase
+    internal class SkillLevelSelectorViewModel : SubViewModelBase
     {
         /// <summary>
-        /// スキル
+        /// ComboBoxに表示するアイテムリスト
         /// </summary>
-        public Skill Skill { get; set; }
-
         public ReactivePropertySlim<ObservableCollection<SkillLevelSelectorItems>> Items { get; } = new();
 
         /// <summary>
-        /// 被選択スキル
+        /// 被選択アイテム
         /// </summary>
-        public ReactivePropertySlim<SkillLevelSelectorItems> SelectedSkill { get; set; }
+        public ReactivePropertySlim<SkillLevelSelectorItems> SelectedItem { get; } = new();
+
+        /// <summary>
+        /// 初期値以外が選択されているか
+        /// </summary>
+        public ReactivePropertySlim<bool> IsSelected { get; } = new(false);
+
+        /// <summary>
+        /// 背景色
+        /// </summary>
+        public ReactivePropertySlim<SolidColorBrush> BackgroundColor { get; } = new(Brushes.White);
+
+        /// <summary>
+        /// スキル名
+        /// </summary>
+        public string SkillName { get; set; }
 
 
-
-        public SkillLevelSelectorViewModel(Skill skill)
+        internal Skill SelectedSkill
         {
-            Skill = skill;
+            get
+            {
+                return new Skill() { Name = SkillName, Level = SelectedItem.Value.SkillLevel };
+            }
+        }
+
+        public SkillLevelSelectorViewModel(string skillName)
+        {
+            SkillName = skillName;
 
             // ComboBoxのItemを作成
+            Skill s = Master.Skills.Where(x => x.Name == SkillName).First();
             ObservableCollection<SkillLevelSelectorItems> items = new()
             {
-                new SkillLevelSelectorItems(skill.Name, 0)
+                new SkillLevelSelectorItems(" " + s.Name, 0)
             };
-            for (int i = 1; i <= skill.MaxLevel2; i++)
+            for (int i = 1; i <= s.MaxLevel2; i++)
             {
-                string displayName = skill.Name + " Lv" + i.ToString();
+                string displayName = s.Name + " Lv" + i.ToString();
                 items.Add(new SkillLevelSelectorItems(displayName, i));
             }
             Items.Value = items;
 
             // 選択されたスキルの情報の初期値
-            SelectedSkill.Value = Items.Value.First();
+            SelectedItem.Value = Items.Value.First();
+
+            SelectedItem.Subscribe(isSelected => { IsSelected.Value = SelectedItem.Value.SkillLevel != 0; });
+            IsSelected.Subscribe(b =>
+            {
+                if (b) // 初期値以外が選択されたとき
+                {
+                    BackgroundColor.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E0EFFF"));
+                }
+                else
+                {
+                    BackgroundColor.Value = Brushes.White;
+                }
+            });
         }
-
-
-        ///// <summary>
-        ///// 選択されているスキルを返却
-        ///// </summary>
-        //internal Skill SelectedSkill
-        //{
-        //    get
-        //    {
-        //        return new Skill(SkillName, SelectedLevel.Value.Level, isFixed: IsFixDisp.Value == FixStr);
-        //    }
-        //}
     }
 }

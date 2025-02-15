@@ -16,13 +16,12 @@ namespace MHSS.Models.Utility
         public Dictionary<string, Constraint> Constraints { get; set; } = new();
 
 
-        public Solve()
+        public Solve(Condition condition)
         {
             var allEquips = Master.Head.Union(Master.Body).Union(Master.Arm).Union(Master.Waist)
                             .Union(Master.Leg).Union(Master.Charm).Union(Master.Deco)
                             .Union(Master.Weapons.SelectMany(w => w));
 
-            
 
             // MIPソルバーを宣言
             Solver = Solver.CreateSolver("SCIP");
@@ -54,9 +53,9 @@ namespace MHSS.Models.Utility
             }
 
             // スキルは指定値以上
-            foreach (var skill in Master.Skills)
+            foreach (var skill in condition.Skills)
             {
-                Constraints.Add(skill.Name, Solver.MakeConstraint(0.0, double.PositiveInfinity, skill.Name));
+                Constraints.Add(skill.Name, Solver.MakeConstraint(skill.Level, double.PositiveInfinity, skill.Name));
             }
 
             // スロットは不足してはいけない

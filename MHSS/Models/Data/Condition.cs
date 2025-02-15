@@ -11,37 +11,35 @@ namespace MHSS.Models.Data
         /// <summary>
         /// スキルの条件
         /// </summary>
-        public static List<Skill> Skill { get; set; } = new();
-
-        
+        public List<Skill> Skills { get; set; } = new();
 
         /// <summary>
         /// 最低防御力
         /// </summary>
-        public static int Def { get; set; }
+        public int Def { get; set; }
 
         /// <summary>
         /// 最低火耐性
         /// </summary>
-        public static int ResFire { get; set; }
+        public int ResFire { get; set; }
 
         /// <summary>
         /// 最低水耐性
         /// </summary>
-        public static int ResWater { get; set; }
+        public int ResWater { get; set; }
 
         /// <summary>
         /// 最低雷耐性
         /// </summary>
-        public static int ResThunder { get; set; }
+        public int ResThunder { get; set; }
         /// <summary>
         /// 最低氷耐性
         /// </summary>
-        public static int ResIce { get; set; }
+        public int ResIce { get; set; }
 
         /// <summary>
         /// 最低龍耐性
         /// </summary>
-        public static int ResDragon { get; set; }
+        public int ResDragon { get; set; }
     }
 }

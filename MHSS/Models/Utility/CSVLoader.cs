@@ -181,6 +181,7 @@ namespace MHSS.Models.Utility
             {
                 Deco deco = new()
                 {
+                    HaveCount = 7,
                     EquipKind = EquipKind.Deco,
                     Name = line[@"名前"],
                     //SeriesName = "",

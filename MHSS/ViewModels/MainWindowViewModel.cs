@@ -15,19 +15,27 @@ using MHSS.ViewModels.SubView;
 
 namespace MHSS.ViewModels
 {
-    public class MainWindowViewModel : BindableBase
+    internal class MainWindowViewModel : BindableBase
     {
         public DelegateCommand ClickCommand { get; set; }
         private Solve Solve {  get; set; }
         public List<Skill> Skill { get; set; }
 
+        /// <summary>
+        /// VMで参照を共有するためのインスタンス
+        /// </summary>
+        internal static MainWindowViewModel Instance { get; set; }
+
+        /// <summary>
+        /// スキル選択のViewModel
+        /// </summary>
         public ReactivePropertySlim<SkillSelectViewModel> SkillSelectVM { get; } = new();
 
 
 
         public MainWindowViewModel()
         {
-            SkillSelectVM.Value = new();
+            Instance = this;
 
             CSVLoader.LoadCsvSkill();
             CSVLoader.LoadCsvHead();
@@ -37,9 +45,9 @@ namespace MHSS.ViewModels
             CSVLoader.LoadCsvLeg();
             CSVLoader.LoadCsvCharm();
             CSVLoader.LoadCsvDeco();
-            Skill = Master.Skills;
-            Solve = new();
             ClickCommand = new DelegateCommand(OnClick);
+
+            SkillSelectVM.Value = new();
         }
 
         private void OnClick()
@@ -108,15 +116,6 @@ namespace MHSS.ViewModels
             }
 
 
-            //CSVLoader.LoadCsvSkill();
-            //CSVLoader.LoadCsvHead();
-            //CSVLoader.LoadCsvBody();
-            //CSVLoader.LoadCsvArm();
-            //CSVLoader.LoadCsvWaist();
-            //CSVLoader.LoadCsvLeg();
-            //CSVLoader.LoadCsvCharm();
-            //CSVLoader.LoadCsvDeco();
-            //Solve = new();
 
             Solver.ResultStatus resultStatus = Solve.Solver.Solve();
 

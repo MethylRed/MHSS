@@ -11,13 +11,9 @@ namespace MHSS.Views
     /// </summary>
     public partial class MainWindow : Window
     {
-        //public List<Skill> Skill { get; set; }
         public MainWindow()
         {
             InitializeComponent();
-
-            //Skill = Master.Skills;
-            //this.DataContext = this;
         }
     }
 }
