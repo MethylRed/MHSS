@@ -18,7 +18,8 @@ namespace MHSS.Models.Utility
 
         public Solve(Condition condition)
         {
-            var allEquips = Master.Head.Union(Master.Body).Union(Master.Arm).Union(Master.Waist)
+            var allEquips = Master.Head
+                            .Union(Master.Body).Union(Master.Arm).Union(Master.Waist)
                             .Union(Master.Leg).Union(Master.Charm).Union(Master.Deco)
                             .Union(Master.Weapons.SelectMany(w => w));
 

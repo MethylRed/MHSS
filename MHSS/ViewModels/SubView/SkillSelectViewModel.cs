@@ -20,7 +20,6 @@ namespace MHSS.ViewModels.SubView
         /// </summary>
         public ReactivePropertySlim<ObservableCollection<SkillLevelSelectorsByCategoryViewModel>> SkillLevelSelectorsByCategoryVM { get; } = new();
 
-
         //public AsyncReactiveCommand SolveCommand { get; private set; }
         public DelegateCommand SolveCommand { get; private set; }
 
@@ -76,7 +75,7 @@ namespace MHSS.ViewModels.SubView
             Debug.WriteLine("\n Check is finished.");
         }
 
-        private Condition MakeCondition()
+        public Condition MakeCondition()
         {
             Condition condition = new();
 

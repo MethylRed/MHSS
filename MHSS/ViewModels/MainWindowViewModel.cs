@@ -12,42 +12,100 @@ using System.Collections.ObjectModel;
 using MHSS.Models.Data;
 using MHSS.Models.Utility;
 using MHSS.ViewModels.SubView;
+using MHSS.Views.Controls;
+using MHSS.ViewModels.Controls;
 
 namespace MHSS.ViewModels
 {
     internal class MainWindowViewModel : BindableBase
     {
         public DelegateCommand ClickCommand { get; set; }
-        private Solve Solve {  get; set; }
         public List<Skill> Skill { get; set; }
+        public DelegateCommand SolveCommand { get; private set; }
+        private Solve _Solve { get; set; }
 
         /// <summary>
         /// VMで参照を共有するためのインスタンス
         /// </summary>
         internal static MainWindowViewModel Instance { get; set; }
 
+
         /// <summary>
         /// スキル選択のViewModel
         /// </summary>
         public ReactivePropertySlim<SkillSelectViewModel> SkillSelectVM { get; } = new();
+
+        /// <summary>
+        /// カテゴリ別スキル選択アイテムのViewModel
+        /// </summary>
+        public ReactivePropertySlim<ObservableCollection<SolutionViewModel>> SolutionVM { get; } = new();
 
 
 
         public MainWindowViewModel()
         {
             Instance = this;
+            SolutionVM.Value = new();
 
             CSVLoader.LoadCsvSkill();
-            CSVLoader.LoadCsvHead();
-            CSVLoader.LoadCsvBody();
-            CSVLoader.LoadCsvArm();
-            CSVLoader.LoadCsvWaist();
-            CSVLoader.LoadCsvLeg();
-            CSVLoader.LoadCsvCharm();
-            CSVLoader.LoadCsvDeco();
+            CSVLoader.LoadCsvEquip();
+            //CSVLoader.LoadCsvHead();
+            //CSVLoader.LoadCsvBody();
+            //CSVLoader.LoadCsvArm();
+            //CSVLoader.LoadCsvWaist();
+            //CSVLoader.LoadCsvLeg();
+            //CSVLoader.LoadCsvCharm();
+            //CSVLoader.LoadCsvDeco();
             ClickCommand = new DelegateCommand(OnClick);
+            SolveCommand = new DelegateCommand(Solve);
 
             SkillSelectVM.Value = new();
+            SolutionVM.Value = new ObservableCollection<SolutionViewModel>();
+
+        }
+
+        /// <summary>
+        /// 検索を実行
+        /// </summary>
+        private void Solve()
+        {
+            // スキルの検索条件を取得
+            Condition condition = SkillSelectVM.Value.MakeCondition();
+
+            _Solve = new(condition);
+
+            Solver.ResultStatus resultStatus = _Solve.Solver.Solve();
+            if (resultStatus != Solver.ResultStatus.OPTIMAL)
+            {
+                Debug.WriteLine("NOT OPTIMAL SOLUTION!");
+            }
+            else
+            {
+                Debug.WriteLine(_Solve.Solver.Objective().Value());
+
+                Dictionary<Equip, int> SolutionEquips = _Solve.Variables
+                    .Where(v => v.Value.SolutionValue() > 0)
+                    .ToDictionary(
+                        v => Master.AllEquips.FirstOrDefault(x => x.Name == v.Key),
+                        v => (int)(v.Value.SolutionValue()));
+
+                foreach (var equip in SolutionEquips)
+                {
+                    if (equip.Key.EquipKind != EquipKind.Deco)
+                    {
+                        Debug.WriteLine(equip.Key.Name);
+                    }
+                    else
+                    {
+                        Debug.WriteLine(equip.Key.Name + "*" +  equip.Value.ToString());
+                    }
+                }
+
+
+
+            }
+
+            Debug.WriteLine("\n Check is finished.");
         }
 
         private void OnClick()
@@ -114,23 +172,6 @@ namespace MHSS.ViewModels
                 //Debug.WriteLine(string.Join("\n", Solve.Constraints.Keys));
                 //#endregion
             }
-
-
-
-            Solver.ResultStatus resultStatus = Solve.Solver.Solve();
-
-            if (resultStatus != Solver.ResultStatus.OPTIMAL)
-            {
-                Debug.WriteLine("NOT OPTIMAL SOLUTION!");
-            }
-            else
-            {
-                Debug.WriteLine(Solve.Solver.Objective().Value());
-                Debug.WriteLine(string.Join("\n", 
-                    Solve.Variables.Where(v => v.Value.SolutionValue() == 1).Select(k => k.Key)));
-            }
-
-            Debug.WriteLine("\n Check is finished.");
 #endif
         }
     }

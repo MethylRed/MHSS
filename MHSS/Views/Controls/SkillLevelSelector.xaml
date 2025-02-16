@@ -30,10 +30,10 @@
                   VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch"
                   ItemsSource="{Binding Items.Value, Mode=OneWay}"
                   DisplayMemberPath="DisplayStr"
+                  FontSize="14"
                   SelectedIndex="0"
                   SelectedItem="{Binding SelectedItem.Value}"
                   Height="Auto"
                   Width="150"/>
-
     </Border>
 </UserControl>

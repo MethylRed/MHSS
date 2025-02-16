@@ -10,6 +10,8 @@ namespace MHSS.Models.Data
     {
         public static List<Skill> Skills { get; set; } = new();
 
+        public static List<Equip> AllEquips { get; set; } = new();
+
         public static List<List<Weapon>> Weapons { get; set; } = new();
 
         public static List<Equip> Head { get; set; } = new();

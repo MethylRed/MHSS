@@ -82,6 +82,26 @@ namespace MHSS.Models.Utility
         }
 
         /// <summary>
+        /// 装備の読み込み
+        /// </summary>
+        public static void LoadCsvEquip()
+        {
+            LoadCsvHead();
+            LoadCsvBody();
+            LoadCsvArm();
+            LoadCsvWaist();
+            LoadCsvLeg();
+            LoadCsvCharm();
+            LoadCsvDeco();
+            LoadCsvWeapon();
+
+            Master.AllEquips = Master.Head
+                            .Union(Master.Body).Union(Master.Arm).Union(Master.Waist)
+                            .Union(Master.Leg).Union(Master.Charm).Union(Master.Deco)
+                            .Union(Master.Weapons.SelectMany(w => w)).ToList();
+        }
+
+        /// <summary>
         /// 頭防具の読み込み
         /// </summary>
         public static void LoadCsvHead()

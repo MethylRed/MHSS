@@ -17,7 +17,7 @@
                  BorderThickness="1"
                  BorderBrush="Black">
         <GroupBox.Header>
-            <TextBlock Text="{Binding Path=CategoryName, Mode=OneWay}" FontSize="16"/>
+            <TextBlock Text="{Binding Path=CategoryName, Mode=OneWay}" FontSize="20"/>
         </GroupBox.Header>
 
         <ItemsControl ItemsSource="{Binding Path=SkillLevelSelectorVM,Mode=OneWay}">
