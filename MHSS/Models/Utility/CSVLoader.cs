@@ -25,6 +25,7 @@ namespace MHSS.Models.Utility
         private const string CsvDeco = "./Models/Data/CSV/MHWs_DECO.csv";
         private const string CsvCharm = "./Models/Data/CSV/MHWs_CHARM.csv";
 
+        // 武器のファイルパス定数
         private static readonly string[] CsvWeapons =
         {
             "./Models/Data/CSV/Weapon/MHWs_GREATSWORD.csv",
@@ -58,6 +59,7 @@ namespace MHSS.Models.Utility
         //private const string CsvHBG = "./Models/Data/CSV/Weapon/MHWs_HEAVYBOWGUN.csv";
         //private const string CsvBOW = "./Models/Data/CSV/Weapon/MHWs_BOW.csv";
 
+
         /// <summary>
         /// スキルのリストを読み込む
         /// </summary>
@@ -73,8 +75,8 @@ namespace MHSS.Models.Utility
                     Name = line[@"名前"],
                     Category = line["カテゴリ"],
                     Level = 0,
-                    MaxLevel1 = int.Parse(line[@"上限1"]),
-                    MaxLevel2 = int.Parse(line[@"上限2"])
+                    MaxLevel1 = Utility.ParseOrDefault(line[@"上限1"]),
+                    MaxLevel2 = Utility.ParseOrDefault(line[@"上限2"])
                 };
 
                 Master.Skills.Add(skill);
@@ -95,9 +97,9 @@ namespace MHSS.Models.Utility
             LoadCsvDeco();
             LoadCsvWeapon();
 
-            Master.AllEquips = Master.Head
-                            .Union(Master.Body).Union(Master.Arm).Union(Master.Waist)
-                            .Union(Master.Leg).Union(Master.Charm).Union(Master.Deco)
+            Master.AllEquips = Master.Heads
+                            .Union(Master.Bodies).Union(Master.Arms).Union(Master.Waists)
+                            .Union(Master.Legs).Union(Master.Charms).Union(Master.Decos)
                             .Union(Master.Weapons.SelectMany(w => w)).ToList();
         }
 
@@ -106,8 +108,8 @@ namespace MHSS.Models.Utility
         /// </summary>
         public static void LoadCsvHead()
         {
-            Master.Head = new();
-            LoadCsvArmor(CsvHead, Master.Head, EquipKind.Head);
+            Master.Heads = new();
+            LoadCsvArmor(CsvHead, Master.Heads, EquipKind.Head);
         }
 
         /// <summary>
@@ -115,8 +117,8 @@ namespace MHSS.Models.Utility
         /// </summary>
         public static void LoadCsvBody()
         {
-            Master.Body = new();
-            LoadCsvArmor(CsvBody, Master.Body, EquipKind.Body);
+            Master.Bodies = new();
+            LoadCsvArmor(CsvBody, Master.Bodies, EquipKind.Body);
         }
 
         /// <summary>
@@ -124,8 +126,8 @@ namespace MHSS.Models.Utility
         /// </summary>
         public static void LoadCsvArm()
         {
-            Master.Arm = new();
-            LoadCsvArmor(CsvArm, Master.Arm, EquipKind.Arm);
+            Master.Arms = new();
+            LoadCsvArmor(CsvArm, Master.Arms, EquipKind.Arm);
         }
 
         /// <summary>
@@ -133,8 +135,8 @@ namespace MHSS.Models.Utility
         /// </summary>
         public static void LoadCsvWaist()
         {
-            Master.Waist = new();
-            LoadCsvArmor(CsvWaist, Master.Waist, EquipKind.Waist);
+            Master.Waists = new();
+            LoadCsvArmor(CsvWaist, Master.Waists, EquipKind.Waist);
         }
 
         /// <summary>
@@ -142,8 +144,8 @@ namespace MHSS.Models.Utility
         /// </summary>
         public static void LoadCsvLeg()
         {
-            Master.Leg = new();
-            LoadCsvArmor(CsvLeg, Master.Leg, EquipKind.Leg);
+            Master.Legs = new();
+            LoadCsvArmor(CsvLeg, Master.Legs, EquipKind.Leg);
         }
 
         /// <summary>
@@ -151,7 +153,7 @@ namespace MHSS.Models.Utility
         /// </summary>
         public static void LoadCsvCharm()
         {
-            Master.Charm = new();
+            Master.Charms = new();
             string str = File.ReadAllText(CsvCharm);
             foreach (ICsvLine line in CsvReader.ReadFromText(str))
             {
@@ -161,9 +163,9 @@ namespace MHSS.Models.Utility
                     Name = line[@"名前"],
                     //SeriesName = "",
                     SlotType = 0,
-                    Slot1 = int.Parse(line[@"スロット1"]),
-                    Slot2 = int.Parse(line[@"スロット2"]),
-                    Slot3 = int.Parse(line[@"スロット3"]),
+                    Slot1 = Utility.ParseOrDefault(line[@"スロット1"]),
+                    Slot2 = Utility.ParseOrDefault(line[@"スロット2"]),
+                    Slot3 = Utility.ParseOrDefault(line[@"スロット3"]),
                     Def = 0,
                     ResFire = 0,
                     ResWater = 0,
@@ -177,16 +179,16 @@ namespace MHSS.Models.Utility
                 {
                     string skillName = line[@"スキル系統" + i];
                     if (string.IsNullOrWhiteSpace(skillName)) break;
-                    int skillLevel = int.Parse(line[@"スキル値" + i]);
+                    int skillLevel = Utility.ParseOrDefault(line[@"スキル値" + i]);
                     skill.Add(new Skill
                     {
                         Name = skillName,
                         Level = skillLevel
                     });
                 }
-                charm.Skill = skill;
+                charm.Skills = skill;
 
-                Master.Charm.Add(charm);
+                Master.Charms.Add(charm);
             }
         }
 
@@ -195,7 +197,7 @@ namespace MHSS.Models.Utility
         /// </summary>
         public static void LoadCsvDeco()
         {
-            Master.Deco = new();
+            Master.Decos = new();
             string str = File.ReadAllText(CsvDeco);
             foreach (ICsvLine line in CsvReader.ReadFromText(str))
             {
@@ -205,8 +207,8 @@ namespace MHSS.Models.Utility
                     EquipKind = EquipKind.Deco,
                     Name = line[@"名前"],
                     //SeriesName = "",
-                    SlotType = int.Parse(line[@"スロットタイプ"]),
-                    Slot1 = int.Parse(line[@"スロットサイズ"]),
+                    SlotType = Utility.ParseOrDefault(line[@"スロットタイプ"], 2),
+                    Slot1 = Utility.ParseOrDefault(line[@"スロットサイズ"]),
                     Slot2 = 0,
                     Slot3 = 0,
                     Def = 0,
@@ -222,16 +224,16 @@ namespace MHSS.Models.Utility
                 {
                     string skillName = line[@"スキル系統" + i];
                     if (string.IsNullOrWhiteSpace(skillName)) break;
-                    int skillLevel = int.Parse(line[@"スキル値" + i]);
+                    int skillLevel = Utility.ParseOrDefault(line[@"スキル値" + i]);
                     skill.Add(new Skill
                     {
                         Name = skillName,
                         Level = skillLevel
                     });
                 }
-                deco.Skill = skill;
+                deco.Skills = skill;
 
-                Master.Deco.Add(deco);
+                Master.Decos.Add(deco);
             }
         }
 
@@ -252,15 +254,15 @@ namespace MHSS.Models.Utility
                         EquipKind = EquipKind.Weapon,
                         WeaponKind = (WeaponKind)i,
                         Name = line[@"名前"],
-                        Attack = int.Parse(line[@"攻撃力"]),
-                        Affinity = int.Parse(line[@"会心率"]),
+                        Attack = Utility.ParseOrDefault(line[@"攻撃力"]),
+                        Affinity = Utility.ParseOrDefault(line[@"会心率"]),
                         ElementType = (Element)Kind.ElementType[line[@"属性"]],
-                        ElementValue = int.Parse(line[@"属性値"]),
+                        ElementValue = Utility.ParseOrDefault(line[@"属性値"]),
                         SlotType = 0,
-                        Slot1 = int.Parse(line[@"スロット1"]),
-                        Slot2 = int.Parse(line[@"スロット2"]),
-                        Slot3 = int.Parse(line[@"スロット3"]),
-                        Def = int.Parse(line[@"防御力ボーナス"]),
+                        Slot1 = Utility.ParseOrDefault(line[@"スロット1"]),
+                        Slot2 = Utility.ParseOrDefault(line[@"スロット2"]),
+                        Slot3 = Utility.ParseOrDefault(line[@"スロット3"]),
+                        Def = Utility.ParseOrDefault(line[@"防御力ボーナス"]),
                         ResFire = 0,
                         ResWater = 0,
                         ResThunder = 0,
@@ -272,14 +274,14 @@ namespace MHSS.Models.Utility
                     {
                         string skillName = line[@"スキル系統" + i];
                         if (string.IsNullOrWhiteSpace(skillName)) break;
-                        int skillLevel = int.Parse(line[@"スキル値" + i]);
+                        int skillLevel = Utility.ParseOrDefault(line[@"スキル値" + i]);
                         skill.Add(new Skill
                         {
                             Name = skillName,
                             Level = skillLevel
                         });
                     }
-                    w.Skill = skill;
+                    w.Skills = skill;
 
                     weapon.Add(w);
                 }
@@ -304,15 +306,15 @@ namespace MHSS.Models.Utility
                     Name = line[@"名前"],
                     //SeriesName = "",
                     SlotType = 0,
-                    Slot1 = int.Parse(line[@"スロット1"]),
-                    Slot2 = int.Parse(line[@"スロット2"]),
-                    Slot3 = int.Parse(line[@"スロット3"]),
-                    Def = int.Parse(line[@"最終防御力"]),
-                    ResFire = int.Parse(line[@"火耐性"]),
-                    ResWater = int.Parse(line[@"水耐性"]),
-                    ResThunder = int.Parse(line[@"雷耐性"]),
-                    ResIce = int.Parse(line[@"氷耐性"]),
-                    ResDragon = int.Parse(line[@"龍耐性"])
+                    Slot1 = Utility.ParseOrDefault(line[@"スロット1"]),
+                    Slot2 = Utility.ParseOrDefault(line[@"スロット2"]),
+                    Slot3 = Utility.ParseOrDefault(line[@"スロット3"]),
+                    Def = Utility.ParseOrDefault(line[@"最終防御力"]),
+                    ResFire = Utility.ParseOrDefault(line[@"火耐性"]),
+                    ResWater = Utility.ParseOrDefault(line[@"水耐性"]),
+                    ResThunder = Utility.ParseOrDefault(line[@"雷耐性"]),
+                    ResIce = Utility.ParseOrDefault(line[@"氷耐性"]),
+                    ResDragon = Utility.ParseOrDefault(line[@"龍耐性"])
                 };
 
                 List<Skill> skill = new();
@@ -320,14 +322,14 @@ namespace MHSS.Models.Utility
                 {
                     string skillName = line[@"スキル系統" + i];
                     if (string.IsNullOrWhiteSpace(skillName)) break;
-                    int skillLevel = int.Parse(line[@"スキル値" + i]);
+                    int skillLevel = Utility.ParseOrDefault(line[@"スキル値" + i]);
                     skill.Add(new Skill
                     {
                         Name = skillName,
                         Level = skillLevel
                     });
                 }
-                armor.Skill = skill;
+                armor.Skills = skill;
 
                 armors.Add(armor);
             }

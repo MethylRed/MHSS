@@ -35,7 +35,7 @@
             <Border Grid.Column="0" Grid.Row="1" Margin="5,0,5,5" BorderThickness="1" BorderBrush="Black" CornerRadius="3">
                 <Button Grid.Row="1" Margin="0,0,10,0"
                         x:Name="SolveButton"
-                        Command="{Binding SolveCommand}"
+                        Command="{Binding SearchCommand}"
                         Height="30" Width="100"
                         Content="🔍検索"
                         Grid.Column="1"
@@ -71,12 +71,12 @@
         <Border Grid.Column="1" CornerRadius="3" Margin="5" BorderBrush="Black" BorderThickness="1">
             <ScrollViewer VerticalAlignment="Stretch">
                 <StackPanel Margin="0">
-                    <ItemsControl ItemsSource="{Binding SolutionVM, Mode=OneWay}">
+                    <!--<ItemsControl ItemsSource="{Binding SolutionVM, Mode=OneWay}">
                         <DataTemplate>
-                            <!--<subviews:Solution HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>-->
-                            <TextBlock Text="1"/>
+                            --><!--<subviews:Solution HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>--><!--
                         </DataTemplate>
-                    </ItemsControl>
+                    </ItemsControl>-->
+                    <subviews:Solution DataContext="{Binding SolutionVM.Value, Mode=OneWay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                 </StackPanel>
             </ScrollViewer>
         </Border>

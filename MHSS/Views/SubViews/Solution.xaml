@@ -9,10 +9,12 @@
              d:DataContext="{d:DesignInstance Type=subview:SolutionViewModel}"
              d:DesignHeight="450" d:DesignWidth="800">
     <Expander Margin="5" Height="Auto" Width="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
-              BorderThickness="1" Background="White">
+              BorderThickness="2" Background="White" BorderBrush="black">
         <Expander.Header>
-            <TextBlock Text="test"/>
+            <TextBlock>
+                <Run>test</Run>
+            </TextBlock>
         </Expander.Header>
-        <TextBlock Text="TEST" FontSize="32"/>
+        <TextBlock Text="{Binding disp.Value, Mode=OneWay}" FontSize="14" Foreground="Black"/>
     </Expander>
 </UserControl>

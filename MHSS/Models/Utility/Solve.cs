@@ -16,11 +16,15 @@ namespace MHSS.Models.Utility
         public Dictionary<string, Constraint> Constraints { get; set; } = new();
 
 
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="condition">検索の条件</param>
         public Solve(Condition condition)
         {
-            var allEquips = Master.Head
-                            .Union(Master.Body).Union(Master.Arm).Union(Master.Waist)
-                            .Union(Master.Leg).Union(Master.Charm).Union(Master.Deco)
+            var allEquips = Master.Heads
+                            .Union(Master.Bodies).Union(Master.Arms).Union(Master.Waists)
+                            .Union(Master.Legs).Union(Master.Charms).Union(Master.Decos)
                             .Union(Master.Weapons.SelectMany(w => w));
 
 
@@ -45,10 +49,9 @@ namespace MHSS.Models.Utility
 
 
             #region Define Constraint
-            // 制約式の定義
             // 武器・防具・護石は１つまでしか装備できない
-            string[] EquipNames = { "Weapon", "Head", "Body", "Arm", "Waist", "Leg", "Charm" };
-            foreach (var name in EquipNames)
+            //string[] EquipNames = { "Weapon", "Head", "Body", "Arm", "Waist", "Leg", "Charm" };
+            foreach (var name in new[] { "Weapon", "Head", "Body", "Arm", "Waist", "Leg", "Charm" })
             {
                 Constraints.Add(name, Solver.MakeConstraint(0.0, 1.0, name));
             }
@@ -85,7 +88,7 @@ namespace MHSS.Models.Utility
                 }
 
                 // スキルの制約
-                foreach (var skill in equip.Skill)
+                foreach (var skill in equip.Skills)
                 {
                     Constraints[skill.Name].SetCoefficient(Variables[equip.Name], skill.Level);
                 }
@@ -123,6 +126,58 @@ namespace MHSS.Models.Utility
             obj.SetMaximization();
             #endregion
         }
+
+        /// <summary>
+        /// 検索の実行
+        /// </summary>
+        /// <param name="searchCount">検索回数</param>
+        /// <returns></returns>
+        public List<SearchedEquips> Search(int searchCount)
+        {
+            List<SearchedEquips> searchedEquips = new();
+
+            // 検索回数が指定値以下・解がある・検索回数が最大回数以下のとき検索を実行し続ける
+            for (int count = 0; (count < searchCount) && (Solver.Solve() == Solver.ResultStatus.OPTIMAL) && (searchCount < Config.Config.Instance.MaxSearchCount); count++)
+            {
+                SearchedEquips searchedEquip = new();
+                // 個数変数の値が0超のものを列挙
+                foreach (var equip in Variables.Where(v => v.Value.SolutionValue() > 0))
+                {
+                    // 全装備から一致するものを探す
+                    var findEquip = Master.AllEquips.Where(x => x.Name == equip.Key).FirstOrDefault();
+
+                    // 無い場合はスキップ
+                    if (findEquip == null) continue;
+
+                    // 装備の種類ごとに代入
+                    switch (findEquip.EquipKind)
+                    {
+                        case EquipKind.Weapon: searchedEquip.Weapon = (Weapon)findEquip; break;
+                        case EquipKind.Head: searchedEquip.Head = findEquip; break;
+                        case EquipKind.Body: searchedEquip.Body = findEquip; break;
+                        case EquipKind.Arm: searchedEquip.Arm = findEquip; break;
+                        case EquipKind.Waist: searchedEquip.Waist = findEquip; break;
+                        case EquipKind.Leg: searchedEquip.Leg = findEquip; break;
+                        case EquipKind.Charm: searchedEquip.Charm = findEquip; break;
+                        case EquipKind.Deco: searchedEquip.Decos.Add((Deco)findEquip); break;
+                    }
+                }
+                searchedEquips.Add(searchedEquip);
+            }
+            return searchedEquips;
+        }
+
+
+        //public static Dictionary<Equip, int> SolutionEquips(Solve solve)
+        //{
+
+
+        //    return solve.Variables
+        //            .Where(v => v.Value.SolutionValue() > 0)
+        //            .ToDictionary(
+        //                v => Master.AllEquips.FirstOrDefault(x => x.Name == v.Key),
+        //                v => (int)(v.Value.SolutionValue()));
+        //}
 
 
         // 装備のスロットの計算

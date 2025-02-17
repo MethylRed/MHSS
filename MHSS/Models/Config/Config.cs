@@ -41,6 +41,11 @@ namespace MHSS.Models.Config
         /// </summary>
         public int MaxDecoSkillCount { get; set; }
 
+        /// <summary>
+        /// 検索の最大回数
+        /// </summary>
+        public int MaxSearchCount { get; set; }
+
         private Config()
         {
             string str = File.ReadAllText(CsvConfig, Encoding.UTF8);
@@ -48,10 +53,11 @@ namespace MHSS.Models.Config
 
             foreach (ICsvLine line in CsvReader.ReadFromText(str))
             {
-                MaxArmorSkillCount = int.Parse(line[@"防具に付くスキルの最大個数"]);
-                MaxWeaponSkillCount = int.Parse(line[@"武器に付くスキルの最大個数"]);
-                MaxCharmSkillCount = int.Parse(line[@"護石に付くスキルの最大個数"]);
-                MaxDecoSkillCount = int.Parse(line[@"装飾品に付くスキルの最大個数"]);
+                MaxArmorSkillCount = Utility.Utility.ParseFromCsvLineOrDefault(line, "防具に付くスキルの最大個数", 5);
+                MaxWeaponSkillCount = Utility.Utility.ParseFromCsvLineOrDefault(line, "武器に付くスキルの最大個数", 5);
+                MaxCharmSkillCount = Utility.Utility.ParseFromCsvLineOrDefault(line, "護石に付くスキルの最大個数", 2);
+                MaxDecoSkillCount = Utility.Utility.ParseFromCsvLineOrDefault(line, "装飾品に付くスキルの最大個数", 2);
+                MaxSearchCount = Utility.Utility.ParseFromCsvLineOrDefault(line, "検索の最大回数", 50);
             }
         }
     }

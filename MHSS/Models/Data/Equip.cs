@@ -78,6 +78,6 @@ namespace MHSS.Models.Data
         /// <summary>
         /// スキル
         /// </summary>
-        public List<Skill> Skill { get; set; } = new();
+        public List<Skill> Skills { get; set; } = new();
     }
 }

@@ -20,9 +20,8 @@ namespace MHSS.ViewModels
     internal class MainWindowViewModel : BindableBase
     {
         public DelegateCommand ClickCommand { get; set; }
-        public List<Skill> Skill { get; set; }
-        public DelegateCommand SolveCommand { get; private set; }
-        private Solve _Solve { get; set; }
+        public DelegateCommand SearchCommand { get; private set; }
+        private Solve Solve { get; set; }
 
         /// <summary>
         /// VMで参照を共有するためのインスタンス
@@ -38,15 +37,15 @@ namespace MHSS.ViewModels
         /// <summary>
         /// カテゴリ別スキル選択アイテムのViewModel
         /// </summary>
-        public ReactivePropertySlim<ObservableCollection<SolutionViewModel>> SolutionVM { get; } = new();
+        public ReactivePropertySlim<SolutionViewModel> SolutionVM { get; } = new();
 
 
 
         public MainWindowViewModel()
         {
             Instance = this;
-            SolutionVM.Value = new();
 
+            // データの読み込み
             CSVLoader.LoadCsvSkill();
             CSVLoader.LoadCsvEquip();
             //CSVLoader.LoadCsvHead();
@@ -56,55 +55,32 @@ namespace MHSS.ViewModels
             //CSVLoader.LoadCsvLeg();
             //CSVLoader.LoadCsvCharm();
             //CSVLoader.LoadCsvDeco();
-            ClickCommand = new DelegateCommand(OnClick);
-            SolveCommand = new DelegateCommand(Solve);
 
+            // ボタンクリックイベントの定義
+            ClickCommand = new DelegateCommand(OnClick);
+            SearchCommand = new DelegateCommand(Search);
+
+            // ViewModelのインスタンスを生成
             SkillSelectVM.Value = new();
-            SolutionVM.Value = new ObservableCollection<SolutionViewModel>();
+            SolutionVM.Value = new();
 
         }
 
         /// <summary>
         /// 検索を実行
         /// </summary>
-        private void Solve()
+        private void Search()
         {
             // スキルの検索条件を取得
             Condition condition = SkillSelectVM.Value.MakeCondition();
 
-            _Solve = new(condition);
+            // ソルバーを宣言
+            Solve = new(condition);
 
-            Solver.ResultStatus resultStatus = _Solve.Solver.Solve();
-            if (resultStatus != Solver.ResultStatus.OPTIMAL)
-            {
-                Debug.WriteLine("NOT OPTIMAL SOLUTION!");
-            }
-            else
-            {
-                Debug.WriteLine(_Solve.Solver.Objective().Value());
+            // 求解し表示
+            SolutionVM.Value.ShowResult(Solve.Search(1));
 
-                Dictionary<Equip, int> SolutionEquips = _Solve.Variables
-                    .Where(v => v.Value.SolutionValue() > 0)
-                    .ToDictionary(
-                        v => Master.AllEquips.FirstOrDefault(x => x.Name == v.Key),
-                        v => (int)(v.Value.SolutionValue()));
-
-                foreach (var equip in SolutionEquips)
-                {
-                    if (equip.Key.EquipKind != EquipKind.Deco)
-                    {
-                        Debug.WriteLine(equip.Key.Name);
-                    }
-                    else
-                    {
-                        Debug.WriteLine(equip.Key.Name + "*" +  equip.Value.ToString());
-                    }
-                }
-
-
-
-            }
-
+            
             Debug.WriteLine("\n Check is finished.");
         }
 
@@ -129,20 +105,20 @@ namespace MHSS.ViewModels
                 CSVLoader.LoadCsvCharm();
                 CSVLoader.LoadCsvDeco();
 
-                var x = Master.Head[100];
+                var x = Master.Heads[100];
                 string s = "";
                 for (int i = 0; i < 7; i++)
                 {
                     x = i switch
                     {
-                        0 => Master.Head[100],
-                        1 => Master.Body[100],
-                        2 => Master.Arm[100],
-                        3 => Master.Waist[100],
-                        4 => Master.Leg[100],
-                        5 => Master.Charm[100],
-                        6 => Master.Deco[100],
-                        _ => Master.Head[100],
+                        0 => Master.Heads[100],
+                        1 => Master.Bodies[100],
+                        2 => Master.Arms[100],
+                        3 => Master.Waists[100],
+                        4 => Master.Legs[100],
+                        5 => Master.Charms[100],
+                        6 => Master.Decos[100],
+                        _ => Master.Heads[100],
                     };
                     s = "";
                     foreach (PropertyInfo prop in x.GetType().GetProperties())
@@ -150,7 +126,7 @@ namespace MHSS.ViewModels
                         if (prop.Name != "Skill") s += prop.GetValue(x) + ",";
                         else
                         {
-                            foreach (var item in x.Skill) s += "\n" + item;
+                            foreach (var item in x.Skills) s += "\n" + item;
                         }
                     }
                     Debug.WriteLine(s);
