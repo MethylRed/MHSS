@@ -8,11 +8,11 @@
         xmlns:subviews="clr-namespace:MHSS.Views.SubViews"
         xmlns:viewmodels="clr-namespace:MHSS.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowViewModel}"
-        Title="MHSS" Height="720" Width="1280" >
+        Title="MHSS" Height="720" Width="1680" >
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="5*"/>
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
@@ -69,26 +69,41 @@
         </Grid>
 
         <Border Grid.Column="1" CornerRadius="3" Margin="5" BorderBrush="Black" BorderThickness="1">
-            <ScrollViewer VerticalAlignment="Stretch">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0" Margin="35,5,25,0" Background="White">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="武器" FontSize="16"/>
+                    <TextBlock Grid.Column="1" Text="頭" FontSize="16"/>
+                    <TextBlock Grid.Column="2" Text="胴" FontSize="16"/>
+                    <TextBlock Grid.Column="3" Text="腕" FontSize="16"/>
+                    <TextBlock Grid.Column="4" Text="腰" FontSize="16"/>
+                    <TextBlock Grid.Column="5" Text="脚" FontSize="16"/>
+                    <TextBlock Grid.Column="6" Text="護石" FontSize="16"/>
+                </Grid>
+            <ScrollViewer Grid.Row="1" VerticalAlignment="Stretch" Margin="5,0,5,5">
                 <StackPanel Margin="0">
-                    <!--<ItemsControl ItemsSource="{Binding SolutionVM, Mode=OneWay}">
+                    <ItemsControl ItemsSource="{Binding ObservableCollectionSolutionVM.Value, Mode=OneWay}">
                         <DataTemplate>
-                            --><!--<subviews:Solution HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>--><!--
+                            <subviews:Solution HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                         </DataTemplate>
-                    </ItemsControl>-->
-                    <subviews:Solution DataContext="{Binding SolutionVM.Value, Mode=OneWay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                    </ItemsControl>
+                    <!--<subviews:Solution DataContext="{Binding SolutionVM.Value, Mode=OneWay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>-->
                 </StackPanel>
             </ScrollViewer>
+            </Grid>
         </Border>
-        <Button
-            x:Name="ForDebugButton"
-            Command="{Binding ClickCommand}"
-            Height="50" Width="100"
-            Content="Click Here"
-            Grid.Column="1"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Bottom"
-            />
         <ContentControl prism:RegionManager.RegionName="ContentRegion" />
     </Grid>
 </Window>

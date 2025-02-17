@@ -7,33 +7,38 @@
              xmlns:viewmodel="clr-namespace:MHSS.ViewModels.Controls"
              d:DataContext="{d:DesignInstance Type=viewmodel:SkillLevelSelectorViewModel}"
              >
-    <UserControl.Resources>
-        
-    </UserControl.Resources>
-    <Border CornerRadius="3">
-        <Border.Style>
-            <Style TargetType="{x:Type Border}">
-                <Setter Property="Background" Value="Transparent"/>
-                <Setter Property="BorderThickness" Value="3"/>
-                <Setter Property="BorderBrush" Value="Transparent"/>
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding Path=IsSelected.Value}" Value="true">
-                        <!--<Setter Property="Background" Value="#92C9E1"/>-->
-                        <!--<Setter Property="BorderBrush" Value="#92C9E1"/>-->
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
-        </Border.Style>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="15"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <CheckBox Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
 
-        <ComboBox Background="{Binding BackgroundColor.Value, Mode=OneWay}"
-                  BorderThickness="0"
-                  VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch"
-                  ItemsSource="{Binding Items.Value, Mode=OneWay}"
-                  DisplayMemberPath="DisplayStr"
-                  FontSize="14"
-                  SelectedIndex="0"
-                  SelectedItem="{Binding SelectedItem.Value}"
-                  Height="Auto"
-                  Width="150"/>
-    </Border>
+        <Border Grid.Column="1" CornerRadius="3" Margin="0,0,10,0">
+            <Border.Style>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="BorderThickness" Value="3"/>
+                    <Setter Property="BorderBrush" Value="Transparent"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Path=IsSelected.Value}" Value="true">
+                            <!--<Setter Property="Background" Value="#92C9E1"/>-->
+                            <!--<Setter Property="BorderBrush" Value="#92C9E1"/>-->
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+
+            <ComboBox Background="{Binding BackgroundColor.Value, Mode=OneWay}"
+                      BorderThickness="0"
+                      VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch"
+                      ItemsSource="{Binding Items.Value, Mode=OneWay}"
+                      DisplayMemberPath="DisplayStr"
+                      FontSize="12"
+                      SelectedIndex="0"
+                      SelectedItem="{Binding SelectedItem.Value}"
+                      Height="Auto"
+                      Width="120"/>
+        </Border>
+    </Grid>
 </UserControl>

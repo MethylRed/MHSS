@@ -12,32 +12,85 @@ namespace MHSS.ViewModels.SubView
     {
         public ReactivePropertySlim<string> disp { get; set; } = new(string.Empty);
 
-        public SolutionViewModel()
+        
+        public ReactivePropertySlim<string> Weapon { get; set; } = new(string.Empty);
+
+        
+        public ReactivePropertySlim<string> Head { get; set; } = new(string.Empty);
+        
+        
+        public ReactivePropertySlim<string> Body { get; set; } = new(string.Empty);
+        
+        
+        public ReactivePropertySlim<string> Arm { get; set; } = new(string.Empty);
+        
+        
+        public ReactivePropertySlim<string> Waist { get; set; } = new(string.Empty);
+        
+        
+        public ReactivePropertySlim<string> Leg { get; set; } = new(string.Empty);
+        
+        
+        public ReactivePropertySlim<string> Charm { get; set; } = new(string.Empty);
+
+        public SolutionViewModel(SearchedEquips searchedEquips)
         {
-            disp.Value = "test";
+            //disp.Value = "";
+            Weapon.Value = "ああああああああああああああ";
+            //Weapon.Value = searchedEquip.Weapon.Name;
+            Head.Value = searchedEquips.Head.Name;
+            Body.Value = searchedEquips.Body.Name;
+            Arm.Value = searchedEquips.Arm.Name;
+            Waist.Value = searchedEquips.Waist.Name;
+            Leg.Value = searchedEquips.Leg.Name;
+            Charm.Value = searchedEquips.Charm.Name;
+            //var counts = searchedEquips.Decos.GroupBy(x => x)
+            //                                    .Select(g => new { g.Key.Name, Count = g.Count() })
+            //                                    .ToList();
+            //foreach (var item in counts)
+            //{
+            //    disp.Value += item.Name + "*" + item.Count.ToString() + "\n";
+            //}
+            //foreach (var skill in searchedEquips.Skills)
+            //{
+            //    disp.Value += "\n" + skill.Name + "Lv" + skill.Level.ToString();
+            //}
         }
 
         /// <summary>
         /// 検索結果の装備構成を受け取り表示用文字列を作成
         /// </summary>
         /// <param name="searchedEquips"></param>
-        public void ShowResult(List<SearchedEquips> searchedEquips)
+        public void ShowResult(SearchedEquips searchedEquips)
         {
             disp.Value = "";
-            foreach (var searchedEquip in searchedEquips)
-            {
-                disp.Value += searchedEquip.Weapon.Name + "\n";
-                disp.Value += searchedEquip.Head.Name + "\n";
-                disp.Value += searchedEquip.Body.Name + "\n";
-                disp.Value += searchedEquip.Arm.Name + "\n";
-                disp.Value += searchedEquip.Waist.Name + "\n";
-                disp.Value += searchedEquip.Leg.Name + "\n";
-                disp.Value += searchedEquip.Charm.Name + "\n";
-                foreach (var deco in searchedEquip.Decos)
+                Weapon.Value = "ああああああああああああああ";
+                //Weapon.Value = searchedEquip.Weapon.Name;
+                Head.Value = searchedEquips.Head.Name;
+                Body.Value = searchedEquips.Body.Name;
+                Arm.Value = searchedEquips.Arm.Name;
+                Waist.Value = searchedEquips.Waist.Name;
+                Leg.Value = searchedEquips.Leg.Name;
+                Charm.Value = searchedEquips.Charm.Name;
+
+                disp.Value += searchedEquips.Weapon.Name + "\n";
+                disp.Value += searchedEquips.Head.Name + "\n";
+                disp.Value += searchedEquips.Body.Name + "\n";
+                disp.Value += searchedEquips.Arm.Name + "\n";
+                disp.Value += searchedEquips.Waist.Name + "\n";
+                disp.Value += searchedEquips.Leg.Name + "\n";
+                disp.Value += searchedEquips.Charm.Name + "\n";
+                var counts = searchedEquips.Decos.GroupBy(x => x)
+                                                .Select(g => new { g.Key.Name, Count = g.Count() })
+                                                .ToList();
+                foreach (var item in counts)
                 {
-                    disp.Value += deco.Name + "\n";
+                    disp.Value += item.Name + "*" + item.Count.ToString() + "\n";
                 }
-            }
+                foreach (var skill in searchedEquips.Skills)
+                {
+                    disp.Value += "\n" + skill.Name + "Lv" + skill.Level.ToString();
+                }
         }
     }
 }

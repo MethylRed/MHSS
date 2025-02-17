@@ -14,9 +14,11 @@
              >
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Border Grid.Row="0" BorderBrush="Black" BorderThickness="2" CornerRadius="3" Background="White">
+        <TextBlock Text="スキルのレベルを固定する場合はチェックボックスにチェックを入れてください。" Margin="5,5,0,5"/>
+        <Border Grid.Row="1" BorderBrush="Black" BorderThickness="2" CornerRadius="3" Background="White">
             <Grid Margin="5">
                 <ScrollViewer VerticalAlignment="Stretch">
                     <StackPanel Margin="0,0,3,100">

@@ -15,7 +15,7 @@ namespace MHSS.Models.Config
         {
             get
             {
-                if (instance == null) instance = new();
+                instance ??= new();
                 return instance;
             }
         }

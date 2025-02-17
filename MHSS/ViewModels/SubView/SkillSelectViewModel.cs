@@ -36,9 +36,11 @@ namespace MHSS.ViewModels.SubView
                     ((IDisposable)item).Dispose();
                 }
             }
+            var s = Master.Skills.GroupBy(s => s.Category).OrderBy(g => Kind.SkillCategory.IndexOf(g.Key))
+                .Select(g => new SkillLevelSelectorsByCategoryViewModel(g.Key, g));
+
             SkillLevelSelectorsByCategoryVM.Value = new ObservableCollection<SkillLevelSelectorsByCategoryViewModel>(
-                Master.Skills.GroupBy(s => s.Category).OrderBy(g => Kind.SkillCategory.IndexOf(g.Key))
-                .Select(g => new SkillLevelSelectorsByCategoryViewModel(g.Key, g))
+                s
             );
 
             SolveCommand = new DelegateCommand(Solve);

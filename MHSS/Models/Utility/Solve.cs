@@ -143,41 +143,33 @@ namespace MHSS.Models.Utility
                 // 個数変数の値が0超のものを列挙
                 foreach (var equip in Variables.Where(v => v.Value.SolutionValue() > 0))
                 {
-                    // 全装備から一致するものを探す
-                    var findEquip = Master.AllEquips.Where(x => x.Name == equip.Key).FirstOrDefault();
-
-                    // 無い場合はスキップ
-                    if (findEquip == null) continue;
-
-                    // 装備の種類ごとに代入
-                    switch (findEquip.EquipKind)
+                    // 個数分繰り返す
+                    for (int i = 0; i < equip.Value.SolutionValue(); i++)
                     {
-                        case EquipKind.Weapon: searchedEquip.Weapon = (Weapon)findEquip; break;
-                        case EquipKind.Head: searchedEquip.Head = findEquip; break;
-                        case EquipKind.Body: searchedEquip.Body = findEquip; break;
-                        case EquipKind.Arm: searchedEquip.Arm = findEquip; break;
-                        case EquipKind.Waist: searchedEquip.Waist = findEquip; break;
-                        case EquipKind.Leg: searchedEquip.Leg = findEquip; break;
-                        case EquipKind.Charm: searchedEquip.Charm = findEquip; break;
-                        case EquipKind.Deco: searchedEquip.Decos.Add((Deco)findEquip); break;
+                        // 全装備から一致するものを探す
+                        var findEquip = Master.AllEquips.Where(x => x.Name == equip.Key).FirstOrDefault();
+
+                        // 無い場合はスキップ
+                        if (findEquip == null) continue;
+
+                        // 装備の種類ごとに代入
+                        switch (findEquip.EquipKind)
+                        {
+                            case EquipKind.Weapon: searchedEquip.Weapon = (Weapon)findEquip; break;
+                            case EquipKind.Head: searchedEquip.Head = findEquip; break;
+                            case EquipKind.Body: searchedEquip.Body = findEquip; break;
+                            case EquipKind.Arm: searchedEquip.Arm = findEquip; break;
+                            case EquipKind.Waist: searchedEquip.Waist = findEquip; break;
+                            case EquipKind.Leg: searchedEquip.Leg = findEquip; break;
+                            case EquipKind.Charm: searchedEquip.Charm = findEquip; break;
+                            case EquipKind.Deco: searchedEquip.Decos.Add((Deco)findEquip); break;
+                        }
                     }
                 }
                 searchedEquips.Add(searchedEquip);
             }
             return searchedEquips;
         }
-
-
-        //public static Dictionary<Equip, int> SolutionEquips(Solve solve)
-        //{
-
-
-        //    return solve.Variables
-        //            .Where(v => v.Value.SolutionValue() > 0)
-        //            .ToDictionary(
-        //                v => Master.AllEquips.FirstOrDefault(x => x.Name == v.Key),
-        //                v => (int)(v.Value.SolutionValue()));
-        //}
 
 
         // 装備のスロットの計算

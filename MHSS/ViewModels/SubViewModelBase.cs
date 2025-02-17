@@ -17,8 +17,9 @@ namespace MHSS.ViewModels
 
         protected SkillSelectViewModel SkillSelectVM { get => MainWindowVM.SkillSelectVM.Value; }
 
-        protected SolutionViewModel SolutionVM { get => MainWindowVM.SolutionVM.Value; }
+        protected ObservableCollection<SolutionViewModel> ObservableCollectionSolutionVM { get => MainWindowVM.ObservableCollectionSolutionVM.Value; }
 
+        protected SolutionViewModel SolutionVM { get => MainWindowVM.SolutionVM.Value; }
 
         /// ReactiveProperty一括破棄用フィールド
         protected CompositeDisposable _disposables = new();
