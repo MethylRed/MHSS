@@ -20,6 +20,11 @@ namespace MHSS.Models.Utility
             return int.TryParse(input, out int result) ? result : defaultValue;
         }
 
+        public static double ParseOrDefaultDouble(string input, double defaultValue = 0.0)
+        {
+            return double.TryParse(input, out double result) ? result : defaultValue;
+        }
+
         /// <summary>
         /// CSVから読み込んだ文字列を数値に変換する
         /// エラーの場合指定値を返す

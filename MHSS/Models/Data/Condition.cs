@@ -24,25 +24,25 @@ namespace MHSS.Models.Data
         /// <summary>
         /// 最低火耐性
         /// </summary>
-        public int ResFire { get; set; }
+        public double ResFire { get; set; }
 
         /// <summary>
         /// 最低水耐性
         /// </summary>
-        public int ResWater { get; set; }
+        public double ResWater { get; set; }
 
         /// <summary>
         /// 最低雷耐性
         /// </summary>
-        public int ResThunder { get; set; }
+        public double ResThunder { get; set; }
         /// <summary>
         /// 最低氷耐性
         /// </summary>
-        public int ResIce { get; set; }
+        public double ResIce { get; set; }
 
         /// <summary>
         /// 最低龍耐性
         /// </summary>
-        public int ResDragon { get; set; }
+        public double ResDragon { get; set; }
     }
 }

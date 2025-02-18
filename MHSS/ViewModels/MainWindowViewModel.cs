@@ -15,16 +15,30 @@ using MHSS.Models.Utility;
 using MHSS.ViewModels.SubView;
 using MHSS.Views.Controls;
 using MHSS.ViewModels.Controls;
+using Reactive.Bindings.Disposables;
 using Reactive.Bindings.Extensions;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
+//using System.Reactive.Disposables;
 
 namespace MHSS.ViewModels
 {
-    internal class MainWindowViewModel : BindableBase
+    internal class MainWindowViewModel : BindableBase, IDisposable
     {
         /// <summary>
         /// 検索コマンド
         /// </summary>
-        public DelegateCommand SearchCommand { get; private set; }
+        public AsyncReactiveCommand SearchCommand { get; }
+
+        /// <summary>
+        /// 表示用検索結果数
+        /// </summary>
+        public ReactivePropertySlim<string> ShowCount { get; set; } = new("0");
+
+        /// <summary>
+        /// ビジー状態
+        /// </summary>
+        public ReactivePropertySlim<bool> IsBusy { get; } = new(false);
 
         /// <summary>
         /// 検索条件・実行のインスタンス
@@ -35,6 +49,36 @@ namespace MHSS.ViewModels
         /// 検索回数
         /// </summary>
         public ReactivePropertySlim<string> SearchCount { get; set; } = new();
+        
+        /// <summary>
+        /// 検索回数
+        /// </summary>
+        public ReactivePropertySlim<string> Def { get; set; } = new();
+
+        /// <summary>
+        /// 検索回数
+        /// </summary>
+        public ReactivePropertySlim<string> ResFire { get; set; } = new();
+
+        /// <summary>
+        /// 検索回数
+        /// </summary>
+        public ReactivePropertySlim<string> ResWater { get; set; } = new();
+
+        /// <summary>
+        /// 検索回数
+        /// </summary>
+        public ReactivePropertySlim<string> ResThunder { get; set; } = new();
+
+        /// <summary>
+        /// 検索回数
+        /// </summary>
+        public ReactivePropertySlim<string> ResIce { get; set; } = new();
+
+        /// <summary>
+        /// 検索回数
+        /// </summary>
+        public ReactivePropertySlim<string> ResDragon { get; set; } = new();
 
         /// <summary>
         /// 各VMで参照を共有するためのインスタンス
@@ -60,6 +104,8 @@ namespace MHSS.ViewModels
         {
             Instance = this;
 
+            //IsFree = IsBusy.Select(x => !x).ToReadOnlyReactivePropertySlim();
+
             // データの読み込み
             CSVLoader.LoadCsvSkill();
             CSVLoader.LoadCsvEquip();
@@ -71,35 +117,108 @@ namespace MHSS.ViewModels
             //CSVLoader.LoadCsvCharm();
             //CSVLoader.LoadCsvDeco();
 
-            // ボタンクリックイベントの定義
-            SearchCommand = new DelegateCommand(Search);
+            // 検索ボタンクリックイベントの定義
+            SearchCommand = IsBusy.Select(x => !x).ToAsyncReactiveCommand();
+            SearchCommand.Subscribe(async () =>
+            {
+                IsBusy.Value = true;
+                await Search();
+                IsBusy.Value = false;
+            }).AddTo(Disposable);
 
             // ViewModelのインスタンスを生成
             SkillSelectVM.Value = new();
 
             SearchCount.Value = Config.Instance.MaxSearchCount.ToString();
+            Def.Value = "0";
+            ResFire.Value = "";
+            ResWater.Value = "";
+            ResThunder.Value = "";
+            ResIce.Value = "";
+            ResDragon.Value = "";
+
         }
 
         /// <summary>
         /// 検索を実行
         /// </summary>
-        private void Search()
+        /// <returns></returns>
+        private async Task Search()
         {
             // スキルの検索条件を取得
             Condition condition = SkillSelectVM.Value.MakeSkillCondition();
+            condition.Def = Utility.ParseOrDefault(Def.Value);
+            condition.ResFire = Utility.ParseOrDefaultDouble(ResFire.Value, double.NegativeInfinity);
+            condition.ResWater = Utility.ParseOrDefaultDouble(ResWater.Value, double.NegativeInfinity);
+            condition.ResThunder = Utility.ParseOrDefaultDouble(ResThunder.Value, double.NegativeInfinity);
+            condition.ResIce = Utility.ParseOrDefaultDouble(ResIce.Value, double.NegativeInfinity);
+            condition.ResDragon = Utility.ParseOrDefaultDouble(ResDragon.Value, double.NegativeInfinity);
 
             // ソルバーを宣言
             Solve = new(condition);
 
             // 求解し表示
-            var s = Solve.Search(Utility.ParseOrDefault(SearchCount.Value, Config.Instance.MaxSearchCount));
             SolutionVMs.Clear();
-            foreach (var item in s)
-            {
-                SolutionVMs.Add(new SolutionViewModel(item));
-            }
+            int count = 0;
+            ShowCount.Value = "0";
 
+            while (count < int.Min(Utility.ParseOrDefault(SearchCount.Value, Config.Instance.MaxSearchCount), Config.Instance.MaxSearchCount))
+            {
+                SearchedEquips searchedEquips = await Task.Run(() => Solve.SearchSingle(count));
+
+                if (searchedEquips == null)
+                {
+                    break;
+                }
+                else
+                {
+                    SolutionVMs.Add(new SolutionViewModel(searchedEquips));
+                    count++;
+                    ShowCount.Value = count.ToString();
+                }
+            }
             Debug.WriteLine("\n Check is finished.");
+        }
+
+
+        protected CompositeDisposable Disposable { get; } = new CompositeDisposable();
+
+        /// <summary>
+        /// disposeフラグ
+        /// </summary>
+        private bool _disposed = false;
+
+        /// <summary>
+        /// Dispose
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Dispose
+        /// </summary>
+        /// <param name="disposing">disposeフラグ</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    Disposable.Dispose();
+                }
+                _disposed = true;
+            }
+        }
+
+        /// <summary>
+        /// ファイナライザ
+        /// </summary>
+        ~MainWindowViewModel()
+        {
+            Dispose(false);
         }
     }
 }

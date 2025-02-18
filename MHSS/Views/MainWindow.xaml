@@ -38,10 +38,10 @@
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
-                <RowDefinition Height="50" />
+                <RowDefinition Height="100" />
             </Grid.RowDefinitions>
         
-            <Border Grid.Column="0" Margin="5" BorderBrush="Black" BorderThickness="1" CornerRadius="3">
+            <Border Grid.Row="0" Margin="5" BorderBrush="Black" BorderThickness="1" CornerRadius="3">
                 <TabControl Grid.Column="0" Margin="5">
                     <TabItem Header="スキル選択">
                         <Grid>
@@ -53,16 +53,12 @@
                 </TabControl>
             </Border>
 
-            
-
-            <Border Grid.Column="0" Grid.Row="1" Margin="5,0,5,5" BorderThickness="1" BorderBrush="Black" CornerRadius="3">
+            <Border Grid.Row="1" Margin="5,0,5,5" BorderThickness="1" BorderBrush="Black" CornerRadius="3">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="100"/>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="90"/>
-                        <ColumnDefinition Width="150"/>
-                        <ColumnDefinition Width="110"/>
+                        <ColumnDefinition Width="200"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="検索回数" Grid.Column="0" Margin="5,0,0,0" FontSize="12"
                                VerticalAlignment="Center"/>
@@ -70,78 +66,164 @@
                              Height="20" Width="30"
                              VerticalAlignment="Center" HorizontalAlignment="Left"
                              VerticalContentAlignment="Center"/>
-                    <Button Grid.Column="2"
-                        Margin="0,0,0,0"
-                        x:Name="SolveButton"
-                        Command="{Binding SearchCommand}"
-                        Height="30" Width="80"
-                        Content="🔍検索"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        FontSize="16"
-                        FontWeight="Bold"/>
-                    <Button Grid.Column="3"
-                        Margin="0"
-                        x:Name="SearchAddSkillButton"
-                        Command="{Binding SearchCommand}"
-                        Height="30" Width="140"
-                        Content="🔍追加スキル検索"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        FontSize="16"
-                        FontWeight="Bold"/>
-                    <Button Grid.Column="4"
-                        Margin="0,0,0,0"
-                        x:Name="ResetButton"
-                        Command="{Binding SearchCommand}"
-                        Height="30" Width="100"
-                        Content="リセット"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        FontSize="16"
-                        FontWeight="Bold"/>
+
+                    <Grid Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="防御力" Grid.Column="0" Grid.Row="0"
+                                   Margin="10,0,0,0" FontSize="12"
+                                   VerticalAlignment="Center"/>
+                        <TextBox Text="{Binding Def.Value}" FontSize="12" Grid.Column="0" Grid.Row="0"
+                                 Margin="60,0,0,0"
+                                 Height="20" Width="30"
+                                 VerticalAlignment="Center" HorizontalAlignment="Left"
+                                 VerticalContentAlignment="Center"/>
+
+                        <TextBlock Text="火耐性" Grid.Column="1" Grid.Row="0"
+                                   Margin="10,0,0,0" FontSize="12"
+                                   VerticalAlignment="Center"/>
+                        <TextBox Text="{Binding ResFire.Value}" FontSize="12" Grid.Column="1" Grid.Row="0"
+                                 Margin="60,0,0,0"
+                                 Height="20" Width="30"
+                                 VerticalAlignment="Center" HorizontalAlignment="Left"
+                                 VerticalContentAlignment="Center"/>
+
+                        <TextBlock Text="水耐性" Grid.Column="2" Grid.Row="0"
+                                   Margin="10,0,0,0" FontSize="12"
+                                   VerticalAlignment="Center"/>
+                        <TextBox Text="{Binding ResWater.Value}" FontSize="12" Grid.Column="2" Grid.Row="0"
+                                 Margin="60,0,0,0"
+                                 Height="20" Width="30"
+                                 VerticalAlignment="Center" HorizontalAlignment="Left"
+                                 VerticalContentAlignment="Center"/>
+
+                        <TextBlock Text="雷耐性" Grid.Column="0" Grid.Row="1"
+                                   Margin="10,0,0,0" FontSize="12"
+                                   VerticalAlignment="Center"/>
+                        <TextBox Text="{Binding ResThunder.Value}" FontSize="12" Grid.Column="0" Grid.Row="1"
+                                 Margin="60,0,0,0"
+                                 Height="20" Width="30"
+                                 VerticalAlignment="Center" HorizontalAlignment="Left"
+                                 VerticalContentAlignment="Center"/>
+
+                        <TextBlock Text="氷耐性" Grid.Column="1" Grid.Row="1"
+                                   Margin="10,0,0,0" FontSize="12"
+                                   VerticalAlignment="Center"/>
+                        <TextBox Text="{Binding ResIce.Value}" FontSize="12" Grid.Column="1" Grid.Row="1"
+                                 Margin="60,0,0,0"
+                                 Height="20" Width="30"
+                                 VerticalAlignment="Center" HorizontalAlignment="Left"
+                                 VerticalContentAlignment="Center"/>
+
+                        <TextBlock Text="龍耐性" Grid.Column="2" Grid.Row="1"
+                                   Margin="10,0,0,0" FontSize="12"
+                                   VerticalAlignment="Center"/>
+                        <TextBox Text="{Binding ResDragon.Value}" FontSize="12" Grid.Column="2" Grid.Row="1"
+                                 Margin="60,0,0,0"
+                                 Height="20" Width="30"
+                                 VerticalAlignment="Center" HorizontalAlignment="Left"
+                                 VerticalContentAlignment="Center"/>
+                    </Grid>
+                    
+                    <Grid Grid.Column="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Button Grid.Row="0"
+                            Margin="15,0,0,0"
+                            x:Name="SolveButton"
+                            Command="{Binding SearchCommand}"
+                            Height="30" Width="80"
+                            Content="🔍検索"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            FontSize="16"
+                            FontWeight="Bold"/>
+                        <Button Grid.Row="1"
+                            Margin="0"
+                            x:Name="SearchAddSkillButton"
+                            Command="{Binding SearchCommand}"
+                            Height="30" Width="160"
+                            Content="🔍追加スキル検索"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontSize="16"
+                            FontWeight="Bold"/>
+                        <Button Grid.Row="0"
+                            Margin="0,0,15,0"
+                            x:Name="ResetButton"
+                            Command="{Binding SearchCommand}"
+                            Height="30" Width="80"
+                            Content="リセット"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            FontSize="16"
+                            FontWeight="Bold"/>
+                    </Grid>
                 </Grid>
             </Border>
         </Grid>
 
         <Border Grid.Column="1" CornerRadius="3" Margin="5" BorderBrush="Black" BorderThickness="1">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <Grid Grid.Row="0" Margin="35,5,25,0" Background="White">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Text="武器" FontSize="16"/>
-                    <TextBlock Grid.Column="1" Text="頭" FontSize="16"/>
-                    <TextBlock Grid.Column="2" Text="胴" FontSize="16"/>
-                    <TextBlock Grid.Column="3" Text="腕" FontSize="16"/>
-                    <TextBlock Grid.Column="4" Text="腰" FontSize="16"/>
-                    <TextBlock Grid.Column="5" Text="脚" FontSize="16"/>
-                    <TextBlock Grid.Column="6" Text="護石" FontSize="16"/>
-                </Grid>
-            <ScrollViewer Grid.Row="1" VerticalAlignment="Stretch" Margin="5,0,5,5">
-                <StackPanel Margin="0">
-                    <ItemsControl ItemsSource="{Binding SolutionVMs, Mode=OneWay}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <subviews:Solution HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                    <!--<subviews:Solution DataContext="{Binding SolutionVMs.Value[0], Mode=OneWay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>-->
-                    <!--<subviews:Solution DataContext="{Binding SolutionVMs.Value[1], Mode=OneWay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>-->
-                </StackPanel>
-            </ScrollViewer>
-            </Grid>
+            <TabControl Margin="5">
+                <TabItem Header="検索結果">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="25"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="30"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0" Margin="35,5,25,0" Background="White">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="武器" FontSize="16"/>
+                            <TextBlock Grid.Column="1" Text="頭" FontSize="16"/>
+                            <TextBlock Grid.Column="2" Text="胴" FontSize="16"/>
+                            <TextBlock Grid.Column="3" Text="腕" FontSize="16"/>
+                            <TextBlock Grid.Column="4" Text="腰" FontSize="16"/>
+                            <TextBlock Grid.Column="5" Text="脚" FontSize="16"/>
+                            <TextBlock Grid.Column="6" Text="護石" FontSize="16"/>
+                        </Grid>
+                        <Border Grid.Row="1" VerticalAlignment="Stretch" Margin="5,0,5,5" BorderBrush="Gainsboro" BorderThickness="2">
+                            <ScrollViewer Grid.Row="1" VerticalAlignment="Stretch">
+                                <StackPanel Margin="0">
+                                    <ItemsControl ItemsSource="{Binding SolutionVMs, Mode=OneWay}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <subviews:Solution HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </ScrollViewer>
+                        </Border>
+                        <TextBlock Text="{Binding ShowCount.Value, StringFormat={}{0}件の検索結果}" Grid.Row="2"
+                                   Margin="0,0,5,0"
+                                   HorizontalAlignment="Right" Width="Auto"
+                                   VerticalAlignment="Center" FontSize="16"/>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="追加スキル検索結果">
+                    
+                </TabItem>
+            </TabControl>
+            
         </Border>
         <ContentControl prism:RegionManager.RegionName="ContentRegion" />
     </Grid>

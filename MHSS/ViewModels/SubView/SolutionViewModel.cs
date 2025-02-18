@@ -44,13 +44,13 @@ namespace MHSS.ViewModels.SubView
             Leg.Value = searchedEquips.Leg.Name;
             Charm.Value = searchedEquips.Charm.Name;
 
-            disp.Value += searchedEquips.Weapon.Name + "\n";
-            disp.Value += searchedEquips.Head.Name + "\n";
-            disp.Value += searchedEquips.Body.Name + "\n";
-            disp.Value += searchedEquips.Arm.Name + "\n";
-            disp.Value += searchedEquips.Waist.Name + "\n";
-            disp.Value += searchedEquips.Leg.Name + "\n";
-            disp.Value += searchedEquips.Charm.Name + "\n";
+            //disp.Value += searchedEquips.Weapon.Name + "\n";
+            //disp.Value += searchedEquips.Head.Name + "\n";
+            //disp.Value += searchedEquips.Body.Name + "\n";
+            //disp.Value += searchedEquips.Arm.Name + "\n";
+            //disp.Value += searchedEquips.Waist.Name + "\n";
+            //disp.Value += searchedEquips.Leg.Name + "\n";
+            //disp.Value += searchedEquips.Charm.Name + "\n";
             var counts = searchedEquips.Decos.GroupBy(x => x)
                                             .Select(g => new { g.Key.Name, Count = g.Count() })
                                             .ToList();
@@ -62,6 +62,7 @@ namespace MHSS.ViewModels.SubView
             {
                 disp.Value += "\n" + skill.Name + "Lv" + skill.Level.ToString();
             }
+            disp.Value += "\n";
         }
     }
 }

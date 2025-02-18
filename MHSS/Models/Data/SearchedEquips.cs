@@ -3,11 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Google.OrTools.LinearSolver;
 
 namespace MHSS.Models.Data
 {
     public class SearchedEquips
     {
+        /// <summary>
+        /// 検索結果ステータス
+        /// </summary>
+        public Solver.ResultStatus ResultStatus { get; set; }
+
         /// <summary>
         /// 検索結果：武器
         /// </summary>
