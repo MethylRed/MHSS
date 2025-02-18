@@ -19,6 +19,10 @@ namespace MHSS.Models.Config
                 return instance;
             }
         }
+
+        /// <summary>
+        /// ConfigのCSVファイルパス
+        /// </summary>
         private const string CsvConfig = "./Models/Config/Config.csv";
 
         /// <summary>
@@ -49,8 +53,6 @@ namespace MHSS.Models.Config
         private Config()
         {
             string str = File.ReadAllText(CsvConfig, Encoding.UTF8);
-
-
             foreach (ICsvLine line in CsvReader.ReadFromText(str))
             {
                 MaxArmorSkillCount = Utility.Utility.ParseFromCsvLineOrDefault(line, "防具に付くスキルの最大個数", 5);

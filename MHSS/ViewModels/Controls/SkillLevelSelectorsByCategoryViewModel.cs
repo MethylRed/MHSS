@@ -26,8 +26,8 @@ namespace MHSS.ViewModels.Controls
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        /// <param name="categoryName"></param>
-        /// <param name="skills"></param>
+        /// <param name="categoryName">カテゴリ名</param>
+        /// <param name="skills">スキルのコレクション</param>
         public SkillLevelSelectorsByCategoryViewModel(string categoryName, IEnumerable<Skill> skills)
         {
             CategoryName = categoryName;
@@ -35,10 +35,10 @@ namespace MHSS.ViewModels.Controls
         }
 
         /// <summary>
-        /// 選択されたスキルのレベル
+        /// スキルの条件コレクションを返す
         /// </summary>
         /// <returns>選択されているスキルの配列</returns>
-        public IReadOnlyList<Skill> SelectedSkills()
+        public IReadOnlyList<Skill> SkillsCondition()
         {
             IReadOnlyList<Skill> selectedSkills = new List<Skill>();
             selectedSkills = SkillLevelSelectorVM/*.Where(s => s.IsSelected.Value)*/

@@ -1,6 +1,7 @@
 ﻿using MHSS.ViewModels.SubView;
 using Prism.Mvvm;
 using Prism.Navigation;
+using Reactive.Bindings;
 using System;
 using System.Collections.ObjectModel;
 using System.Reactive.Disposables;
@@ -17,9 +18,8 @@ namespace MHSS.ViewModels
 
         protected SkillSelectViewModel SkillSelectVM { get => MainWindowVM.SkillSelectVM.Value; }
 
-        protected ObservableCollection<SolutionViewModel> ObservableCollectionSolutionVM { get => MainWindowVM.ObservableCollectionSolutionVM.Value; }
+        //protected ReactiveCollection<SolutionViewModel> SolutionVMs { get => MainWindowVM.SolutionVMs; }
 
-        protected SolutionViewModel SolutionVM { get => MainWindowVM.SolutionVM.Value; }
 
         /// ReactiveProperty一括破棄用フィールド
         protected CompositeDisposable _disposables = new();

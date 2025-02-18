@@ -38,7 +38,6 @@ namespace MHSS.Models.Utility
             {
                 return defaultValue;
             }
-
         }
     }
 }

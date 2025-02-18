@@ -20,11 +20,10 @@ namespace MHSS.ViewModels.SubView
         /// </summary>
         public ReactivePropertySlim<ObservableCollection<SkillLevelSelectorsByCategoryViewModel>> SkillLevelSelectorsByCategoryVM { get; } = new();
 
-        //public AsyncReactiveCommand SolveCommand { get; private set; }
-        public DelegateCommand SolveCommand { get; private set; }
 
-        private Solve _Solve { get; set; }
-
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
         public SkillSelectViewModel()
         {
             // カテゴリ別にスキル条件選択のComboBoxを配置
@@ -36,53 +35,20 @@ namespace MHSS.ViewModels.SubView
                     ((IDisposable)item).Dispose();
                 }
             }
-            var s = Master.Skills.GroupBy(s => s.Category).OrderBy(g => Kind.SkillCategory.IndexOf(g.Key))
-                .Select(g => new SkillLevelSelectorsByCategoryViewModel(g.Key, g));
-
             SkillLevelSelectorsByCategoryVM.Value = new ObservableCollection<SkillLevelSelectorsByCategoryViewModel>(
-                s
+                Master.Skills.GroupBy(s => s.Category).OrderBy(g => Kind.SkillCategory.IndexOf(g.Key))
+                .Select(g => new SkillLevelSelectorsByCategoryViewModel(g.Key, g))
             );
-
-            SolveCommand = new DelegateCommand(Solve);
         }
 
         /// <summary>
-        /// 検索を実行
+        /// 検索条件を取得
         /// </summary>
-        private void Solve()
-        {
-            // スキルの検索条件を取得
-            Condition condition = MakeCondition();
-
-            _Solve = new(condition);
-
-            Solver.ResultStatus resultStatus = _Solve.Solver.Solve();
-            if (resultStatus != Solver.ResultStatus.OPTIMAL)
-            {
-                Debug.WriteLine("NOT OPTIMAL SOLUTION!");
-            }
-            else
-            {
-                Debug.WriteLine(_Solve.Solver.Objective().Value());
-
-                var a = _Solve.Variables.Where(v => v.Value.SolutionValue() > 0);
-
-                foreach (var item in a)
-                {
-                    Debug.WriteLine(item.Key + " *" + item.Value.SolutionValue().ToString());
-                }
-                //Debug.WriteLine(string.Join("\n",_Solve.Variables.Where(v => v.Value.SolutionValue() > 0).Select(k => k.Key)));
-            }
-
-            Debug.WriteLine("\n Check is finished.");
-        }
-
-        public Condition MakeCondition()
+        /// <returns></returns>
+        public Condition MakeSkillCondition()
         {
             Condition condition = new();
-
-            condition.Skills = SkillLevelSelectorsByCategoryVM.Value.SelectMany(v => v.SelectedSkills()).ToList();
-
+            condition.Skills = SkillLevelSelectorsByCategoryVM.Value.SelectMany(v => v.SkillsCondition()).ToList();
             return condition;
         }
     }

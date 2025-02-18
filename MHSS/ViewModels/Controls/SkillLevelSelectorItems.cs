@@ -18,7 +18,12 @@ namespace MHSS.ViewModels.Controls
         /// </summary>
         public int SkillLevel { get; set; }
 
-
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="displayStr">表示用文字列</param>
+        /// <param name="skillLevel">スキルレベル</param>
+        /// <param name="isFixed">スキルレベル固定の有無</param>
         public SkillLevelSelectorItems(string displayStr, int skillLevel)
         {
             DisplayStr = displayStr;

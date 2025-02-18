@@ -12,7 +12,7 @@
             <ColumnDefinition Width="15"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <CheckBox Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <CheckBox Grid.Column="0" IsChecked="{Binding IsFixed.Value, Mode=TwoWay}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
 
         <Border Grid.Column="1" CornerRadius="3" Margin="0,0,10,0">
             <Border.Style>

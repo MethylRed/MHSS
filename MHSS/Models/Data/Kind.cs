@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace MHSS.Models.Data
 {
+    /// <summary>
+    /// 装備の種類
+    /// </summary>
     public enum EquipKind
     {
         Weapon,
@@ -19,6 +22,9 @@ namespace MHSS.Models.Data
         Deco
     }
 
+    /// <summary>
+    /// 武器の種類
+    /// </summary>
     public enum WeaponKind
     {
         GreatSword,
@@ -37,6 +43,9 @@ namespace MHSS.Models.Data
         Bow
     }
 
+    /// <summary>
+    /// 属性の種類
+    /// </summary>
     public enum Element
     {
         None,
@@ -52,18 +61,20 @@ namespace MHSS.Models.Data
     }
 
 
-
     public static class Kind
     {
+        /// <summary>
+        /// スキルのカテゴリ
+        /// </summary>
         public static List<string> SkillCategory = new()
         {
             "クエスト", "アイテム", "戦闘(生存)", "特殊攻撃耐性", "パラメータ変化",
             "戦闘(属性・異常)", "戦闘(攻撃)", "グループスキル", "シリーズスキル"
         };
 
-        public const string a = "クエスト";
-
-
+        /// <summary>
+        /// 属性種類の辞書
+        /// </summary>
         public static Dictionary<string, int> ElementType = new()
         {
             {"無", 0},
@@ -78,6 +89,11 @@ namespace MHSS.Models.Data
             {"麻痺", 9}
         };
 
+        /// <summary>
+        /// 装備の種類：文字列(日本語)に変換
+        /// </summary>
+        /// <param name="kind"></param>
+        /// <returns></returns>
         public static string EquipKindsToJpString(this EquipKind kind)
         {
             return kind switch
@@ -94,6 +110,11 @@ namespace MHSS.Models.Data
             };
         }
 
+        /// <summary>
+        /// 装備の種類：文字列(英語)に変換
+        /// </summary>
+        /// <param name="kind"></param>
+        /// <returns></returns>
         public static string EquipKindsToEnString(this EquipKind kind)
         {
             return kind switch
@@ -110,7 +131,11 @@ namespace MHSS.Models.Data
             };
         }
 
-
+        /// <summary>
+        /// 武器の種類：文字列に変換
+        /// </summary>
+        /// <param name="kind"></param>
+        /// <returns></returns>
         public static string WeaponKindsToString(this WeaponKind kind)
         {
             return kind switch

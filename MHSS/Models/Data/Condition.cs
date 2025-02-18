@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace MHSS.Models.Data
 {
+    /// <summary>
+    /// 検索条件のクラス
+    /// </summary>
     public class Condition
     {
         /// <summary>

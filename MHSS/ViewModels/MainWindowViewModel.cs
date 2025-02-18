@@ -9,6 +9,7 @@ using Google.OrTools.LinearSolver;
 using System.Linq;
 using Reactive.Bindings;
 using System.Collections.ObjectModel;
+using MHSS.Models.Config;
 using MHSS.Models.Data;
 using MHSS.Models.Utility;
 using MHSS.ViewModels.SubView;
@@ -20,11 +21,23 @@ namespace MHSS.ViewModels
 {
     internal class MainWindowViewModel : BindableBase
     {
+        /// <summary>
+        /// 検索コマンド
+        /// </summary>
         public DelegateCommand SearchCommand { get; private set; }
+
+        /// <summary>
+        /// 検索条件・実行のインスタンス
+        /// </summary>
         private Solve Solve { get; set; }
 
         /// <summary>
-        /// VMで参照を共有するためのインスタンス
+        /// 検索回数
+        /// </summary>
+        public ReactivePropertySlim<string> SearchCount { get; set; } = new();
+
+        /// <summary>
+        /// 各VMで参照を共有するためのインスタンス
         /// </summary>
         internal static MainWindowViewModel Instance { get; set; }
 
@@ -35,14 +48,14 @@ namespace MHSS.ViewModels
         public ReactivePropertySlim<SkillSelectViewModel> SkillSelectVM { get; } = new();
 
         /// <summary>
-        /// カテゴリ別スキル選択アイテムのViewModel
+        /// 結果表示のViewModel
         /// </summary>
-        public ReactivePropertySlim<ObservableCollection<SolutionViewModel>> ObservableCollectionSolutionVM { get; set; } = new();
-
-        public ReactivePropertySlim<SolutionViewModel> SolutionVM { get; } = new();
+        public ReactiveCollection<SolutionViewModel> SolutionVMs { get; } = new();
 
 
-
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
         public MainWindowViewModel()
         {
             Instance = this;
@@ -62,10 +75,9 @@ namespace MHSS.ViewModels
             SearchCommand = new DelegateCommand(Search);
 
             // ViewModelのインスタンスを生成
-            ObservableCollectionSolutionVM.Value = new();
             SkillSelectVM.Value = new();
-            SolutionVM.Value = new(new());
 
+            SearchCount.Value = Config.Instance.MaxSearchCount.ToString();
         }
 
         /// <summary>
@@ -74,34 +86,18 @@ namespace MHSS.ViewModels
         private void Search()
         {
             // スキルの検索条件を取得
-            Condition condition = SkillSelectVM.Value.MakeCondition();
+            Condition condition = SkillSelectVM.Value.MakeSkillCondition();
 
             // ソルバーを宣言
             Solve = new(condition);
 
             // 求解し表示
-            //SolutionVM.Value.ShowResult(Solve.Search(1)[0]);
-
-            ObservableCollectionSolutionVM.Value.Add(new(Solve.Search(1)[0]));
-
-            
-            //var s = Solve.Search(2);
-            //foreach (var item in s)
-            //{
-            //    ObservableCollectionSolutionVM.Value.Add(new SolutionViewModel(item));
-            //}
-
-
-
-
-            //int count = 2;
-            //for (int i = 0; i < count ; i++)
-            //{
-            //    SolutionVM.Value.ShowResult(Solve.Search(count)[i]);
-            //    ObservableCollectionSolutionVM.Value.Add()
-
-            //}
-
+            var s = Solve.Search(Utility.ParseOrDefault(SearchCount.Value, Config.Instance.MaxSearchCount));
+            SolutionVMs.Clear();
+            foreach (var item in s)
+            {
+                SolutionVMs.Add(new SolutionViewModel(item));
+            }
 
             Debug.WriteLine("\n Check is finished.");
         }

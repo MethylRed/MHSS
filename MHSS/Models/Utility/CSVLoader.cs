@@ -88,6 +88,7 @@ namespace MHSS.Models.Utility
         /// </summary>
         public static void LoadCsvEquip()
         {
+            LoadCsvWeapon();
             LoadCsvHead();
             LoadCsvBody();
             LoadCsvArm();
@@ -95,7 +96,6 @@ namespace MHSS.Models.Utility
             LoadCsvLeg();
             LoadCsvCharm();
             LoadCsvDeco();
-            LoadCsvWeapon();
 
             Master.AllEquips = Master.Heads
                             .Union(Master.Bodies).Union(Master.Arms).Union(Master.Waists)
@@ -242,51 +242,53 @@ namespace MHSS.Models.Utility
         /// </summary>
         public static void LoadCsvWeapon()
         {
-            Master.Weapons = new();
-            for(int i = 0; i < CsvWeapons.Length; i++)
-            {
-                List<Weapon> weapon = new();
-                string str = File.ReadAllText(CsvWeapons[i]);
-                foreach (ICsvLine line in CsvReader.ReadFromText(str))
+                Master.Weapons = new();
+                for (int i = 0; i < CsvWeapons.Length; i++)
                 {
-                    Weapon w = new()
+                    List<Weapon> weapon = new();
+                    string str = File.ReadAllText(CsvWeapons[i]);
+                    foreach (ICsvLine line in CsvReader.ReadFromText(str))
                     {
-                        EquipKind = EquipKind.Weapon,
-                        WeaponKind = (WeaponKind)i,
-                        Name = line[@"名前"],
-                        Attack = Utility.ParseOrDefault(line[@"攻撃力"]),
-                        Affinity = Utility.ParseOrDefault(line[@"会心率"]),
-                        ElementType = (Element)Kind.ElementType[line[@"属性"]],
-                        ElementValue = Utility.ParseOrDefault(line[@"属性値"]),
-                        SlotType = 0,
-                        Slot1 = Utility.ParseOrDefault(line[@"スロット1"]),
-                        Slot2 = Utility.ParseOrDefault(line[@"スロット2"]),
-                        Slot3 = Utility.ParseOrDefault(line[@"スロット3"]),
-                        Def = Utility.ParseOrDefault(line[@"防御力ボーナス"]),
-                        ResFire = 0,
-                        ResWater = 0,
-                        ResThunder = 0,
-                        ResIce = 0,
-                        ResDragon = 0
-                    };
-                    List<Skill> skill = new();
-                    for (int j = 1; j <= Config.Config.Instance.MaxWeaponSkillCount; j++)
-                    {
-                        string skillName = line[@"スキル系統" + i];
-                        if (string.IsNullOrWhiteSpace(skillName)) break;
-                        int skillLevel = Utility.ParseOrDefault(line[@"スキル値" + i]);
-                        skill.Add(new Skill
+                        Weapon w = new()
                         {
-                            Name = skillName,
-                            Level = skillLevel
-                        });
-                    }
-                    w.Skills = skill;
+                            EquipKind = EquipKind.Weapon,
+                            WeaponKind = (WeaponKind)i,
+                            Name = line[@"名前"],
+                            Attack = Utility.ParseOrDefault(line[@"攻撃力"]),
+                            Affinity = Utility.ParseOrDefault(line[@"会心率"]),
+                            ElementType1 = (Element)Kind.ElementType.GetValueOrDefault(line[@"属性1"],0),
+                            ElementValue1 = Utility.ParseOrDefault(line[@"属性値1"]),
+                            ElementType2 = (Element)Kind.ElementType.GetValueOrDefault(line[@"属性2"],0),
+                            ElementValue2 = Utility.ParseOrDefault(line[@"属性値2"]),
+                            SlotType = 0,
+                            Slot1 = Utility.ParseOrDefault(line[@"スロット1"]),
+                            Slot2 = Utility.ParseOrDefault(line[@"スロット2"]),
+                            Slot3 = Utility.ParseOrDefault(line[@"スロット3"]),
+                            Def = Utility.ParseOrDefault(line[@"防御力ボーナス"]),
+                            ResFire = 0,
+                            ResWater = 0,
+                            ResThunder = 0,
+                            ResIce = 0,
+                            ResDragon = 0
+                        };
+                        List<Skill> skill = new();
+                        for (int j = 1; j <= Config.Config.Instance.MaxWeaponSkillCount; j++)
+                        {
+                            string skillName = line[@"スキル系統" + j];
+                            if (string.IsNullOrWhiteSpace(skillName)) break;
+                            int skillLevel = Utility.ParseOrDefault(line[@"スキル値" + i]);
+                            skill.Add(new Skill
+                            {
+                                Name = skillName,
+                                Level = skillLevel
+                            });
+                        }
+                        w.Skills = skill;
 
-                    weapon.Add(w);
+                        weapon.Add(w);
+                    }
+                    Master.Weapons.Add(weapon);
                 }
-                Master.Weapons.Add(weapon);
-            }
         }
 
         /// <summary>

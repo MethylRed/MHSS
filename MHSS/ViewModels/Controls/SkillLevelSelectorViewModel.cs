@@ -24,7 +24,12 @@ namespace MHSS.ViewModels.Controls
         public ReactivePropertySlim<SkillLevelSelectorItems> SelectedItem { get; } = new();
 
         /// <summary>
-        /// 初期値以外が選択されているか
+        /// スキルレベル固定有無
+        /// </summary>
+        public ReactivePropertySlim<bool> IsFixed { get; } = new(false);
+
+        /// <summary>
+        /// 初期値以外の選択有無
         /// </summary>
         public ReactivePropertySlim<bool> IsSelected { get; } = new(false);
 
@@ -38,15 +43,21 @@ namespace MHSS.ViewModels.Controls
         /// </summary>
         public string SkillName { get; set; }
 
-
+        /// <summary>
+        /// 選択されたスキル
+        /// </summary>
         internal Skill SelectedSkill
         {
             get
             {
-                return new Skill() { Name = SkillName, Level = SelectedItem.Value.SkillLevel };
+                return new Skill() { Name = SkillName, Level = SelectedItem.Value.SkillLevel , IsFixed = IsFixed.Value};
             }
         }
 
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="skillName">スキル名</param>
         public SkillLevelSelectorViewModel(string skillName)
         {
             SkillName = skillName;
@@ -55,22 +66,37 @@ namespace MHSS.ViewModels.Controls
             Skill s = Master.Skills.Where(x => x.Name == SkillName).First();
             ObservableCollection<SkillLevelSelectorItems> items = new()
             {
+                // Lv0はわざわざLv0と書かない
                 new SkillLevelSelectorItems(" " + s.Name, 0)
             };
             for (int i = 1; i <= s.MaxLevel2; i++)
             {
+                // スキル名+Lvを表示
                 string displayName = s.Name + " Lv" + i.ToString();
                 items.Add(new SkillLevelSelectorItems(displayName, i));
             }
             Items.Value = items;
 
+
             // 選択されたスキルの情報の初期値
             SelectedItem.Value = Items.Value.First();
 
-            SelectedItem.Subscribe(isSelected => { IsSelected.Value = SelectedItem.Value.SkillLevel != 0; });
+            // スキルレベルか固定有無が変更されたら
+            // IsSelected = True ：スキルレベルが0以外 or レベル固定
+            // IsSelected = False：スキルレベルが0 and レベル非固定
+            SelectedItem.Subscribe(isSelected =>
+            {
+                IsSelected.Value = (SelectedItem.Value.SkillLevel != 0) || IsFixed.Value;
+            });
+            IsFixed.Subscribe(isFixed =>
+            {
+                IsSelected.Value = (SelectedItem.Value.SkillLevel != 0) || IsFixed.Value;
+            });
+
+            // スキルレベルが0以外 or レベル固定のとき、ComboBoxの色を変更する
             IsSelected.Subscribe(b =>
             {
-                if (b) // 初期値以外が選択されたとき
+                if (b)
                 {
                     BackgroundColor.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E0EFFF"));
                 }
