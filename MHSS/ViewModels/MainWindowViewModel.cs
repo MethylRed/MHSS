@@ -31,6 +31,11 @@ namespace MHSS.ViewModels
         public AsyncReactiveCommand SearchCommand { get; }
 
         /// <summary>
+        /// 追加スキル検索コマンド
+        /// </summary>
+        public AsyncReactiveCommand SearchExtraSkillsCommand { get; }
+
+        /// <summary>
         /// 表示用検索結果数
         /// </summary>
         public ReactivePropertySlim<string> ShowCount { get; set; } = new("0");
@@ -126,6 +131,14 @@ namespace MHSS.ViewModels
                 IsBusy.Value = false;
             }).AddTo(Disposable);
 
+            SearchExtraSkillsCommand = IsBusy.Select(x => !x).ToAsyncReactiveCommand();
+            SearchExtraSkillsCommand.Subscribe(async () =>
+            {
+                IsBusy.Value = true;
+                await SearchExtraSkills();
+                IsBusy.Value = false;
+            }).AddTo(Disposable);
+
             // ViewModelのインスタンスを生成
             SkillSelectVM.Value = new();
 
@@ -136,7 +149,6 @@ namespace MHSS.ViewModels
             ResThunder.Value = "";
             ResIce.Value = "";
             ResDragon.Value = "";
-
         }
 
         /// <summary>
@@ -177,7 +189,46 @@ namespace MHSS.ViewModels
                     ShowCount.Value = count.ToString();
                 }
             }
-            Debug.WriteLine("\n Check is finished.");
+            Debug.WriteLine("Check is finished.");
+        }
+
+
+        /// <summary>
+        /// 追加スキル検索
+        /// </summary>
+        /// <returns></returns>
+        private async Task SearchExtraSkills()
+        {
+            Condition masterCondition = SkillSelectVM.Value.MakeSkillCondition();
+
+            int count = 0;
+
+            List<Skill> skills = new();
+
+            // すべてのスキルについて
+            foreach (var skill in Master.Skills)
+            {
+                int l = masterCondition.Skills.Single(s => s.Name == skill.Name).Level;
+                for (int level = 1; level <= skill.MaxLevel2-l; level++)
+                {
+                    // スキルの検索条件を取得
+                    Condition condition = SkillSelectVM.Value.MakeSkillCondition();
+                    condition.Def = Utility.ParseOrDefault(Def.Value);
+                    condition.ResFire = Utility.ParseOrDefaultDouble(ResFire.Value, double.NegativeInfinity);
+                    condition.ResWater = Utility.ParseOrDefaultDouble(ResWater.Value, double.NegativeInfinity);
+                    condition.ResThunder = Utility.ParseOrDefaultDouble(ResThunder.Value, double.NegativeInfinity);
+                    condition.ResIce = Utility.ParseOrDefaultDouble(ResIce.Value, double.NegativeInfinity);
+                    condition.ResDragon = Utility.ParseOrDefaultDouble(ResDragon.Value, double.NegativeInfinity);
+                    condition.Skills.Single(s => s.Name == skill.Name).Level = level;
+
+                    // ソルバーを宣言
+                    Solve = new(condition);
+
+                    Solver.ResultStatus status = await Task.Run(() => Solve.Solver.Solve());
+                    if (status != Solver.ResultStatus.OPTIMAL) break;
+                    skills.Add(new Skill() { Name = skill.Name, Level = condition.Skills.Single(s => s.Name == skill.Name).Level });
+                }
+            }
         }
 
 

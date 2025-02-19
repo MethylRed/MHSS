@@ -54,11 +54,12 @@
             </Border>
 
             <Border Grid.Row="1" Margin="5,0,5,5" BorderThickness="1" BorderBrush="Black" CornerRadius="3">
+                
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="100"/>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition Width="180"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="検索回数" Grid.Column="0" Margin="5,0,0,0" FontSize="12"
                                VerticalAlignment="Center"/>
@@ -67,7 +68,13 @@
                              VerticalAlignment="Center" HorizontalAlignment="Left"
                              VerticalContentAlignment="Center"/>
 
-                    <Grid Grid.Column="1">
+                    <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                        <ScrollViewer.Resources>
+                            <Style TargetType="ScrollBar">
+                                <Setter Property="Height" Value="10"/>
+                            </Style>
+                        </ScrollViewer.Resources>
+                        <Grid Grid.Column="1">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
@@ -82,7 +89,7 @@
                                    Margin="10,0,0,0" FontSize="12"
                                    VerticalAlignment="Center"/>
                         <TextBox Text="{Binding Def.Value}" FontSize="12" Grid.Column="0" Grid.Row="0"
-                                 Margin="60,0,0,0"
+                                 Margin="55,0,0,0"
                                  Height="20" Width="30"
                                  VerticalAlignment="Center" HorizontalAlignment="Left"
                                  VerticalContentAlignment="Center"/>
@@ -91,7 +98,7 @@
                                    Margin="10,0,0,0" FontSize="12"
                                    VerticalAlignment="Center"/>
                         <TextBox Text="{Binding ResFire.Value}" FontSize="12" Grid.Column="1" Grid.Row="0"
-                                 Margin="60,0,0,0"
+                                 Margin="55,0,0,0"
                                  Height="20" Width="30"
                                  VerticalAlignment="Center" HorizontalAlignment="Left"
                                  VerticalContentAlignment="Center"/>
@@ -100,7 +107,7 @@
                                    Margin="10,0,0,0" FontSize="12"
                                    VerticalAlignment="Center"/>
                         <TextBox Text="{Binding ResWater.Value}" FontSize="12" Grid.Column="2" Grid.Row="0"
-                                 Margin="60,0,0,0"
+                                 Margin="55,0,0,0"
                                  Height="20" Width="30"
                                  VerticalAlignment="Center" HorizontalAlignment="Left"
                                  VerticalContentAlignment="Center"/>
@@ -109,7 +116,7 @@
                                    Margin="10,0,0,0" FontSize="12"
                                    VerticalAlignment="Center"/>
                         <TextBox Text="{Binding ResThunder.Value}" FontSize="12" Grid.Column="0" Grid.Row="1"
-                                 Margin="60,0,0,0"
+                                 Margin="55,0,0,0"
                                  Height="20" Width="30"
                                  VerticalAlignment="Center" HorizontalAlignment="Left"
                                  VerticalContentAlignment="Center"/>
@@ -118,7 +125,7 @@
                                    Margin="10,0,0,0" FontSize="12"
                                    VerticalAlignment="Center"/>
                         <TextBox Text="{Binding ResIce.Value}" FontSize="12" Grid.Column="1" Grid.Row="1"
-                                 Margin="60,0,0,0"
+                                 Margin="55,0,0,0"
                                  Height="20" Width="30"
                                  VerticalAlignment="Center" HorizontalAlignment="Left"
                                  VerticalContentAlignment="Center"/>
@@ -127,19 +134,20 @@
                                    Margin="10,0,0,0" FontSize="12"
                                    VerticalAlignment="Center"/>
                         <TextBox Text="{Binding ResDragon.Value}" FontSize="12" Grid.Column="2" Grid.Row="1"
-                                 Margin="60,0,0,0"
+                                 Margin="55,0,0,0"
                                  Height="20" Width="30"
                                  VerticalAlignment="Center" HorizontalAlignment="Left"
                                  VerticalContentAlignment="Center"/>
                     </Grid>
-                    
+                    </ScrollViewer>
+
                     <Grid Grid.Column="2">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <Button Grid.Row="0"
-                            Margin="15,0,0,0"
+                            Margin="5,0,0,0"
                             x:Name="SolveButton"
                             Command="{Binding SearchCommand}"
                             Height="30" Width="80"
@@ -151,15 +159,15 @@
                         <Button Grid.Row="1"
                             Margin="0"
                             x:Name="SearchAddSkillButton"
-                            Command="{Binding SearchCommand}"
-                            Height="30" Width="160"
+                            Command="{Binding SearchExtraSkillsCommand}"
+                            Height="30" Width="170"
                             Content="🔍追加スキル検索"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             FontSize="16"
                             FontWeight="Bold"/>
                         <Button Grid.Row="0"
-                            Margin="0,0,15,0"
+                            Margin="0,0,5,0"
                             x:Name="ResetButton"
                             Command="{Binding SearchCommand}"
                             Height="30" Width="80"

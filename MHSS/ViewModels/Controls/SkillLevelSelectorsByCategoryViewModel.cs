@@ -41,8 +41,7 @@ namespace MHSS.ViewModels.Controls
         public IReadOnlyList<Skill> SkillsCondition()
         {
             IReadOnlyList<Skill> selectedSkills = new List<Skill>();
-            selectedSkills = SkillLevelSelectorVM/*.Where(s => s.IsSelected.Value)*/
-                .Select(s => s.SelectedSkill).ToList();
+            selectedSkills = SkillLevelSelectorVM.Select(s => s.SelectedSkill).ToList();
             return selectedSkills;
         }
     }

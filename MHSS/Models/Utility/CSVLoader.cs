@@ -308,7 +308,7 @@ namespace MHSS.Models.Utility
                     EquipKind = equipKind,
                     Name = line[@"名前"],
                     //SeriesName = "",
-                    SlotType = 0,
+                    SlotType = 1,
                     Slot1 = Utility.ParseOrDefault(line[@"スロット1"]),
                     Slot2 = Utility.ParseOrDefault(line[@"スロット2"]),
                     Slot3 = Utility.ParseOrDefault(line[@"スロット3"]),
