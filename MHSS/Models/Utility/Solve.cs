@@ -73,10 +73,10 @@ namespace MHSS.Models.Utility
             }
 
             // スロットは不足してはいけない
-            for (int i = 0; i < 4; i++)
+            for (int i = 1; i <= 4; i++)
             {
-                Constraints.Add("ArmorSlotCount" + (i + 1).ToString(), Solver.MakeConstraint(0.0, double.PositiveInfinity, "ArmorSlotCount" + (i + 1).ToString()));
-                Constraints.Add("WeaponSlotCount" + (i + 1).ToString(), Solver.MakeConstraint(0.0, double.PositiveInfinity, "WeaponSlotCount" + (i + 1).ToString()));
+                Constraints.Add("ArmorSlotCount" + i.ToString(), Solver.MakeConstraint(0.0, double.PositiveInfinity, "ArmorSlotCount" + i.ToString()));
+                Constraints.Add("WeaponSlotCount" + i.ToString(), Solver.MakeConstraint(0.0, double.PositiveInfinity, "WeaponSlotCount" + i.ToString()));
             }
 
             // 防御・耐性は指定値以上
@@ -138,71 +138,6 @@ namespace MHSS.Models.Utility
             #endregion
         }
 
-        /// <summary>
-        /// 検索の実行
-        /// </summary>
-        /// <param name="searchCount">検索回数</param>
-        /// <returns></returns>
-        public List<SearchedEquips> Search(int searchCount)
-        {
-            List<SearchedEquips> searchedEquips = new();
-
-            // 検索回数が指定値以下・解がある・検索回数が最大回数以下のとき検索を実行し続ける
-            for (int count = 0; (count < int.Min(searchCount, Config.Config.Instance.MaxSearchCount)) && (Solver.Solve() == Solver.ResultStatus.OPTIMAL); count++)
-            {
-                // 検索結果のインスタンスを生成
-                SearchedEquips searchedEquip = new();
-
-                // 検索された、装飾品以外の個数変数
-                List<Variable> searchedVariables = new();
-
-                // 個数変数の値が0超のものを列挙
-                foreach (var variable in Variables.Where(v => v.Value.SolutionValue() > 0))
-                {
-                    // 全装備から一致するものを探す
-                    var findEquip = Master.AllEquips.Where(x => x.Name == variable.Key).FirstOrDefault();
-
-                    // 無い場合はスキップ
-                    if (findEquip == null) continue;
-
-                    // 装備の種類ごとに代入
-                    switch (findEquip.EquipKind)
-                    {
-                        case EquipKind.Weapon: searchedEquip.Weapon = (Weapon)findEquip; break;
-                        case EquipKind.Head: searchedEquip.Head = findEquip; break;
-                        case EquipKind.Body: searchedEquip.Body = findEquip; break;
-                        case EquipKind.Arm: searchedEquip.Arm = findEquip; break;
-                        case EquipKind.Waist: searchedEquip.Waist = findEquip; break;
-                        case EquipKind.Leg: searchedEquip.Leg = findEquip; break;
-                        case EquipKind.Charm: searchedEquip.Charm = findEquip; break;
-
-                        // 装飾品はダブりで数を数える
-                        case EquipKind.Deco:
-                            for (int i = 0; i < variable.Value.SolutionValue(); i++)
-                            {
-                                searchedEquip.Decos.Add((Deco)findEquip);
-                            }
-                            break;
-                    }
-
-                    // 複数検索条件の係数を定義
-                    if (findEquip.EquipKind != EquipKind.Deco)
-                    {
-                        searchedVariables.Add(variable.Value);
-                    }
-                }
-
-                //// 複数検索の場合、武器・防具・護石は同じ組み合わせであってはならない
-                ExtraConstraints.Add("Extra" + count.ToString(), Solver.MakeConstraint(0.0, searchedVariables.Count - 1.0, "Extra" + count.ToString()));
-                foreach (var searchedVariable in searchedVariables)
-                {
-                    ExtraConstraints["Extra" + count.ToString()].SetCoefficient(searchedVariable, 1.0);
-                }
-
-                searchedEquips.Add(searchedEquip);
-            }
-            return searchedEquips;
-        }
 
         /// <summary>
         /// 1回検索する
@@ -224,7 +159,7 @@ namespace MHSS.Models.Utility
                 foreach (var variable in Variables.Where(v => v.Value.SolutionValue() > 0))
                 {
                     // 全装備から一致するものを探す
-                    var findEquip = Master.AllEquips.Where(x => x.Name == variable.Key).FirstOrDefault();
+                    var findEquip = Master.AllEquips.Single(x => x.Name == variable.Key);
 
                     // 無い場合はスキップ
                     if (findEquip == null) continue;

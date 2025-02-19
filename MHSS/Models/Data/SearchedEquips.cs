@@ -55,6 +55,18 @@ namespace MHSS.Models.Data
         public List<Deco> Decos { get; set; } = new();
 
 
+        public List<int> Slots => new[]
+        {
+            Weapon.Slot1, Weapon.Slot2, Weapon.Slot3,
+            Head.Slot1, Head.Slot2, Head.Slot3,
+            Body.Slot1, Body.Slot2, Body.Slot3,
+            Arm.Slot1, Arm.Slot2, Arm.Slot3,
+            Waist.Slot1, Waist.Slot2, Waist.Slot3,
+            Leg.Slot1, Leg.Slot2, Leg.Slot3,
+            Charm.Slot1, Charm.Slot2, Charm.Slot3
+        }.ToList();
+
+
         /// <summary>
         /// 検索結果：全装備
         /// </summary>
@@ -99,7 +111,12 @@ namespace MHSS.Models.Data
         public List<Skill> Skills => Equips
                                     .SelectMany(e => e.Skills)
                                     .GroupBy(s => s.Name)
-                                    .Select(g => new Skill { Name = g.Key, Level = g.Sum(s => s.Level) })
+                                    .Select(g => new Skill
+                                    {
+                                        Name = g.Key,
+                                        Level = g.Sum(s => s.Level)
+                                    })
+                                    .OrderByDescending(s => s.Level)
                                     .ToList();
     }
 }

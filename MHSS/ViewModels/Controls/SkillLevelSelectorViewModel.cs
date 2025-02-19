@@ -61,6 +61,7 @@ namespace MHSS.ViewModels.Controls
         public SkillLevelSelectorViewModel(string skillName)
         {
             SkillName = skillName;
+            string displayName = "";
 
             // ComboBoxのItemを作成
             Skill s = Master.Skills.Where(x => x.Name == SkillName).First();
@@ -69,11 +70,26 @@ namespace MHSS.ViewModels.Controls
                 // Lv0はわざわざLv0と書かない
                 new SkillLevelSelectorItems(" " + s.Name, 0)
             };
-            for (int i = 1; i <= s.MaxLevel2; i++)
+            // シリーズスキルのとき
+            // 発動スキルが書かれてないと消えちゃうので発動スキルが書かれてることも条件
+            if ((s.Category == "シリーズスキル") && (s.ActivateSkillName1 != string.Empty))
             {
-                // スキル名+Lvを表示
-                string displayName = s.Name + " Lv" + i.ToString();
-                items.Add(new SkillLevelSelectorItems(displayName, i));
+                displayName = $"{s.ActivateSkillName1}({s.Name}+{s.MaxLevel1})";
+                items.Add(new SkillLevelSelectorItems(displayName, s.MaxLevel1));
+                if (s.ActivateSkillName2 != string.Empty)
+                {
+                    displayName = $"{s.ActivateSkillName2}({s.Name}+{s.MaxLevel2})";
+                    items.Add(new SkillLevelSelectorItems(displayName, s.MaxLevel2));
+                }
+            }
+            else
+            {
+                for (int i = 1; i <= s.MaxLevel2; i++)
+                {
+                    // スキル名+Lvを表示
+                    displayName = s.Name + " Lv" + i.ToString();
+                    items.Add(new SkillLevelSelectorItems(displayName, i));
+                }
             }
             Items.Value = items;
 

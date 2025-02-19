@@ -46,16 +46,27 @@
                     </Viewbox>
                 </Grid>
             </Expander.Header>
-            <StackPanel>
-                <TextBlock Text="{Binding Weapon.Value, Mode=OneWay}" Height="Auto" Width="200" Background="WhiteSmoke" FontSize="20" HorizontalAlignment="Left" Margin="20,0,0,0" Foreground="Black"/>
-                <TextBlock Text="{Binding Head.Value, Mode=OneWay}" Height="Auto" Width="200" Background="White" FontSize="20" HorizontalAlignment="Left" Margin="20,0,0,0" Foreground="Black"/>
-                <TextBlock Text="{Binding Body.Value, Mode=OneWay}" Height="Auto" Width="200" Background="WhiteSmoke" FontSize="20" HorizontalAlignment="Left" Margin="20,0,0,0" Foreground="Black"/>
-                <TextBlock Text="{Binding Arm.Value, Mode=OneWay}" Height="Auto" Width="200" Background="White" FontSize="20" HorizontalAlignment="Left" Margin="20,0,0,0" Foreground="Black"/>
-                <TextBlock Text="{Binding Waist.Value, Mode=OneWay}" Height="Auto" Width="200" Background="WhiteSmoke" FontSize="20" HorizontalAlignment="Left" Margin="20,0,0,0" Foreground="Black"/>
-                <TextBlock Text="{Binding Leg.Value, Mode=OneWay}" Height="Auto" Width="200" Background="White" FontSize="20" HorizontalAlignment="Left" Margin="20,0,0,0" Foreground="Black"/>
-                <TextBlock Text="{Binding Charm.Value, Mode=OneWay}" Height="Auto" Width="200" Background="WhiteSmoke" FontSize="20" HorizontalAlignment="Left" Margin="20,0,0,0" Foreground="Black"/>
-                <TextBlock Text="{Binding disp.Value, Mode=OneWay}" Height="Auto" Width="200" Background="White" FontSize="12" Margin="10,0,0,0" Foreground="Black"/>
-            </StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="{Binding Weapon.Value, Mode=OneWay}" Height="Auto" Width="Auto" Background="WhiteSmoke" FontSize="20" HorizontalAlignment="Left" Margin="20,0,0,0" Foreground="Black"/>
+                    <TextBlock Text="{Binding Head.Value, Mode=OneWay}" Height="Auto" Width="Auto" Background="White" FontSize="20" HorizontalAlignment="Left" Margin="20,0,0,0" Foreground="Black"/>
+                    <TextBlock Text="{Binding Body.Value, Mode=OneWay}" Height="Auto" Width="200" Background="WhiteSmoke" FontSize="20" HorizontalAlignment="Left" Margin="20,0,0,0" Foreground="Black"/>
+                    <TextBlock Text="{Binding Arm.Value, Mode=OneWay}" Height="Auto" Width="200" Background="White" FontSize="20" HorizontalAlignment="Left" Margin="20,0,0,0" Foreground="Black"/>
+                    <TextBlock Text="{Binding Waist.Value, Mode=OneWay}" Height="Auto" Width="200" Background="WhiteSmoke" FontSize="20" HorizontalAlignment="Left" Margin="20,0,0,0" Foreground="Black"/>
+                    <TextBlock Text="{Binding Leg.Value, Mode=OneWay}" Height="Auto" Width="200" Background="White" FontSize="20" HorizontalAlignment="Left" Margin="20,0,0,0" Foreground="Black"/>
+                    <TextBlock Text="{Binding Charm.Value, Mode=OneWay}" Height="Auto" Width="200" Background="WhiteSmoke" FontSize="20" HorizontalAlignment="Left" Margin="20,0,0,0" Foreground="Black"/>
+                </StackPanel>
+                <TextBlock Text="{Binding Deco.Value, Mode=OneWay}" Grid.Column="1" Height="Auto" Width="200" Background="White" FontSize="12" Margin="10,0,0,0" Foreground="Black"/>
+                <TextBlock Text="{Binding Skill.Value, Mode=OneWay}" Grid.Column="2" Height="Auto" Width="200" Background="White" FontSize="12" Margin="10,0,0,0" Foreground="Black"/>
+
+
+            </Grid>
+            
         </Expander>
     </Border>
 </UserControl>

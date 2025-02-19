@@ -44,5 +44,11 @@ namespace MHSS.Models.Utility
                 return defaultValue;
             }
         }
+
+
+        public static string NormalizeEmpty(string input)
+        {
+            return string.IsNullOrWhiteSpace(input) ? string.Empty : input;
+        }
     }
 }

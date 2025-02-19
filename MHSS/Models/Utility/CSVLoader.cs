@@ -75,10 +75,11 @@ namespace MHSS.Models.Utility
                     Name = line[@"名前"],
                     Category = line["カテゴリ"],
                     Level = 0,
+                    ActivateSkillName1 = Utility.NormalizeEmpty(line[@"発動スキル1"]),
+                    ActivateSkillName2 = Utility.NormalizeEmpty(line[@"発動スキル2"]),
                     MaxLevel1 = Utility.ParseOrDefault(line[@"上限1"]),
                     MaxLevel2 = Utility.ParseOrDefault(line[@"上限2"])
                 };
-
                 Master.Skills.Add(skill);
             }
         }
@@ -177,9 +178,9 @@ namespace MHSS.Models.Utility
                 List<Skill> skill = new();
                 for (int i = 1; i <= Config.Config.Instance.MaxCharmSkillCount; i++)
                 {
-                    string skillName = line[@"スキル系統" + i];
+                    string skillName = line[$"スキル系統{i}"];
                     if (string.IsNullOrWhiteSpace(skillName)) break;
-                    int skillLevel = Utility.ParseOrDefault(line[@"スキル値" + i]);
+                    int skillLevel = Utility.ParseOrDefault(line[$"スキル値{i}"]);
                     skill.Add(new Skill
                     {
                         Name = skillName,
@@ -222,9 +223,9 @@ namespace MHSS.Models.Utility
                 List<Skill> skill = new();
                 for (int i = 1; i <= Config.Config.Instance.MaxDecoSkillCount; i++)
                 {
-                    string skillName = line[@"スキル系統" + i];
+                    string skillName = line[$"スキル系統{i}"];
                     if (string.IsNullOrWhiteSpace(skillName)) break;
-                    int skillLevel = Utility.ParseOrDefault(line[@"スキル値" + i]);
+                    int skillLevel = Utility.ParseOrDefault(line[$"スキル値{i}"]);
                     skill.Add(new Skill
                     {
                         Name = skillName,
@@ -274,15 +275,15 @@ namespace MHSS.Models.Utility
                         List<Skill> skill = new();
                         for (int j = 1; j <= Config.Config.Instance.MaxWeaponSkillCount; j++)
                         {
-                            string skillName = line[@"スキル系統" + j];
+                            string skillName = line[$"スキル系統{j}"];
                             if (string.IsNullOrWhiteSpace(skillName)) break;
-                            int skillLevel = Utility.ParseOrDefault(line[@"スキル値" + i]);
+                            int skillLevel = Utility.ParseOrDefault(line[$"スキル値{j}"]);
                             skill.Add(new Skill
                             {
                                 Name = skillName,
                                 Level = skillLevel
                             });
-                        }
+                    }
                         w.Skills = skill;
 
                         weapon.Add(w);
@@ -322,9 +323,9 @@ namespace MHSS.Models.Utility
                 List<Skill> skill = new();
                 for (int i = 1; i <= Config.Config.Instance.MaxArmorSkillCount; i++)
                 {
-                    string skillName = line[@"スキル系統" + i];
+                    string skillName = line[$"スキル系統{i}"];
                     if (string.IsNullOrWhiteSpace(skillName)) break;
-                    int skillLevel = Utility.ParseOrDefault(line[@"スキル値" + i]);
+                    int skillLevel = Utility.ParseOrDefault(line[$"スキル値{i}"]);
                     skill.Add(new Skill
                     {
                         Name = skillName,

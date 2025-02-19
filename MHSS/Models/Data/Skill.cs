@@ -24,14 +24,24 @@ namespace MHSS.Models.Data
         public int Level { get; set; } = 0;
 
         /// <summary>
+        /// 発動スキル1(シリーズ・グループスキル)
+        /// </summary>
+        public string ActivateSkillName1 { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 発動スキル2(シリーズ・グループスキル)
+        /// </summary>
+        public string ActivateSkillName2 { get; set; } = string.Empty;
+
+        /// <summary>
         /// 普通のスキル：スキルの上限値(極意なし)
-        /// シリーズスキル：発動に必要なシリーズスキルの数(少ない方)
+        /// シリーズ・グループスキル：発動スキル1に必要なレベル
         /// </summary>
         public int MaxLevel1 { get; set; } = 0;
 
         /// <summary>
         /// 普通のスキル：スキルの上限値(極意あり)
-        /// シリーズスキル：発動に必要なシリーズスキルの数(多い方)
+        /// シリーズ・グループスキル：発動スキル2に必要なレベル
         /// </summary>
         public int MaxLevel2 { get; set; } = 0;
 
