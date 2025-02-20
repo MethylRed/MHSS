@@ -48,9 +48,26 @@ namespace MHSS.Models.Data
 
         public Condition() { }
 
+
+        /// <summary>
+        /// コピーコンストラクタ
+        /// </summary>
+        /// <param name="other"></param>
         public Condition(Condition other)
         {
-            Skills = other.Skills;
+            Skills = new List<Skill>();
+            foreach (Skill skill in other.Skills)
+            {
+                Skill s = new(skill);
+                Skills.Add(s);
+            }
+            Def = other.Def;
+            ResFire = other.ResFire;
+            ResWater = other.ResWater;
+            ResThunder = other.ResThunder;
+            ResIce = other.ResIce;
+            ResDragon = other.ResDragon;
+            ResDragon = other.ResDragon;
         }
     }
 }

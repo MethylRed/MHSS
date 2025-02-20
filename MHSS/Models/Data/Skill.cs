@@ -49,5 +49,28 @@ namespace MHSS.Models.Data
         /// 検索条件:スキルレベルの固定
         /// </summary>
         public bool IsFixed { get; set; } = false;
+
+
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        public Skill() { }
+
+
+        /// <summary>
+        /// コピーコンストラクタ
+        /// </summary>
+        /// <param name="other"></param>
+        public Skill(Skill other)
+        {
+            Name = other.Name;
+            Category = other.Category;
+            Level = other.Level;
+            ActivateSkillName1 = other.ActivateSkillName1;
+            ActivateSkillName2 = other.ActivateSkillName2;
+            MaxLevel1 = other.MaxLevel1;
+            MaxLevel2 = other.MaxLevel2;
+            IsFixed = other.IsFixed;
+        }
     }
 }
