@@ -18,7 +18,7 @@ namespace MHSS.ViewModels.SubView
         /// <summary>
         /// カテゴリ別スキル選択アイテムのViewModel
         /// </summary>
-        public ReactivePropertySlim<ObservableCollection<SkillLevelSelectorsByCategoryViewModel>> SkillLevelSelectorsByCategoryVM { get; } = new();
+        public ReactivePropertySlim<ObservableCollection<SkillLevelSelectorsByCategoryViewModel>> SkillLevelSelectorsByCategoryVMs { get; } = new();
 
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace MHSS.ViewModels.SubView
         public SkillSelectViewModel()
         {
             // カテゴリ別にスキル条件選択のComboBoxを配置
-            ObservableCollection<SkillLevelSelectorsByCategoryViewModel> oldColl = SkillLevelSelectorsByCategoryVM.Value;
+            ObservableCollection<SkillLevelSelectorsByCategoryViewModel> oldColl = SkillLevelSelectorsByCategoryVMs.Value;
             if (oldColl != null)
             {
                 foreach (var item in oldColl)
@@ -35,20 +35,20 @@ namespace MHSS.ViewModels.SubView
                     ((IDisposable)item).Dispose();
                 }
             }
-            SkillLevelSelectorsByCategoryVM.Value = new ObservableCollection<SkillLevelSelectorsByCategoryViewModel>(
+            SkillLevelSelectorsByCategoryVMs.Value = new ObservableCollection<SkillLevelSelectorsByCategoryViewModel>(
                 Master.Skills.GroupBy(s => s.Category).OrderBy(g => Kind.SkillCategory.IndexOf(g.Key))
                 .Select(g => new SkillLevelSelectorsByCategoryViewModel(g.Key, g))
             );
         }
 
         /// <summary>
-        /// 検索条件を取得
+        /// スキルの検索条件を取得
         /// </summary>
         /// <returns></returns>
         public Condition MakeSkillCondition()
         {
             Condition condition = new();
-            condition.Skills = SkillLevelSelectorsByCategoryVM.Value.SelectMany(v => v.SkillsCondition()).ToList();
+            condition.Skills = SkillLevelSelectorsByCategoryVMs.Value.SelectMany(v => v.SkillsCondition()).ToList();
             return condition;
         }
     }

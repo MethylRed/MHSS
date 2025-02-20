@@ -28,25 +28,47 @@ namespace MHSS.Models.Utility
             if (Solver is null) return;
 
             #region Define Variables
+            // 個数変数を定義する。
+            // 武器・防具・護石は、同じものを2個以上装備できないのでブール変数。
+            // 装飾品は、所持数まで装備できるので、整数変数で上限を所持数にする。
+
+            // 基本的に、武器/防具スキルを持つ装飾品は武器/防具の装飾品スロットにしか装備できない。
+            // しかし、その垣根を超えた装備が存在する可能性がある。
+            // 武器スキルを装備可能な防具や、武器スキル・防具スキルの区別がない装飾品など。
+            // このような装備/装飾品を「両対応装備/装飾品」と呼ぶことにする。
+            // ただし、各装備のスロット毎にこれを考えるのは非常にめんどくさいのでやめておく。
+            // 「両対応装備/装飾品の個数変数」は、
+            // 「武器スキル装飾品を受け入れるもの/武器に装着するもの」と
+            // 「防具スキル装飾品を受け入れる/防具に装着するもの」の2種類用意し、
+            // 装備はブール変数、装飾品は上限が所持数の整数変数とする。
+            
             foreach (var equip in Master.AllEquips)
             {
-                // 装飾品の場合は所持数を上限にする
-                if (equip.EquipKind == EquipKind.Deco)
+                // スロットタイプが 2 -> 武器・防具スキル装飾品スロットの区別なし
+                if (equip.SlotType == 2)
                 {
-                    if (equip.SlotType == 2)
+                    // 装飾品の場合は上限を所持数にする
+                    if (equip.EquipKind == EquipKind.Deco)
                     {
                         Variables.Add($"{equip.Name}_Weapon", Solver.MakeIntVar(0.0, ((Deco)equip).HaveCount, $"{equip.Name}_Weapon"));
                         Variables.Add($"{equip.Name}_Armor", Solver.MakeIntVar(0.0, ((Deco)equip).HaveCount, $"{equip.Name}_Armor"));
-
                     }
                     else
                     {
-                        Variables.Add(equip.Name, Solver.MakeIntVar(0.0, ((Deco)equip).HaveCount, equip.Name));
+                        Variables.Add($"{equip.Name}_Weapon", Solver.MakeBoolVar($"{equip.Name}_Weapon"));
+                        Variables.Add($"{equip.Name}_Armor", Solver.MakeBoolVar($"{equip.Name}_Armor"));
                     }
                 }
                 else
                 {
-                    Variables.Add(equip.Name, Solver.MakeBoolVar(equip.Name));
+                    if (equip.EquipKind == EquipKind.Deco)
+                    {
+                        Variables.Add(equip.Name, Solver.MakeIntVar(0.0, ((Deco)equip).HaveCount, equip.Name));
+                    }
+                    else
+                    {
+                        Variables.Add(equip.Name, Solver.MakeBoolVar(equip.Name));
+                    }
                 }
             }
             #endregion
@@ -54,7 +76,6 @@ namespace MHSS.Models.Utility
 
             #region Define Constraint
             // 武器・防具・護石は１つまでしか装備できない
-            //string[] EquipNames = { "Weapon", "Head", "Body", "Arm", "Waist", "Leg", "Charm" };
             foreach (var name in new[] { "Weapon", "Head", "Body", "Arm", "Waist", "Leg", "Charm" })
             {
                 Constraints.Add(name, Solver.MakeConstraint(0.0, 1.0, name));
@@ -90,10 +111,19 @@ namespace MHSS.Models.Utility
             Constraints.Add("ResIce", Solver.MakeConstraint(condition.ResIce, double.PositiveInfinity, "ResIce"));
             Constraints.Add("ResDragon", Solver.MakeConstraint(condition.ResDragon, double.PositiveInfinity, "ResDragon"));
 
-            // 両対応装飾品の場合
-            foreach (var deco in Master.Decos.Where(d => d.SlotType == 2))
+
+            // 両対応装備の個数制約
+            // それぞれの「両対応装備/装飾品(武器)」と「両対応装備/装飾品(防具)」の個数変数の和の上限を「1/所持数」に定める。
+            foreach (var equip in Master.AllEquips.Where(d => d.SlotType == 2))
             {
-                Constraints.Add(deco.Name, Solver.MakeConstraint(0.0, deco.HaveCount, deco.Name));
+                if (equip.EquipKind == EquipKind.Deco)
+                {
+                    Constraints.Add(equip.Name, Solver.MakeConstraint(0.0, ((Deco)equip).HaveCount, equip.Name));
+                }
+                else
+                {
+                    Constraints.Add(equip.Name, Solver.MakeConstraint(0.0, 1.0, equip.Name));
+                }
             }
 
 
@@ -101,62 +131,81 @@ namespace MHSS.Models.Utility
             // 係数の定義
             foreach (var equip in Master.AllEquips)
             {
-                // 武器・防具・護石の制約
-                if (equip.EquipKind != EquipKind.Deco)
+                if (equip.SlotType == 2)
                 {
-                    Constraints[Kind.EquipKindsToEnString(equip.EquipKind)]
-                        .SetCoefficient(Variables[equip.Name], 1);
-                }
+                    // 武器・防具・護石の制約
+                    if (equip.EquipKind != EquipKind.Deco)
+                    {
+                        Constraints[Kind.EquipKindsToEnString(equip.EquipKind)].SetCoefficient(Variables[$"{equip.Name}_Weapon"], 1);
+                        Constraints[Kind.EquipKindsToEnString(equip.EquipKind)].SetCoefficient(Variables[$"{equip.Name}_Armor"], 1);
+                    }
 
-                // スキルの制約
-                foreach (var skill in equip.Skills)
-                {
-                    if (equip.SlotType == 2)
+                    // スキルの制約
+                    foreach (var skill in equip.Skills)
                     {
                         Constraints[skill.Name].SetCoefficient(Variables[$"{equip.Name}_Weapon"], skill.Level);
                         Constraints[skill.Name].SetCoefficient(Variables[$"{equip.Name}_Armor"], skill.Level);
                     }
-                    else
-                    {
-                        Constraints[skill.Name].SetCoefficient(Variables[equip.Name], skill.Level);
-                    }
-                }
 
-                // スロットの制約
-
-                // 武器スロットと防具スロットは完全に分かれている。
-                // 装飾品は、どちらにも装着できるタイプが存在する。
-                // ＜両対応装飾品の個数変数＞は、＜武器に装着するもの＞と＜防具に装着するもの＞の2種類用意し、
-                // それぞれの上限は＜所持数＞とする。
-                // さらに制約条件として、＜両対応装飾品(武器)＞と＜両対応装飾品(防具)＞の個数変数の和の上限を
-                // ＜所持数＞に定める。
-                var slotCount = SlotCount(equip);
-                if (equip.SlotType == 0)
-                {
-                    for (int i = 0; i < 4; i++)
-                    {
-                        Constraints["WeaponSlotCount" + (i + 1).ToString()].SetCoefficient(Variables[equip.Name], slotCount[i]);
-                    }
-                }
-                else if (equip.SlotType == 1)
-                {
-                    for (int i = 0; i < 4; i++)
-                    {
-                        Constraints["ArmorSlotCount" + (i + 1).ToString()].SetCoefficient(Variables[equip.Name], slotCount[i]);
-                    }
-                }
-                else
-                {
+                    // スロットの制約
+                    var slotCount = SlotCount(equip);
                     for (int i = 0; i < 4; i++)
                     {
                         Constraints["WeaponSlotCount" + (i + 1).ToString()].SetCoefficient(Variables[$"{equip.Name}_Weapon"], slotCount[i]);
                         Constraints["ArmorSlotCount" + (i + 1).ToString()].SetCoefficient(Variables[$"{equip.Name}_Armor"], slotCount[i]);
                     }
-                }
 
-                // 防御・耐性の制約
-                if (equip.EquipKind != EquipKind.Deco)
+                    // 防御・耐性の制約
+                    Constraints["Def"].SetCoefficient(Variables[$"{equip.Name}_Weapon"], equip.Def);
+                    Constraints["Def"].SetCoefficient(Variables[$"{equip.Name}_Armor"], equip.Def);
+                    Constraints["ResFire"].SetCoefficient(Variables[$"{equip.Name}_Weapon"], equip.ResFire);
+                    Constraints["ResFire"].SetCoefficient(Variables[$"{equip.Name}_Armor"], equip.ResFire);
+                    Constraints["ResWater"].SetCoefficient(Variables[$"{equip.Name}_Weapon"], equip.ResWater);
+                    Constraints["ResWater"].SetCoefficient(Variables[$"{equip.Name}_Armor"], equip.ResWater);
+                    Constraints["ResThunder"].SetCoefficient(Variables[$"{equip.Name}_Weapon"], equip.ResThunder);
+                    Constraints["ResThunder"].SetCoefficient(Variables[$"{equip.Name}_Armor"], equip.ResThunder);
+                    Constraints["ResIce"].SetCoefficient(Variables[$"{equip.Name}_Weapon"], equip.ResIce);
+                    Constraints["ResIce"].SetCoefficient(Variables[$"{equip.Name}_Armor"], equip.ResIce);
+                    Constraints["ResDragon"].SetCoefficient(Variables[$"{equip.Name}_Weapon"], equip.ResDragon);
+                    Constraints["ResDragon"].SetCoefficient(Variables[$"{equip.Name}_Armor"], equip.ResDragon);
+
+                    // 両対応装備の個数制約
+                    Constraints[equip.Name].SetCoefficient(Variables[$"{equip.Name}_Weapon"], 1.0);
+                    Constraints[equip.Name].SetCoefficient(Variables[$"{equip.Name}_Armor"], 1.0);
+
+                }
+                else
                 {
+                    // 武器・防具・護石の制約
+                    if (equip.EquipKind != EquipKind.Deco)
+                    {
+                        Constraints[Kind.EquipKindsToEnString(equip.EquipKind)].SetCoefficient(Variables[equip.Name], 1);
+                    }
+
+                    // スキルの制約
+                    foreach (var skill in equip.Skills)
+                    {
+                        Constraints[skill.Name].SetCoefficient(Variables[equip.Name], skill.Level);
+                    }
+
+                    // スロットの制約
+                    var slotCount = SlotCount(equip);
+                    if (equip.SlotType == 0)
+                    {
+                        for (int i = 0; i < 4; i++)
+                        {
+                            Constraints["WeaponSlotCount" + (i + 1).ToString()].SetCoefficient(Variables[equip.Name], slotCount[i]);
+                        }
+                    }
+                    else if (equip.SlotType == 1)
+                    {
+                        for (int i = 0; i < 4; i++)
+                        {
+                            Constraints["ArmorSlotCount" + (i + 1).ToString()].SetCoefficient(Variables[equip.Name], slotCount[i]);
+                        }
+                    }
+
+                    // 防御・耐性の制約
                     Constraints["Def"].SetCoefficient(Variables[equip.Name], equip.Def);
                     Constraints["ResFire"].SetCoefficient(Variables[equip.Name], equip.ResFire);
                     Constraints["ResWater"].SetCoefficient(Variables[equip.Name], equip.ResWater);
@@ -170,9 +219,17 @@ namespace MHSS.Models.Utility
             #region Define Objective
             // 防御を最大化
             Objective obj = Solver.Objective();
-            foreach (var equip in Master.AllEquips.Where(e => e.EquipKind != EquipKind.Deco))
+            foreach (var equip in Master.AllEquips)
             {
-                obj.SetCoefficient(Variables[equip.Name], equip.Def);
+                if (equip.SlotType == 2)
+                {
+                    obj.SetCoefficient(Variables[$"{equip.Name}_Weapon"], equip.Def);
+                    obj.SetCoefficient(Variables[$"{equip.Name}_Armor"], equip.Def);
+                }
+                else
+                {
+                    obj.SetCoefficient(Variables[equip.Name], equip.Def);
+                }
             }
             obj.SetMaximization();
             #endregion
@@ -199,7 +256,9 @@ namespace MHSS.Models.Utility
                 foreach (var variable in Variables.Where(v => v.Value.SolutionValue() > 0))
                 {
                     // 全装備から一致するものを探す
-                    var findEquip = Master.AllEquips.Single(x => variable.Key.Contains(x.Name));
+                    var findEquip = Master.AllEquips
+                        .Single(x => (variable.Key == x.Name) ||
+                        (variable.Key == $"{x.Name}_Weapon") || (variable.Key == $"{x.Name}_Armor"));
 
                     // 無い場合はスキップ
                     if (findEquip == null) continue;
@@ -244,25 +303,6 @@ namespace MHSS.Models.Utility
             }
             return searchedEquip;
         }
-
-        /// <summary>
-        /// 追加スキルの検索
-        /// </summary>
-        /// <returns></returns>
-        //public Skill SearchExtraSkill(Skill extraSkill, int count)
-        //{
-        //    // 検索結果がOPTIMALのとき
-        //    if (Solver.Solve() == Solver.ResultStatus.OPTIMAL)
-        //    {
-        //        searchExtraSkill = extraSkill;
-        //    }
-        //    else
-        //    {
-        //        searchExtraSkill = null;
-        //    }
-        //    return searchExtraSkill;
-        //}
-
 
         // 装備のスロットの計算
         private static int[] SlotCount(Equip equip)

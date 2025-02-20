@@ -20,7 +20,7 @@ namespace MHSS.ViewModels.Controls
         /// <summary>
         /// スキル選択アイテムのViewModel
         /// </summary>
-        public ObservableCollection<SkillLevelSelectorViewModel> SkillLevelSelectorVM { get; init; }
+        public ObservableCollection<SkillLevelSelectorViewModel> SkillLevelSelectorVMs { get; init; }
 
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace MHSS.ViewModels.Controls
         public SkillLevelSelectorsByCategoryViewModel(string categoryName, IEnumerable<Skill> skills)
         {
             CategoryName = categoryName;
-            SkillLevelSelectorVM = new(skills.Select(x => new SkillLevelSelectorViewModel(x.Name)));
+            SkillLevelSelectorVMs = new(skills.Select(x => new SkillLevelSelectorViewModel(x.Name)));
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace MHSS.ViewModels.Controls
         public IReadOnlyList<Skill> SkillsCondition()
         {
             IReadOnlyList<Skill> selectedSkills = new List<Skill>();
-            selectedSkills = SkillLevelSelectorVM.Select(s => s.SelectedSkill).ToList();
+            selectedSkills = SkillLevelSelectorVMs.Select(s => s.SelectedSkill).ToList();
             return selectedSkills;
         }
     }

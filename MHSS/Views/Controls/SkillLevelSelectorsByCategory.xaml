@@ -20,7 +20,7 @@
             <TextBlock Text="{Binding Path=CategoryName, Mode=OneWay}" FontSize="20"/>
         </GroupBox.Header>
 
-        <ItemsControl ItemsSource="{Binding Path=SkillLevelSelectorVM,Mode=OneWay}">
+        <ItemsControl ItemsSource="{Binding Path=SkillLevelSelectorVMs,Mode=OneWay}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <local:SkillLevelSelector Margin="3"/>

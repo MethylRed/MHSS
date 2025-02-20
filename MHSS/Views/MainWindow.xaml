@@ -8,7 +8,7 @@
         xmlns:subviews="clr-namespace:MHSS.Views.SubViews"
         xmlns:viewmodels="clr-namespace:MHSS.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowViewModel}"
-        Title="MHSS" Height="720" Width="1680" >
+        Title="MHSS" Height="540" Width="1080" >
     <Window.Resources>
             <Style TargetType="Button">
                 <Setter Property="Background" Value="Gainsboro" />

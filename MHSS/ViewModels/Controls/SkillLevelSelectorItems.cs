@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MHSS.Models.Data;
 
 namespace MHSS.ViewModels.Controls
 {
@@ -17,6 +18,7 @@ namespace MHSS.ViewModels.Controls
         /// スキルレベル
         /// </summary>
         public int SkillLevel { get; set; }
+
 
         /// <summary>
         /// コンストラクタ

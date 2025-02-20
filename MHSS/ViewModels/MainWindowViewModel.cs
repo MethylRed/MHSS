@@ -109,8 +109,6 @@ namespace MHSS.ViewModels
         {
             Instance = this;
 
-            //IsFree = IsBusy.Select(x => !x).ToReadOnlyReactivePropertySlim();
-
             // データの読み込み
             CSVLoader.LoadCsvSkill();
             CSVLoader.LoadCsvEquip();
@@ -127,10 +125,17 @@ namespace MHSS.ViewModels
             SearchCommand.Subscribe(async () =>
             {
                 IsBusy.Value = true;
-                await Search();
-                IsBusy.Value = false;
+                try
+                {
+                    await Task.Run(() => Search());
+                }
+                finally
+                {
+                    IsBusy.Value = false;
+                }
             }).AddTo(Disposable);
 
+            // 追加スキル検索ボタンクリックイベントの定義
             SearchExtraSkillsCommand = IsBusy.Select(x => !x).ToAsyncReactiveCommand();
             SearchExtraSkillsCommand.Subscribe(async () =>
             {
@@ -139,10 +144,12 @@ namespace MHSS.ViewModels
                 IsBusy.Value = false;
             }).AddTo(Disposable);
 
+
             // ViewModelのインスタンスを生成
             SkillSelectVM.Value = new();
 
             SearchCount.Value = Config.Instance.MaxSearchCount.ToString();
+            SearchCount.Value = "1";
             Def.Value = "0";
             ResFire.Value = "";
             ResWater.Value = "";
@@ -155,28 +162,22 @@ namespace MHSS.ViewModels
         /// 検索を実行
         /// </summary>
         /// <returns></returns>
-        private async Task Search()
+        private void Search()
         {
             // スキルの検索条件を取得
-            Condition condition = SkillSelectVM.Value.MakeSkillCondition();
-            condition.Def = Utility.ParseOrDefault(Def.Value);
-            condition.ResFire = Utility.ParseOrDefaultDouble(ResFire.Value, double.NegativeInfinity);
-            condition.ResWater = Utility.ParseOrDefaultDouble(ResWater.Value, double.NegativeInfinity);
-            condition.ResThunder = Utility.ParseOrDefaultDouble(ResThunder.Value, double.NegativeInfinity);
-            condition.ResIce = Utility.ParseOrDefaultDouble(ResIce.Value, double.NegativeInfinity);
-            condition.ResDragon = Utility.ParseOrDefaultDouble(ResDragon.Value, double.NegativeInfinity);
+            Condition condition = GetCondition();
 
             // ソルバーを宣言
             Solve = new(condition);
 
             // 求解し表示
-            SolutionVMs.Clear();
+            System.Windows.Application.Current.Dispatcher.Invoke(() => SolutionVMs.Clear());
             int count = 0;
             ShowCount.Value = "0";
 
             while (count < int.Min(Utility.ParseOrDefault(SearchCount.Value, Config.Instance.MaxSearchCount), Config.Instance.MaxSearchCount))
             {
-                SearchedEquips searchedEquips = await Task.Run(() => Solve.SearchSingle(count));
+                SearchedEquips searchedEquips = Solve.SearchSingle(count);
 
                 if (searchedEquips == null)
                 {
@@ -184,14 +185,15 @@ namespace MHSS.ViewModels
                 }
                 else
                 {
-                    SolutionVMs.Add(new SolutionViewModel(searchedEquips));
-                    count++;
-                    ShowCount.Value = count.ToString();
+                    System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        SolutionVMs.Add(new SolutionViewModel(searchedEquips));
+                        ShowCount.Value = (++count).ToString();
+                    });
                 }
             }
             Debug.WriteLine("Check is finished.");
         }
-
 
         /// <summary>
         /// 追加スキル検索
@@ -199,26 +201,26 @@ namespace MHSS.ViewModels
         /// <returns></returns>
         private async Task SearchExtraSkills()
         {
-            Condition masterCondition = SkillSelectVM.Value.MakeSkillCondition();
+            // 元の検索条件を保持
+            Condition masterCondition = GetCondition();
 
+            // 進捗管理用
             int count = 0;
 
+            // 検索結果
             List<Skill> skills = new();
 
             // すべてのスキルについて
-            foreach (var skill in Master.Skills)
+            foreach (var skill in masterCondition.Skills)
             {
-                int l = masterCondition.Skills.Single(s => s.Name == skill.Name).Level;
-                for (int level = 1; level <= skill.MaxLevel2-l; level++)
+                // 元の検索条件のスキルレベル
+                int l = skill.Level;
+
+                // 元の検索条件のスキルレベル+1から上限まで検索
+                for (int level = skill.Level+1; level <= skill.MaxLevel2; level++)
                 {
                     // スキルの検索条件を取得
-                    Condition condition = SkillSelectVM.Value.MakeSkillCondition();
-                    condition.Def = Utility.ParseOrDefault(Def.Value);
-                    condition.ResFire = Utility.ParseOrDefaultDouble(ResFire.Value, double.NegativeInfinity);
-                    condition.ResWater = Utility.ParseOrDefaultDouble(ResWater.Value, double.NegativeInfinity);
-                    condition.ResThunder = Utility.ParseOrDefaultDouble(ResThunder.Value, double.NegativeInfinity);
-                    condition.ResIce = Utility.ParseOrDefaultDouble(ResIce.Value, double.NegativeInfinity);
-                    condition.ResDragon = Utility.ParseOrDefaultDouble(ResDragon.Value, double.NegativeInfinity);
+                    Condition condition = new(masterCondition);
                     condition.Skills.Single(s => s.Name == skill.Name).Level = level;
 
                     // ソルバーを宣言
@@ -227,8 +229,52 @@ namespace MHSS.ViewModels
                     Solver.ResultStatus status = await Task.Run(() => Solve.Solver.Solve());
                     if (status != Solver.ResultStatus.OPTIMAL) break;
                     skills.Add(new Skill() { Name = skill.Name, Level = condition.Skills.Single(s => s.Name == skill.Name).Level });
+                    //Debug.WriteLine($"{skill.Name}Lv{condition.Skills.Single(s => s.Name == skill.Name).Level}");
                 }
             }
+
+            //foreach (var skill in Master.Skills)
+            //{
+            //    // 元の検索条件のスキルレベル
+            //    int l = masterCondition.Skills.Single(s => s.Name == skill.Name).Level;
+            //    for (int level = 1; level <= skill.MaxLevel2 - l; level++)
+            //    {
+            //        // スキルの検索条件を取得
+            //        Condition condition = SkillSelectVM.Value.MakeSkillCondition();
+            //        condition.Def = Utility.ParseOrDefault(Def.Value);
+            //        condition.ResFire = Utility.ParseOrDefaultDouble(ResFire.Value, double.NegativeInfinity);
+            //        condition.ResWater = Utility.ParseOrDefaultDouble(ResWater.Value, double.NegativeInfinity);
+            //        condition.ResThunder = Utility.ParseOrDefaultDouble(ResThunder.Value, double.NegativeInfinity);
+            //        condition.ResIce = Utility.ParseOrDefaultDouble(ResIce.Value, double.NegativeInfinity);
+            //        condition.ResDragon = Utility.ParseOrDefaultDouble(ResDragon.Value, double.NegativeInfinity);
+            //        condition.Skills.Single(s => s.Name == skill.Name).Level = level;
+
+            //        // ソルバーを宣言
+            //        Solve = new(condition);
+
+            //        Solver.ResultStatus status = await Task.Run(() => Solve.Solver.Solve());
+            //        if (status != Solver.ResultStatus.OPTIMAL) break;
+            //        skills.Add(new Skill() { Name = skill.Name, Level = condition.Skills.Single(s => s.Name == skill.Name).Level });
+            //        Debug.WriteLine($"{skill.Name}Lv{condition.Skills.Single(s => s.Name == skill.Name).Level}");
+            //    }
+            //}
+        }
+
+        /// <summary>
+        /// 検索条件を取得
+        /// </summary>
+        /// <returns></returns>
+        private Condition GetCondition()
+        {
+            Condition condition = SkillSelectVM.Value.MakeSkillCondition();
+            condition.Def = Utility.ParseOrDefault(Def.Value);
+            condition.ResFire = Utility.ParseOrDefaultDouble(ResFire.Value, double.NegativeInfinity);
+            condition.ResWater = Utility.ParseOrDefaultDouble(ResWater.Value, double.NegativeInfinity);
+            condition.ResThunder = Utility.ParseOrDefaultDouble(ResThunder.Value, double.NegativeInfinity);
+            condition.ResIce = Utility.ParseOrDefaultDouble(ResIce.Value, double.NegativeInfinity);
+            condition.ResDragon = Utility.ParseOrDefaultDouble(ResDragon.Value, double.NegativeInfinity);
+
+            return condition;
         }
 
 

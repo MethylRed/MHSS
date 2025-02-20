@@ -22,7 +22,7 @@
             <Grid Margin="5">
                 <ScrollViewer VerticalAlignment="Stretch">
                     <StackPanel Margin="0,0,3,100">
-                        <ItemsControl ItemsSource="{Binding SkillLevelSelectorsByCategoryVM.Value, Mode=OneWay}">
+                        <ItemsControl ItemsSource="{Binding SkillLevelSelectorsByCategoryVMs.Value, Mode=OneWay}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <ctrl:SkillLevelSelectorsByCategory/>

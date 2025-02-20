@@ -49,6 +49,5 @@ namespace MHSS.Models.Data
         /// 検索条件:スキルレベルの固定
         /// </summary>
         public bool IsFixed { get; set; } = false;
-
     }
 }

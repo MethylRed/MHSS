@@ -50,7 +50,15 @@ namespace MHSS.ViewModels.Controls
         {
             get
             {
-                return new Skill() { Name = SkillName, Level = SelectedItem.Value.SkillLevel , IsFixed = IsFixed.Value};
+                var s = Master.Skills.Single(s => s.Name == SkillName);
+                return new Skill() { Name = SkillName,
+                                     Category = s.Category,
+                                     Level = SelectedItem.Value.SkillLevel,
+                                     ActivateSkillName1 = s.ActivateSkillName1,
+                                     ActivateSkillName2 = s.ActivateSkillName2,
+                                     MaxLevel1 = s.MaxLevel1,
+                                     MaxLevel2 = s.MaxLevel2,
+                                     IsFixed = IsFixed.Value };
             }
         }
 
@@ -64,7 +72,8 @@ namespace MHSS.ViewModels.Controls
             string displayName = "";
 
             // ComboBoxのItemを作成
-            Skill s = Master.Skills.Where(x => x.Name == SkillName).First();
+            //Skill s = Master.Skills.Where(x => x.Name == SkillName).First();
+            Skill s = Master.Skills.Single(x => x.Name == SkillName);
             ObservableCollection<SkillLevelSelectorItems> items = new()
             {
                 // Lv0はわざわざLv0と書かない

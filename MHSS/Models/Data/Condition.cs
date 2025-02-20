@@ -44,5 +44,13 @@ namespace MHSS.Models.Data
         /// 最低龍耐性
         /// </summary>
         public double ResDragon { get; set; }
+
+
+        public Condition() { }
+
+        public Condition(Condition other)
+        {
+            Skills = other.Skills;
+        }
     }
 }

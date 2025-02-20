@@ -12,38 +12,45 @@
         <Expander Grid.Column="0" Margin="0,0,0,0" Height="Auto" Width="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                   BorderThickness="0" BorderBrush="Transparent">
             <Expander.Header>
-                <Grid HorizontalAlignment="{Binding HorizontalAlignment, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentPresenter}}, Mode=OneWayToSource}"
-                      Height="40">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Viewbox Stretch="Uniform" Grid.Column="0" Height="20">
-                        <TextBlock Text="{Binding Weapon.Value, Mode=OneWay}" FontSize="16" Margin="0,0,10,0"/>
-                    </Viewbox>
-                    <Viewbox Stretch="Uniform" Grid.Column="1" Height="20">
-                        <TextBlock Text="{Binding Head.Value, Mode=OneWay}" FontSize="16" Margin="0,0,10,0"/>
-                    </Viewbox>
-                    <Viewbox Stretch="Uniform" Grid.Column="2" Height="20">
-                        <TextBlock Text="{Binding Body.Value, Mode=OneWay}" FontSize="16" Margin="0,0,10,0"/>
-                    </Viewbox>
-                    <Viewbox Stretch="Uniform" Grid.Column="3" Height="20">
-                        <TextBlock Text="{Binding Arm.Value, Mode=OneWay}" FontSize="16" Margin="0,0,10,0"/>
-                    </Viewbox>
-                    <Viewbox Stretch="Uniform" Grid.Column="4" Height="20">
-                        <TextBlock Text="{Binding Waist.Value, Mode=OneWay}" FontSize="16" Margin="0,0,10,0"/>
-                    </Viewbox>
-                    <Viewbox Stretch="Uniform" Grid.Column="5" Height="20">
-                        <TextBlock Text="{Binding Leg.Value, Mode=OneWay}" FontSize="16" Margin="0,0,10,0"/>
-                    </Viewbox>
-                    <Viewbox Stretch="Uniform" Grid.Column="6" Height="20">
-                        <TextBlock Text="{Binding Charm.Value, Mode=OneWay}" FontSize="16" Margin="0,0,10,0"/>
-                    </Viewbox>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="20"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" HorizontalAlignment="{Binding HorizontalAlignment, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentPresenter}}, Mode=OneWayToSource}"
+                          Height="30">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Viewbox Stretch="Uniform" Grid.Column="0" Height="20">
+                            <TextBlock Text="{Binding Weapon.Value, Mode=OneWay}" FontSize="16" Margin="0,0,10,0"/>
+                        </Viewbox>
+                        <Viewbox Stretch="Uniform" Grid.Column="1" Height="20">
+                            <TextBlock Text="{Binding Head.Value, Mode=OneWay}" FontSize="16" Margin="0,0,10,0"/>
+                        </Viewbox>
+                        <Viewbox Stretch="Uniform" Grid.Column="2" Height="20">
+                            <TextBlock Text="{Binding Body.Value, Mode=OneWay}" FontSize="16" Margin="0,0,10,0"/>
+                        </Viewbox>
+                        <Viewbox Stretch="Uniform" Grid.Column="3" Height="20">
+                            <TextBlock Text="{Binding Arm.Value, Mode=OneWay}" FontSize="16" Margin="0,0,10,0"/>
+                        </Viewbox>
+                        <Viewbox Stretch="Uniform" Grid.Column="4" Height="20">
+                            <TextBlock Text="{Binding Waist.Value, Mode=OneWay}" FontSize="16" Margin="0,0,10,0"/>
+                        </Viewbox>
+                        <Viewbox Stretch="Uniform" Grid.Column="5" Height="20">
+                            <TextBlock Text="{Binding Leg.Value, Mode=OneWay}" FontSize="16" Margin="0,0,10,0"/>
+                        </Viewbox>
+                        <Viewbox Stretch="Uniform" Grid.Column="6" Height="20">
+                            <TextBlock Text="{Binding Charm.Value, Mode=OneWay}" FontSize="16" Margin="0,0,10,0"/>
+                        </Viewbox>
+                    </Grid>
+                    <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1"></Border>
                 </Grid>
             </Expander.Header>
             <Grid>
