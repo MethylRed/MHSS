@@ -50,7 +50,7 @@ namespace MHSS.Models.Data
 
 
         /// <summary>
-        /// コピーコンストラクタ
+        /// 追加スキル用コピーコンストラクタ
         /// </summary>
         /// <param name="other"></param>
         public Condition(Condition other)

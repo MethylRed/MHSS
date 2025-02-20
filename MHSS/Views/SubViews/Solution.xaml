@@ -7,7 +7,7 @@
              xmlns:subview="clr-namespace:MHSS.ViewModels.SubView"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance Type=subview:SolutionViewModel}"
-             d:DesignHeight="200" d:DesignWidth="400">
+             d:DesignHeight="400" d:DesignWidth="400">
     <Border BorderBrush="Gainsboro" BorderThickness="1">
         <Expander Grid.Column="0" Margin="0,0,0,0" Height="Auto" Width="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                   BorderThickness="0" BorderBrush="Transparent">
@@ -53,22 +53,134 @@
                     <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1"></Border>
                 </Grid>
             </Expander.Header>
-            <Grid>
+            <Grid Height="350">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <StackPanel Grid.Column="0">
-                    <TextBlock Text="{Binding Weapon.Value, Mode=OneWay}" Height="Auto" Width="Auto" Background="WhiteSmoke" FontSize="20" HorizontalAlignment="Left" Margin="20,0,0,0" Foreground="Black"/>
-                    <TextBlock Text="{Binding Head.Value, Mode=OneWay}" Height="Auto" Width="Auto" Background="White" FontSize="20" HorizontalAlignment="Left" Margin="20,0,0,0" Foreground="Black"/>
-                    <TextBlock Text="{Binding Body.Value, Mode=OneWay}" Height="Auto" Width="200" Background="WhiteSmoke" FontSize="20" HorizontalAlignment="Left" Margin="20,0,0,0" Foreground="Black"/>
-                    <TextBlock Text="{Binding Arm.Value, Mode=OneWay}" Height="Auto" Width="200" Background="White" FontSize="20" HorizontalAlignment="Left" Margin="20,0,0,0" Foreground="Black"/>
-                    <TextBlock Text="{Binding Waist.Value, Mode=OneWay}" Height="Auto" Width="200" Background="WhiteSmoke" FontSize="20" HorizontalAlignment="Left" Margin="20,0,0,0" Foreground="Black"/>
-                    <TextBlock Text="{Binding Leg.Value, Mode=OneWay}" Height="Auto" Width="200" Background="White" FontSize="20" HorizontalAlignment="Left" Margin="20,0,0,0" Foreground="Black"/>
-                    <TextBlock Text="{Binding Charm.Value, Mode=OneWay}" Height="Auto" Width="200" Background="WhiteSmoke" FontSize="20" HorizontalAlignment="Left" Margin="20,0,0,0" Foreground="Black"/>
-                </StackPanel>
-                <TextBlock Text="{Binding Deco.Value, Mode=OneWay}" Grid.Column="1" Height="Auto" Width="200" Background="White" FontSize="12" Margin="10,0,0,0" Foreground="Black"/>
+                <Grid Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Border Grid.Row="0" Background="WhiteSmoke" Margin="20,0,0,0">
+                        <TextBlock Text="{Binding Weapon.Value, Mode=OneWay}" Height="Auto" Width="200" Background="WhiteSmoke" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="Black"/>
+                    </Border>
+                    <Border Grid.Row="1" Background="White" Margin="20,0,0,0">
+                        <TextBlock Text="{Binding Head.Value, Mode=OneWay}" Height="Auto" Width="200" Background="White" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="Black"/>
+                    </Border>
+                    <Border Grid.Row="2" Background="WhiteSmoke" Margin="20,0,0,0">
+                        <TextBlock Text="{Binding Body.Value, Mode=OneWay}" Height="Auto" Width="200" Background="WhiteSmoke" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="Black"/>
+                    </Border>
+                    <Border Grid.Row="3" Background="White" Margin="20,0,0,0">
+                        <TextBlock Text="{Binding Arm.Value, Mode=OneWay}" Height="Auto" Width="200" Background="White" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="Black"/>
+                    </Border>
+                    <Border Grid.Row="4" Background="WhiteSmoke" Margin="20,0,0,0">
+                        <TextBlock Text="{Binding Waist.Value, Mode=OneWay}" Height="Auto" Width="200" Background="WhiteSmoke" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="Black"/>
+                    </Border>
+                    <Border Grid.Row="5" Background="White" Margin="20,0,0,0">
+                        <TextBlock Text="{Binding Leg.Value, Mode=OneWay}" Height="Auto" Width="200" Background="White" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="Black"/>
+                    </Border>
+                    <Border Grid.Row="6" Background="WhiteSmoke" Margin="20,0,0,0">
+                        <TextBlock Text="{Binding Charm.Value, Mode=OneWay}" Height="Auto" Width="200" Background="WhiteSmoke" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="Black"/>
+                    </Border>
+                </Grid>
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Border Grid.Row="0" Background="WhiteSmoke" Margin="20,0,0,0">
+                        <TextBlock Text="{Binding Deco.Value[0], Mode=OneWay}" Height="Auto" Width="200" Background="WhiteSmoke" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="Black"/>
+                    </Border>
+                    <Border Grid.Row="1" Background="WhiteSmoke" Margin="20,0,0,0">
+                        <TextBlock Text="{Binding Deco.Value[1], Mode=OneWay}" Height="Auto" Width="200" Background="WhiteSmoke" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="Black"/>
+                    </Border>
+                    <Border Grid.Row="2" Background="WhiteSmoke" Margin="20,0,0,0">
+                        <TextBlock Text="{Binding Deco.Value[2], Mode=OneWay}" Height="Auto" Width="200" Background="WhiteSmoke" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="Black"/>
+                    </Border>
+                    <Border Grid.Row="3" Background="White" Margin="20,0,0,0">
+                        <TextBlock Text="{Binding Deco.Value[3], Mode=OneWay}" Height="Auto" Width="200" Background="White" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="Black"/>
+                    </Border>
+                    <Border Grid.Row="4" Background="White" Margin="20,0,0,0">
+                        <TextBlock Text="{Binding Deco.Value[4], Mode=OneWay}" Height="Auto" Width="200" Background="White" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="Black"/>
+                    </Border>
+                    <Border Grid.Row="5" Background="White" Margin="20,0,0,0">
+                        <TextBlock Text="{Binding Deco.Value[5], Mode=OneWay}" Height="Auto" Width="200" Background="White" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="Black"/>
+                    </Border>
+                    <Border Grid.Row="6" Background="WhiteSmoke" Margin="20,0,0,0">
+                        <TextBlock Text="{Binding Deco.Value[6], Mode=OneWay}" Height="Auto" Width="200" Background="WhiteSmoke" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="Black"/>
+                    </Border>
+                    <Border Grid.Row="7" Background="WhiteSmoke" Margin="20,0,0,0">
+                        <TextBlock Text="{Binding Deco.Value[7], Mode=OneWay}" Height="Auto" Width="200" Background="WhiteSmoke" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="Black"/>
+                    </Border>
+                    <Border Grid.Row="8" Background="WhiteSmoke" Margin="20,0,0,0">
+                        <TextBlock Text="{Binding Deco.Value[8], Mode=OneWay}" Height="Auto" Width="200" Background="WhiteSmoke" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="Black"/>
+                    </Border>
+                    <Border Grid.Row="9" Background="White" Margin="20,0,0,0">
+                        <TextBlock Text="{Binding Deco.Value[9], Mode=OneWay}" Height="Auto" Width="200" Background="White" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="Black"/>
+                    </Border>
+                    <Border Grid.Row="10" Background="White" Margin="20,0,0,0">
+                        <TextBlock Text="{Binding Deco.Value[10], Mode=OneWay}" Height="Auto" Width="200" Background="White" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="Black"/>
+                    </Border>
+                    <Border Grid.Row="11" Background="White" Margin="20,0,0,0">
+                        <TextBlock Text="{Binding Deco.Value[11], Mode=OneWay}" Height="Auto" Width="200" Background="White" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="Black"/>
+                    </Border>
+                    <Border Grid.Row="12" Background="WhiteSmoke" Margin="20,0,0,0">
+                        <TextBlock Text="{Binding Deco.Value[12], Mode=OneWay}" Height="Auto" Width="200" Background="WhiteSmoke" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="Black"/>
+                    </Border>
+                    <Border Grid.Row="13" Background="WhiteSmoke" Margin="20,0,0,0">
+                        <TextBlock Text="{Binding Deco.Value[13], Mode=OneWay}" Height="Auto" Width="200" Background="WhiteSmoke" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="Black"/>
+                    </Border>
+                    <Border Grid.Row="14" Background="WhiteSmoke" Margin="20,0,0,0">
+                        <TextBlock Text="{Binding Deco.Value[14], Mode=OneWay}" Height="Auto" Width="200" Background="WhiteSmoke" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="Black"/>
+                    </Border>
+                    <Border Grid.Row="15" Background="White" Margin="20,0,0,0">
+                        <TextBlock Text="{Binding Deco.Value[15], Mode=OneWay}" Height="Auto" Width="200" Background="White" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="Black"/>
+                    </Border>
+                    <Border Grid.Row="16" Background="White" Margin="20,0,0,0">
+                        <TextBlock Text="{Binding Deco.Value[16], Mode=OneWay}" Height="Auto" Width="200" Background="White" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="Black"/>
+                    </Border>
+                    <Border Grid.Row="17" Background="White" Margin="20,0,0,0">
+                        <TextBlock Text="{Binding Deco.Value[17], Mode=OneWay}" Height="Auto" Width="200" Background="White" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="Black"/>
+                    </Border>
+                    <Border Grid.Row="18" Background="WhiteSmoke" Margin="20,0,0,0">
+                        <TextBlock Text="{Binding Deco.Value[18], Mode=OneWay}" Height="Auto" Width="200" Background="WhiteSmoke" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="Black"/>
+                    </Border>
+                    <Border Grid.Row="19" Background="WhiteSmoke" Margin="20,0,0,0">
+                        <TextBlock Text="{Binding Deco.Value[19], Mode=OneWay}" Height="Auto" Width="200" Background="WhiteSmoke" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="Black"/>
+                    </Border>
+                    <Border Grid.Row="20" Background="WhiteSmoke" Margin="20,0,0,0">
+                        <TextBlock Text="{Binding Deco.Value[20], Mode=OneWay}" Height="Auto" Width="200" Background="WhiteSmoke" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="Black"/>
+                    </Border>
+                </Grid>
+
+                <!--<TextBlock Text="{Binding Deco.Value, Mode=OneWay}" Grid.Column="1" Height="Auto" Width="200" Background="White" FontSize="12" Margin="10,0,0,0" Foreground="Black"/>-->
                 <TextBlock Text="{Binding Skill.Value, Mode=OneWay}" Grid.Column="2" Height="Auto" Width="200" Background="White" FontSize="12" Margin="10,0,0,0" Foreground="Black"/>
 
 

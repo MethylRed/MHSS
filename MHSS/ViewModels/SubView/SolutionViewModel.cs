@@ -2,6 +2,7 @@
 using Reactive.Bindings;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,7 +35,29 @@ namespace MHSS.ViewModels.SubView
         public ReactivePropertySlim<string> Charm { get; set; } = new(string.Empty);
 
 
-        public ReactivePropertySlim<string> Deco { get; set; } = new(string.Empty);
+        public ReactivePropertySlim<string> Deco0 { get; set; } = new(string.Empty);
+        public ReactivePropertySlim<string> Deco1 { get; set; } = new(string.Empty);
+        public ReactivePropertySlim<string> Deco2 { get; set; } = new(string.Empty);
+        public ReactivePropertySlim<string> Deco3 { get; set; } = new(string.Empty);
+        public ReactivePropertySlim<string> Deco4 { get; set; } = new(string.Empty);
+        public ReactivePropertySlim<string> Deco5 { get; set; } = new(string.Empty);
+        public ReactivePropertySlim<string> Deco6 { get; set; } = new(string.Empty);
+        public ReactivePropertySlim<string> Deco7 { get; set; } = new(string.Empty);
+        public ReactivePropertySlim<string> Deco8 { get; set; } = new(string.Empty);
+        public ReactivePropertySlim<string> Deco9 { get; set; } = new(string.Empty);
+        public ReactivePropertySlim<string> Deco10 { get; set; } = new(string.Empty);
+        public ReactivePropertySlim<string> Deco11 { get; set; } = new(string.Empty);
+        public ReactivePropertySlim<string> Deco12 { get; set; } = new(string.Empty);
+        public ReactivePropertySlim<string> Deco13 { get; set; } = new(string.Empty);
+        public ReactivePropertySlim<string> Deco14 { get; set; } = new(string.Empty);
+        public ReactivePropertySlim<string> Deco15 { get; set; } = new(string.Empty);
+        public ReactivePropertySlim<string> Deco16 { get; set; } = new(string.Empty);
+        public ReactivePropertySlim<string> Deco17 { get; set; } = new(string.Empty);
+        public ReactivePropertySlim<string> Deco18 { get; set; } = new(string.Empty);
+        public ReactivePropertySlim<string> Deco19 { get; set; } = new(string.Empty);
+        public ReactivePropertySlim<string> Deco20 { get; set; } = new(string.Empty);
+
+        public ReactivePropertySlim<ObservableCollection<string>> Deco { get; set; } = new();
 
 
         public SolutionViewModel(SearchedEquips searchedEquips)
@@ -52,12 +75,15 @@ namespace MHSS.ViewModels.SubView
                                              .Select(g => new { g.Key.Name, Count = g.Count() })
                                              .ToList();
 
-
-
+            Deco.Value = new();
+            foreach (var d in searchedEquips.Decos)
+            {
+                Deco.Value.Add(d.Name);
+            }
 
             foreach (var item in decos)
             {
-                Deco.Value += item.Name + "*" + item.Count.ToString() + "\n";
+                Deco0.Value += item.Name + "*" + item.Count.ToString() + "\n";
             }
 
 

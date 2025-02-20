@@ -19,6 +19,7 @@ using Reactive.Bindings.Disposables;
 using Reactive.Bindings.Extensions;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using System.Collections.Concurrent;
 //using System.Reactive.Disposables;
 
 namespace MHSS.ViewModels
@@ -39,6 +40,10 @@ namespace MHSS.ViewModels
         /// 表示用検索結果数
         /// </summary>
         public ReactivePropertySlim<string> ShowCount { get; set; } = new("0");
+
+
+        public ReactivePropertySlim<ObservableCollection<Skill>> ExtraSkills { get; set; } = new(new());
+
 
         /// <summary>
         /// ビジー状態
@@ -201,52 +206,67 @@ namespace MHSS.ViewModels
         /// <returns></returns>
         private async Task SearchExtraSkills()
         {
+            Stopwatch sw = Stopwatch.StartNew();
+
             // 元の検索条件を保持
             Condition masterCondition = GetCondition();
+            ConcurrentBag<Skill> skills = new();
 
             // 進捗管理用
             int count = 0;
+            int maxDegreeOfParallelism = Math.Min((Environment.ProcessorCount)/2, 6);
+            var options = new ParallelOptions { MaxDegreeOfParallelism = maxDegreeOfParallelism };
 
             // 検索結果
-            List<Skill> skills = new();
+            //List<Skill> skills = new();
+
+            await Task.Run(() =>
+            {
+                Parallel.ForEach(masterCondition.Skills, options, skill =>
+                {
+                    count++;
+                    for (int level = skill.Level + 1; level <= skill.MaxLevel2; level++)
+                    {
+                        Condition condition = new(masterCondition);
+                        condition.Skills.Single(s => s.Name == skill.Name).Level = level;
+                        Solve solve = new Solve(condition);
+
+                        Solver.ResultStatus status = solve.Solver.Solve();
+                        
+                        if (status != Solver.ResultStatus.OPTIMAL) break;
+
+                        skills.Add(new Skill { Name = skill.Name, Level = level });
+                    }
+                });
+            });
+
+            ExtraSkills.Value = new(skills);
+
+            sw.Stop();
+            Debug.WriteLine(sw.ElapsedMilliseconds);
+
+
+
+
+
+
+
+
+
+
+
 
             // すべてのスキルについて
-            foreach (var skill in masterCondition.Skills)
-            {
-                // 元の検索条件のスキルレベル
-                int l = skill.Level;
-
-                // 元の検索条件のスキルレベル+1から上限まで検索
-                for (int level = skill.Level+1; level <= skill.MaxLevel2; level++)
-                {
-                    // スキルの検索条件を取得
-                    Condition condition = new(masterCondition);
-                    condition.Skills.Single(s => s.Name == skill.Name).Level = level;
-
-                    // ソルバーを宣言
-                    Solve = new(condition);
-
-                    Solver.ResultStatus status = await Task.Run(() => Solve.Solver.Solve());
-                    if (status != Solver.ResultStatus.OPTIMAL) break;
-                    skills.Add(new Skill() { Name = skill.Name, Level = condition.Skills.Single(s => s.Name == skill.Name).Level });
-                    //Debug.WriteLine($"{skill.Name}Lv{condition.Skills.Single(s => s.Name == skill.Name).Level}");
-                }
-            }
-
-            //foreach (var skill in Master.Skills)
+            //foreach (var skill in masterCondition.Skills)
             //{
             //    // 元の検索条件のスキルレベル
-            //    int l = masterCondition.Skills.Single(s => s.Name == skill.Name).Level;
-            //    for (int level = 1; level <= skill.MaxLevel2 - l; level++)
+            //    int l = skill.Level;
+
+            //    // 元の検索条件のスキルレベル+1から上限まで検索
+            //    for (int level = skill.Level+1; level <= skill.MaxLevel2; level++)
             //    {
             //        // スキルの検索条件を取得
-            //        Condition condition = SkillSelectVM.Value.MakeSkillCondition();
-            //        condition.Def = Utility.ParseOrDefault(Def.Value);
-            //        condition.ResFire = Utility.ParseOrDefaultDouble(ResFire.Value, double.NegativeInfinity);
-            //        condition.ResWater = Utility.ParseOrDefaultDouble(ResWater.Value, double.NegativeInfinity);
-            //        condition.ResThunder = Utility.ParseOrDefaultDouble(ResThunder.Value, double.NegativeInfinity);
-            //        condition.ResIce = Utility.ParseOrDefaultDouble(ResIce.Value, double.NegativeInfinity);
-            //        condition.ResDragon = Utility.ParseOrDefaultDouble(ResDragon.Value, double.NegativeInfinity);
+            //        Condition condition = new(masterCondition);
             //        condition.Skills.Single(s => s.Name == skill.Name).Level = level;
 
             //        // ソルバーを宣言
@@ -255,7 +275,7 @@ namespace MHSS.ViewModels
             //        Solver.ResultStatus status = await Task.Run(() => Solve.Solver.Solve());
             //        if (status != Solver.ResultStatus.OPTIMAL) break;
             //        skills.Add(new Skill() { Name = skill.Name, Level = condition.Skills.Single(s => s.Name == skill.Name).Level });
-            //        Debug.WriteLine($"{skill.Name}Lv{condition.Skills.Single(s => s.Name == skill.Name).Level}");
+            //        //Debug.WriteLine($"{skill.Name}Lv{condition.Skills.Single(s => s.Name == skill.Name).Level}");
             //    }
             //}
         }
