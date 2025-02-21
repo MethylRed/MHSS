@@ -49,6 +49,8 @@ namespace MHSS.ViewModels.SubView
         {
             Condition condition = new();
             condition.Skills = SkillLevelSelectorsByCategoryVMs.Value.SelectMany(v => v.SkillsCondition()).ToList();
+            bool b = SkillLevelSelectorsByCategoryVMs.Value.Select(s => s.JudgeSecret()).Aggregate(true, (acc, x) => acc && x);
+            condition.Secret = b;
             return condition;
         }
     }

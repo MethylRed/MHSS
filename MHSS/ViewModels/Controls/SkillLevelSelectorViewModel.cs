@@ -34,6 +34,11 @@ namespace MHSS.ViewModels.Controls
         public ReactivePropertySlim<bool> IsSelected { get; } = new(false);
 
         /// <summary>
+        /// 選択状態  0:非選択 1:選択(OK) 2:選択(NG)
+        /// </summary>
+        public ReactivePropertySlim<int> SelectedState { get; } = new(0);
+
+        /// <summary>
         /// 背景色
         /// </summary>
         public ReactivePropertySlim<SolidColorBrush> BackgroundColor { get; } = new(Brushes.White);
@@ -69,7 +74,6 @@ namespace MHSS.ViewModels.Controls
         public SkillLevelSelectorViewModel(string skillName)
         {
             SkillName = skillName;
-            string displayName = "";
 
             // ComboBoxのItemを作成
             //Skill s = Master.Skills.Where(x => x.Name == SkillName).First();
@@ -83,21 +87,24 @@ namespace MHSS.ViewModels.Controls
             // 発動スキルが書かれてないと消えちゃうので発動スキルが書かれてることも条件
             if ((s.Category == "シリーズスキル") && (s.ActivateSkillName1 != string.Empty))
             {
-                displayName = $"{s.ActivateSkillName1}({s.Name}+{s.MaxLevel1})";
-                items.Add(new SkillLevelSelectorItems(displayName, s.MaxLevel1));
+                items.Add(new SkillLevelSelectorItems($"{s.ActivateSkillName1}({s.Name}+{s.MaxLevel1})", s.MaxLevel1));
                 if (s.ActivateSkillName2 != string.Empty)
                 {
-                    displayName = $"{s.ActivateSkillName2}({s.Name}+{s.MaxLevel2})";
-                    items.Add(new SkillLevelSelectorItems(displayName, s.MaxLevel2));
+                    items.Add(new SkillLevelSelectorItems($"{s.ActivateSkillName2}({s.Name}+{s.MaxLevel2})", s.MaxLevel2));
                 }
             }
             else
             {
-                for (int i = 1; i <= s.MaxLevel2; i++)
+                for (int i = 1; i <= s.MaxLevel1; i++)
                 {
                     // スキル名+Lvを表示
-                    displayName = s.Name + " Lv" + i.ToString();
-                    items.Add(new SkillLevelSelectorItems(displayName, i));
+                    items.Add(new SkillLevelSelectorItems($"{s.Name} Lv{i}", i));
+                }
+                for (int i = s.MaxLevel1 + 1; i<= s.MaxLevel2; i++)
+                {
+                    // 極意があるとき
+                    items.Add(new SkillLevelSelectorItems($"{s.Name} Lv{i}({s.ActivateSkillName2})".Replace("()", ""), i));
+
                 }
             }
             Items.Value = items;
@@ -111,24 +118,74 @@ namespace MHSS.ViewModels.Controls
             // IsSelected = False：スキルレベルが0 and レベル非固定
             SelectedItem.Subscribe(isSelected =>
             {
-                IsSelected.Value = (SelectedItem.Value.SkillLevel != 0) || IsFixed.Value;
-            });
-            IsFixed.Subscribe(isFixed =>
-            {
-                IsSelected.Value = (SelectedItem.Value.SkillLevel != 0) || IsFixed.Value;
-            });
-
-            // スキルレベルが0以外 or レベル固定のとき、ComboBoxの色を変更する
-            IsSelected.Subscribe(b =>
-            {
-                if (b)
+                if ((SelectedItem.Value.SkillLevel != 0) || IsFixed.Value)
                 {
-                    BackgroundColor.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E0EFFF"));
+                    //IsSelected.Value = true;
+                    if ((SelectedSkill.Level > SelectedSkill.MaxLevel1) &&
+                        (SelectedSkill.Name == "シリーズスキル") &&
+                        (SelectedSkill.ActivateSkillName2 != ""))
+                    {
+                        SelectedState.Value = 2;
+                    }
+                    else
+                    {
+                        SelectedState.Value = 1;
+                    }
                 }
                 else
                 {
-                    BackgroundColor.Value = Brushes.White;
+                    //IsSelected.Value = false;
+                    SelectedState.Value = 0;
                 }
+            });
+            IsFixed.Subscribe(isFixed =>
+            {
+                if ((SelectedItem.Value.SkillLevel != 0) || IsFixed.Value)
+                {
+                    //IsSelected.Value = true;
+                    if ((SelectedSkill.Level > SelectedSkill.MaxLevel1) &&
+                        (SelectedSkill.Name == "シリーズスキル") &&
+                        (SelectedSkill.ActivateSkillName2 != ""))
+                    {
+                        SelectedState.Value = 2;
+                    }
+                    else
+                    {
+                        SelectedState.Value = 1;
+                    }
+                }
+                else
+                {
+                    //IsSelected.Value = false;
+                    SelectedState.Value = 0;
+                }
+            });
+
+            // スキルレベルが0以外 or レベル固定のとき、ComboBoxの色を変更する
+            //IsSelected.Subscribe(b =>
+            //{
+            //    if (b)
+            //    {
+            //        BackgroundColor.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E0EFFF"));
+            //    }
+            //    else
+            //    {
+            //        BackgroundColor.Value = Brushes.White;
+            //    }
+            //});
+
+            SelectedState.Subscribe(i =>
+            {
+                switch (i)
+                {
+                    case 0: BackgroundColor.Value = Brushes.White; break;
+                    case 1: BackgroundColor.Value = BackgroundColor.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E0EFFF")); break;
+                    case 2: BackgroundColor.Value = BackgroundColor.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FADBD8")); break;
+                }
+
+                //if (i == 0) BackgroundColor.Value = Brushes.White;
+                //else if (i == 1) BackgroundColor.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E0EFFF"));
+                //else BackgroundColor.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FADBD8"));
             });
         }
     }

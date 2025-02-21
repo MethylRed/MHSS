@@ -172,6 +172,8 @@ namespace MHSS.ViewModels
             // スキルの検索条件を取得
             Condition condition = GetCondition();
 
+            if (!condition.Secret) return;
+
             // ソルバーを宣言
             Solve = new(condition);
 
@@ -210,6 +212,8 @@ namespace MHSS.ViewModels
 
             // 元の検索条件を保持
             Condition masterCondition = GetCondition();
+            if (!masterCondition.Secret) return;
+
             ConcurrentBag<Skill> skills = new();
 
             // 進捗管理用

@@ -20,12 +20,6 @@
                     <Setter Property="Background" Value="Transparent"/>
                     <Setter Property="BorderThickness" Value="3"/>
                     <Setter Property="BorderBrush" Value="Transparent"/>
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Path=IsSelected.Value}" Value="true">
-                            <!--<Setter Property="Background" Value="#92C9E1"/>-->
-                            <!--<Setter Property="BorderBrush" Value="#92C9E1"/>-->
-                        </DataTrigger>
-                    </Style.Triggers>
                 </Style>
             </Border.Style>
 

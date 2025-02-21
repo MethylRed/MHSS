@@ -45,6 +45,10 @@ namespace MHSS.Models.Data
         /// </summary>
         public double ResDragon { get; set; }
 
+        /// <summary>
+        /// 極意判定用
+        /// </summary>
+        public bool Secret { get; set; } = true;
 
         public Condition() { }
 
@@ -68,6 +72,7 @@ namespace MHSS.Models.Data
             ResIce = other.ResIce;
             ResDragon = other.ResDragon;
             ResDragon = other.ResDragon;
+            Secret = other.Secret;
         }
     }
 }

@@ -57,5 +57,13 @@ namespace MHSS.Models.Data
         /// 全装飾品
         /// </summary>
         public static List<Deco> Decos { get; set; } = new();
+
+
+        Dictionary<string, Equip> dicHead = Master.Heads.ToDictionary(kvp => kvp.Name, kvp => kvp);
+        Dictionary<string, Deco> dicDeco = Master.Decos.ToDictionary(kvp => kvp.Name, kvp => kvp);
+
+        Dictionary<string, Equip> dic => dicHead
+            .Concat(dicDeco.Select(kvp => new KeyValuePair<string, Equip>(kvp.Key, kvp.Value)))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
     }
 }

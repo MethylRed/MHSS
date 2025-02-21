@@ -44,5 +44,11 @@ namespace MHSS.ViewModels.Controls
             selectedSkills = SkillLevelSelectorVMs.Select(s => s.SelectedSkill).ToList();
             return selectedSkills;
         }
+
+        public bool JudgeSecret()
+        {
+            int i = SkillLevelSelectorVMs.Select(s => s.SelectedState.Value).Aggregate(1, (acc, x) => acc * x);
+            return (i > 1);
+        }
     }
 }
