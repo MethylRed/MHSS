@@ -171,6 +171,7 @@ namespace MHSS.ViewModels
         {
             // スキルの検索条件を取得
             Condition condition = GetCondition();
+            System.Windows.Application.Current.Dispatcher.Invoke(() => SolutionVMs.Clear());
 
             if (!condition.Secret) return;
 
@@ -178,7 +179,6 @@ namespace MHSS.ViewModels
             Solve = new(condition);
 
             // 求解し表示
-            System.Windows.Application.Current.Dispatcher.Invoke(() => SolutionVMs.Clear());
             int count = 0;
             ShowCount.Value = "0";
 

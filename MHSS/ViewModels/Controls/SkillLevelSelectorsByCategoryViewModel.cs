@@ -47,8 +47,7 @@ namespace MHSS.ViewModels.Controls
 
         public bool JudgeSecret()
         {
-            int i = SkillLevelSelectorVMs.Select(s => s.SelectedState.Value).Aggregate(1, (acc, x) => acc * x);
-            return (i > 1);
+            return SkillLevelSelectorVMs.Select(s => s.SatisfySecret.Value).Aggregate(true, (acc, x) => acc && x);
         }
     }
 }
