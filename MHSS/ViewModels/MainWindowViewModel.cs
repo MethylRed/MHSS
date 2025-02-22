@@ -20,12 +20,18 @@ using Reactive.Bindings.Extensions;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
+using System.Text;
 //using System.Reactive.Disposables;
 
 namespace MHSS.ViewModels
 {
     internal class MainWindowViewModel : BindableBase, IDisposable
     {
+        /// <summary>
+        /// 検索結果表示タブの選択インデックス
+        /// </summary>
+        public ReactivePropertySlim<int> SelectedResultTabIndex { get; set; } = new(0);
+
         /// <summary>
         /// 検索コマンド
         /// </summary>
@@ -43,7 +49,7 @@ namespace MHSS.ViewModels
 
 
         public ReactivePropertySlim<ObservableCollection<Skill>> ExtraSkills { get; set; } = new(new());
-
+        public ReactivePropertySlim<string> ForDisplayExtraSkills { get; set; } = new("");
 
         /// <summary>
         /// ビジー状態
@@ -102,6 +108,11 @@ namespace MHSS.ViewModels
         public ReactivePropertySlim<SkillSelectViewModel> SkillSelectVM { get; } = new();
 
         /// <summary>
+        /// 装飾品登録のViewModel
+        /// </summary>
+        public ReactiveCollection<DecoRegistViewModel> DecoRegistVMs { get; } = new();
+
+        /// <summary>
         /// 結果表示のViewModel
         /// </summary>
         public ReactiveCollection<SolutionViewModel> SolutionVMs { get; } = new();
@@ -124,6 +135,8 @@ namespace MHSS.ViewModels
             //CSVLoader.LoadCsvLeg();
             //CSVLoader.LoadCsvCharm();
             //CSVLoader.LoadCsvDeco();
+
+            foreach (var deco in Master.Decos) DecoRegistVMs.Add(new DecoRegistViewModel(deco));
 
             // 検索ボタンクリックイベントの定義
             SearchCommand = IsBusy.Select(x => !x).ToAsyncReactiveCommand();
@@ -171,9 +184,11 @@ namespace MHSS.ViewModels
         {
             // スキルの検索条件を取得
             Condition condition = GetCondition();
+
+            // 解を表示するVMを初期化
             System.Windows.Application.Current.Dispatcher.Invoke(() => SolutionVMs.Clear());
 
-            if (!condition.Secret) return;
+            if (!condition.SatisfySecret) return;
 
             // ソルバーを宣言
             Solve = new(condition);
@@ -199,6 +214,7 @@ namespace MHSS.ViewModels
                     });
                 }
             }
+            SelectedResultTabIndex.Value = 0;
             Debug.WriteLine("Check is finished.");
         }
 
@@ -212,7 +228,7 @@ namespace MHSS.ViewModels
 
             // 元の検索条件を保持
             Condition masterCondition = GetCondition();
-            if (!masterCondition.Secret) return;
+            if (!masterCondition.SatisfySecret) return;
 
             ConcurrentBag<Skill> skills = new();
 
@@ -229,7 +245,7 @@ namespace MHSS.ViewModels
                 Parallel.ForEach(masterCondition.Skills, options, skill =>
                 {
                     count++;
-                    for (int level = skill.Level + 1; level <= skill.MaxLevel2; level++)
+                    for (int level = skill.Level + 1; level <= int.Max(skill.MaxLevel1, skill.MaxLevel2); level++)
                     {
                         Condition condition = new(masterCondition);
                         condition.Skills.Single(s => s.Name == skill.Name).Level = level;
@@ -246,42 +262,21 @@ namespace MHSS.ViewModels
 
             ExtraSkills.Value = new(skills);
 
+            var x = ExtraSkills.Value.GroupBy(s => s.Name).Select(g => new { g.Key, Count = g.Count() });
+            StringBuilder sb = new();
+            foreach (var item in x)
+            {
+                sb.Append($"{item.Key}  ");
+                for (int i = 1; i <= item.Count; i++)
+                {
+                    sb.Append($"Lv{i}, ");
+                }
+                sb.Append('\n');
+            }
+            ForDisplayExtraSkills.Value = sb.ToString();
+            SelectedResultTabIndex.Value = 1;
             sw.Stop();
             Debug.WriteLine(sw.ElapsedMilliseconds);
-
-
-
-
-
-
-
-
-
-
-
-
-            // すべてのスキルについて
-            //foreach (var skill in masterCondition.Skills)
-            //{
-            //    // 元の検索条件のスキルレベル
-            //    int l = skill.Level;
-
-            //    // 元の検索条件のスキルレベル+1から上限まで検索
-            //    for (int level = skill.Level+1; level <= skill.MaxLevel2; level++)
-            //    {
-            //        // スキルの検索条件を取得
-            //        Condition condition = new(masterCondition);
-            //        condition.Skills.Single(s => s.Name == skill.Name).Level = level;
-
-            //        // ソルバーを宣言
-            //        Solve = new(condition);
-
-            //        Solver.ResultStatus status = await Task.Run(() => Solve.Solver.Solve());
-            //        if (status != Solver.ResultStatus.OPTIMAL) break;
-            //        skills.Add(new Skill() { Name = skill.Name, Level = condition.Skills.Single(s => s.Name == skill.Name).Level });
-            //        //Debug.WriteLine($"{skill.Name}Lv{condition.Skills.Single(s => s.Name == skill.Name).Level}");
-            //    }
-            //}
         }
 
         /// <summary>

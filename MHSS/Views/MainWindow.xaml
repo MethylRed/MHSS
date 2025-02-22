@@ -6,6 +6,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:prism="http://prismlibrary.com/"
         xmlns:subviews="clr-namespace:MHSS.Views.SubViews"
+        xmlns:ctrl="clr-namespace:MHSS.Views.Controls"
         xmlns:viewmodels="clr-namespace:MHSS.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowViewModel}"
         Title="MHSS" Height="540" Width="1080" >
@@ -49,6 +50,28 @@
                         </Grid>
                     </TabItem>
                     <TabItem Header="武器選択">
+                    </TabItem>
+                    <TabItem Header="装備固定・除外">
+                    </TabItem>
+                    <TabItem Header="装飾品登録">
+                        <ScrollViewer Grid.Row="1" VerticalAlignment="Stretch">
+                            <StackPanel Margin="0">
+                                <ItemsControl ItemsSource="{Binding DecoRegistVMs, Mode=OneWay}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <ctrl:DecoRegist HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="15,0,0,0"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                </ItemsControl>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </TabItem>
+                    <TabItem Header="武器登録">
                     </TabItem>
                 </TabControl>
             </Border>
@@ -182,7 +205,7 @@
         </Grid>
 
         <Border Grid.Column="1" CornerRadius="3" Margin="5" BorderBrush="Black" BorderThickness="1">
-            <TabControl Margin="5">
+            <TabControl Margin="5" x:Name="ResultTab" SelectedIndex="{Binding SelectedResultTabIndex.Value, Mode=TwoWay}">
                 <TabItem Header="検索結果">
                     <Grid>
                         <Grid.RowDefinitions>
@@ -228,7 +251,9 @@
                     </Grid>
                 </TabItem>
                 <TabItem Header="追加スキル検索結果">
-                    
+                    <ScrollViewer>
+                        <TextBlock Text="{Binding ForDisplayExtraSkills.Value}"/>
+                    </ScrollViewer>
                 </TabItem>
             </TabControl>
             

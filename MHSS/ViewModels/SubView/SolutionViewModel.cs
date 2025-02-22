@@ -80,6 +80,10 @@ namespace MHSS.ViewModels.SubView
             {
                 Deco.Value.Add(d.Name);
             }
+            for (int i = Deco.Value.Count(); i < 21; i++)
+            {
+                Deco.Value.Add("");
+            }
 
             foreach (var item in decos)
             {

@@ -11,5 +11,10 @@ namespace MHSS.Views.Controls
         {
             InitializeComponent();
         }
+
+        private void ComboBox_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
+        {
+            e.Handled = true;
+        }
     }
 }

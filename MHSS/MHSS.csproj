@@ -40,5 +40,47 @@
     <None Update="Models\Data\CSV\MHWs_SKILL.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Models\Data\CSV\Weapon\MHWs_BOW.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Models\Data\CSV\Weapon\MHWs_CHARGEBLADE.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Models\Data\CSV\Weapon\MHWs_DUALBLADES.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Models\Data\CSV\Weapon\MHWs_GREATSWORD.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Models\Data\CSV\Weapon\MHWs_GUNLANCE.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Models\Data\CSV\Weapon\MHWs_HAMMER.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Models\Data\CSV\Weapon\MHWs_HEAVYBOWGUN.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Models\Data\CSV\Weapon\MHWs_HUNTINGHORN.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Models\Data\CSV\Weapon\MHWs_INSECTGLAIVE.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Models\Data\CSV\Weapon\MHWs_LANCE.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Models\Data\CSV\Weapon\MHWs_LIGHTBOWGUN.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Models\Data\CSV\Weapon\MHWs_LONGSWORD.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Models\Data\CSV\Weapon\MHWs_SWITCHAXE.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Models\Data\CSV\Weapon\MHWs_SWORDANDSHIELD.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

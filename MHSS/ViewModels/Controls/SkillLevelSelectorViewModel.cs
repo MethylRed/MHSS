@@ -8,6 +8,7 @@ using Reactive.Bindings;
 using System.Collections.ObjectModel;
 using System.Windows.Media;
 using System.Reactive.Disposables;
+using System.Windows.Input;
 
 namespace MHSS.ViewModels.Controls
 {
@@ -32,21 +33,6 @@ namespace MHSS.ViewModels.Controls
         /// 初期値以外の選択有無
         /// </summary>
         public ReactivePropertySlim<bool> IsSelected { get; } = new(false);
-
-        /// <summary>
-        /// 選択状態  0:非選択 1:選択(OK) 2:選択(NG)
-        /// </summary>
-        //public ReactivePropertySlim<int> SelectedState { get; } = new(0);
-
-        /// <summary>
-        /// 極意が発動しているか
-        /// </summary>
-        public bool ActiveSecret1 { get; set; } = true;
-
-        /// <summary>
-        /// 極意が発動しているか
-        /// </summary>
-        public bool ActiveSecret2 { get; set; } = true;
 
         /// <summary>
         /// 極意による上限解放が必要なレベルを指定していて、極意が発動しているかどうか
@@ -99,15 +85,15 @@ namespace MHSS.ViewModels.Controls
                 new SkillLevelSelectorItems(" " + s.Name, 0)
             };
             // シリーズスキルのとき
-            // 発動スキルが書かれてないと消えちゃうので発動スキルが書かれてることも条件
-            if ((s.Category == "シリーズスキル") && (s.ActivateSkillName1 != string.Empty))
+            if (s.Category == "シリーズスキル")
             {
                 items.Add(new SkillLevelSelectorItems($"{s.ActivateSkillName1}({s.Name}+{s.MaxLevel1})", s.MaxLevel1));
                 if (s.ActivateSkillName2 != string.Empty)
                 {
-                    items.Add(new SkillLevelSelectorItems($"{s.ActivateSkillName2}({s.Name}+{s.MaxLevel2})", s.MaxLevel2));
+                    items.Add(new SkillLevelSelectorItems($"{s.ActivateSkillName1}&{s.ActivateSkillName2}({s.Name}+{s.MaxLevel2})", s.MaxLevel2));
                 }
             }
+            // シリーズスキル以外の時
             else
             {
                 for (int i = 1; i <= s.MaxLevel1; i++)
@@ -117,8 +103,8 @@ namespace MHSS.ViewModels.Controls
                 }
                 for (int i = s.MaxLevel1 + 1; i<= s.MaxLevel2; i++)
                 {
-                    // 極意があるとき
-                    items.Add(new SkillLevelSelectorItems($"{s.Name} Lv{i}({s.ActivateSkillName2})".Replace("()", ""), i));
+                    // 極意があるときは極意スキル名を付加
+                    items.Add(new SkillLevelSelectorItems($"{s.Name} Lv{i}({s.ActivateSkillName1})".Replace("()", ""), i));
 
                 }
             }
@@ -127,71 +113,6 @@ namespace MHSS.ViewModels.Controls
 
             // 選択されたスキルの情報の初期値
             SelectedItem.Value = Items.Value.First();
-
-            //// スキルレベルか固定有無が変更されたら
-            //// IsSelected = True ：スキルレベルが0以外 or レベル固定
-            //// IsSelected = False：スキルレベルが0 and レベル非固定
-            //SelectedItem.Subscribe(isSelected =>
-            //{
-            //    if ((SelectedItem.Value.SkillLevel != 0) || IsFixed.Value)
-            //    {
-            //        //IsSelected.Value = true;
-            //        if ((SelectedSkill.Level > SelectedSkill.MaxLevel1) &&
-            //            (SelectedSkill.Category != "シリーズスキル") &&
-            //            (SelectedSkill.ActivateSkillName2 != ""))
-            //        {
-            //            SelectedState.Value = 2;
-            //            JudgeSecret = false;
-            //        }
-            //        else
-            //        {
-            //            SelectedState.Value = 1;
-            //            JudgeSecret = true;
-            //        }
-            //    }
-            //    else
-            //    {
-            //        //IsSelected.Value = false;
-            //        SelectedState.Value = 0;
-            //        JudgeSecret = true;
-            //    }
-            //});
-            //IsFixed.Subscribe(isFixed =>
-            //{
-            //    if ((SelectedItem.Value.SkillLevel != 0) || IsFixed.Value)
-            //    {
-            //        //IsSelected.Value = true;
-            //        if ((SelectedSkill.Level > SelectedSkill.MaxLevel1) &&
-            //            (SelectedSkill.Category != "シリーズスキル") &&
-            //            (SelectedSkill.ActivateSkillName2 != ""))
-            //        {
-            //            SelectedState.Value = 2;
-            //            JudgeSecret = false;
-            //        }
-            //        else
-            //        {
-            //            SelectedState.Value = 1;
-            //            JudgeSecret = true;
-            //        }
-            //    }
-            //    else
-            //    {
-            //        //IsSelected.Value = false;
-            //        SelectedState.Value = 0;
-            //        JudgeSecret = true;
-            //    }
-            //});
-
-            //SelectedState.Subscribe(i =>
-            //{
-            //    switch (i)
-            //    {
-            //        case 0: BackgroundColor.Value = Brushes.White; break;
-            //        case 1: BackgroundColor.Value = BackgroundColor.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E0EFFF")); break;
-            //        case 2: BackgroundColor.Value = BackgroundColor.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FADBD8")); break;
-            //    }
-            //});
-
         }
     }
 }

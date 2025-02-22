@@ -15,8 +15,17 @@ namespace MHSS.ViewModels
         /// </summary>
         protected MainWindowViewModel MainWindowVM { get => MainWindowViewModel.Instance; }
 
-
+        /// <summary>
+        /// SkillSelectViewModelのインスタンス
+        /// </summary>
         protected SkillSelectViewModel SkillSelectVM { get => MainWindowVM.SkillSelectVM.Value; }
+
+        ///// <summary>
+        ///// DecoRegistViewModelのインスタンス
+        ///// </summary>
+        //protected DecoRegistViewModel DecoRegistVM { get => MainWindowVM.DecoRegistVM.Value; }
+
+
 
         //protected ReactiveCollection<SolutionViewModel> SolutionVMs { get => MainWindowVM.SolutionVMs; }
 

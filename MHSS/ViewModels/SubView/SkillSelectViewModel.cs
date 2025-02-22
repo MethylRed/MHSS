@@ -12,6 +12,7 @@ using MHSS.ViewModels.Controls;
 using Google.OrTools.LinearSolver;
 using System.Runtime.CompilerServices;
 using System.Windows.Media;
+using System.Text.RegularExpressions;
 
 namespace MHSS.ViewModels.SubView
 {
@@ -43,320 +44,120 @@ namespace MHSS.ViewModels.SubView
             );
 
 
+            var skillLevelSelectorVMs = SkillLevelSelectorsByCategoryVMs.Value.SelectMany(v => v.SkillLevelSelectorVMs);
 
-            var x = SkillLevelSelectorsByCategoryVMs.Value.SelectMany(v => v.SkillLevelSelectorVMs);
+            // 極意を発動させられるシリーズスキルのSelectorVM
+            var seriesSkillsWithSecret = skillLevelSelectorVMs
+                .Where(s => (s.SelectedSkill.Category == "シリーズスキル") &&
+                    ((s.SelectedSkill.ActivateSkillName1.Contains("極意")) ||
+                     (s.SelectedSkill.ActivateSkillName2.Contains("極意"))));
 
-            // 極意が発動するシリーズスキル
-            var seriesSkillsActiveSecret1 = x.Where(v => ((v.SelectedSkill.Category == "シリーズスキル") && (v.SelectedSkill.ActivateSkillName1.Contains("極意")) && !(v.SelectedSkill.ActivateSkillName2.Contains("極意"))));
-            var seriesSkillsActiveSecret2 = x.Where(v => ((v.SelectedSkill.Category == "シリーズスキル") && !(v.SelectedSkill.ActivateSkillName1.Contains("極意")) && (v.SelectedSkill.ActivateSkillName2.Contains("極意"))));
-            var seriesSkillsActiveSecret12 = x.Where(v => ((v.SelectedSkill.Category == "シリーズスキル") && (v.SelectedSkill.ActivateSkillName1.Contains("極意")) && (v.SelectedSkill.ActivateSkillName2.Contains("極意"))));
+            // 各極意を発動させられるシリーズスキルのDictionary
+            var seriesSkillWithSecretDict = seriesSkillsWithSecret.GroupBy(g => g.SelectedSkill.ActivateSkillName1).ToDictionary(g => g.Key, g => g.ToList())
+                .Concat(seriesSkillsWithSecret.GroupBy(g => g.SelectedSkill.ActivateSkillName2).ToDictionary(g => g.Key, g => g.ToList()))
+                .GroupBy(kvp => kvp.Key)
+                .ToDictionary(g => g.Key, g => g.SelectMany(kvp => kvp.Value)).Where(kvp => kvp.Key.Contains("極意"))
+                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
-            // 極意で上限解放ができるスキル
-            var skillsHaveSecret = x.Where(v => ((v.SelectedSkill.Category != "シリーズスキル") && (v.SelectedSkill.ActivateSkillName2.Contains("極意"))));
+            // 極意で上限が解放可能なスキルのSelectorVM
+            var limitBreakSkills = skillLevelSelectorVMs.Where(s => (s.SelectedSkill.Category != "シリーズスキル") && (s.SelectedSkill.ActivateSkillName1.Contains("極意")));
 
-            // 上記2つ以外
-            var otherSkills = x.Where(v => !((v.SelectedSkill.Category == "シリーズスキル") && ((v.SelectedSkill.ActivateSkillName1.Contains("極意")) || (v.SelectedSkill.ActivateSkillName2.Contains("極意")))) && !((v.SelectedSkill.Category != "シリーズスキル") && (v.SelectedSkill.ActivateSkillName2.Contains("極意"))));
+            // 極意に関係しないスキルのSelectorVM
+            var otherSkills = skillLevelSelectorVMs
+                .Where(v => !((v.SelectedSkill.ActivateSkillName1.Contains("極意")) || v.SelectedSkill.ActivateSkillName2.Contains("・極意")));
 
-
-            
-            foreach (var item in seriesSkillsActiveSecret1)
+            // 極意を発動させられるシリーズスキルが選ばれたとき
+            foreach (var item in seriesSkillsWithSecret)
             {
                 item.SelectedItem.Subscribe(isSelected =>
                 {
-                    var activeSecretSum = seriesSkillsActiveSecret1.Where(v => (item.SelectedSkill.Name != v.SelectedSkill.Name)).Where(v => (item.SelectedSkill.ActivateSkillName1 == v.SelectedSkill.ActivateSkillName1)).Select(v => v.ActiveSecret1)
-                    .Union(seriesSkillsActiveSecret2.Where(v => (item.SelectedSkill.ActivateSkillName1 == v.SelectedSkill.ActivateSkillName2)).Select(v => v.ActiveSecret2))
-                    .Union(seriesSkillsActiveSecret12.Where(v => (item.SelectedSkill.ActivateSkillName1 == v.SelectedSkill.ActivateSkillName1)).Select(v => v.ActiveSecret1))
-                    .Union(seriesSkillsActiveSecret12.Where(v => (item.SelectedSkill.ActivateSkillName1 == v.SelectedSkill.ActivateSkillName2)).Select(v => v.ActiveSecret2))
-                    .DefaultIfEmpty(false).Aggregate((acc, current) => acc || current);
+                    // 発動スキル一覧
+                    var items = Regex.Replace(item.Items.Value.Last().DisplayStr, @"\([^)]*\)", "").Trim().Split("&");
 
-                    var s = skillsHaveSecret.Single(v => (item.SelectedSkill.ActivateSkillName1 == v.SelectedSkill.ActivateSkillName2));
-                    
-                    //レベルが0以外 or 固定されたら
+                    // レベル1以上か固定されたとき
                     if ((item.SelectedItem.Value.SkillLevel != 0) || item.IsFixed.Value)
                     {
-                        // 極意が発動時
-                        if (item.SelectedSkill.Level >= item.SelectedSkill.MaxLevel1)
+                        // 全ての発動スキルについて
+                        foreach (var str in items)
                         {
-                            item.ActiveSecret1 = true;
-                            s.SatisfySecret.Value |= true;
-                        }
-                        else
-                        {
-                            item.ActiveSecret1 = false;
-                            s.SatisfySecret.Value = activeSecretSum;
+                            // 発動スキルが極意だったら
+                            if (str.Contains("極意"))
+                            {
+                                // その極意に対応するスキルのIsFixedを2回bit反転して値を変更せずに通知を送る
+                                limitBreakSkills.Single(x => x.SelectedSkill.ActivateSkillName1 == str).IsFixed.Value = !limitBreakSkills.Single(x => x.SelectedSkill.ActivateSkillName1 == str).IsFixed.Value;
+                                limitBreakSkills.Single(x => x.SelectedSkill.ActivateSkillName1 == str).IsFixed.Value = !limitBreakSkills.Single(x => x.SelectedSkill.ActivateSkillName1 == str).IsFixed.Value;
+                            }
                         }
                         item.IsSelected.Value = true;
                     }
                     else
                     {
+                        foreach (var str in items)
+                        {
+                            if (str.Contains("極意"))
+                            {
+                                limitBreakSkills.Single(x => x.SelectedSkill.ActivateSkillName1 == str).IsFixed.Value = !limitBreakSkills.Single(x => x.SelectedSkill.ActivateSkillName1 == str).IsFixed.Value;
+                                limitBreakSkills.Single(x => x.SelectedSkill.ActivateSkillName1 == str).IsFixed.Value = !limitBreakSkills.Single(x => x.SelectedSkill.ActivateSkillName1 == str).IsFixed.Value;
+                            }
+                        }
                         item.IsSelected.Value = false;
-                        item.ActiveSecret1 = false;
-
-                        // これは間違い。対応する極意のActiveSecretの論理和を代入する。
-                        s.SatisfySecret.Value = activeSecretSum;
                     }
                 });
                 item.IsFixed.Subscribe(isSelected =>
                 {
-                    var activeSecretSum = seriesSkillsActiveSecret1.Where(v => (item.SelectedSkill.Name != v.SelectedSkill.Name)).Where(v => (item.SelectedSkill.ActivateSkillName1 == v.SelectedSkill.ActivateSkillName1)).Select(v => v.ActiveSecret1)
-                    .Union(seriesSkillsActiveSecret2.Where(v => (item.SelectedSkill.ActivateSkillName1 == v.SelectedSkill.ActivateSkillName2)).Select(v => v.ActiveSecret2))
-                    .Union(seriesSkillsActiveSecret12.Where(v => (item.SelectedSkill.ActivateSkillName1 == v.SelectedSkill.ActivateSkillName1)).Select(v => v.ActiveSecret1))
-                    .Union(seriesSkillsActiveSecret12.Where(v => (item.SelectedSkill.ActivateSkillName1 == v.SelectedSkill.ActivateSkillName2)).Select(v => v.ActiveSecret2))
-                    .DefaultIfEmpty(false).Aggregate((acc, current) => acc || current);
+                    // 発動スキル一覧
+                    var items = Regex.Replace(item.Items.Value.Last().DisplayStr, @"\([^)]*\)", "").Trim().Split("&");
 
-                    var s = skillsHaveSecret.Single(v => (item.SelectedSkill.ActivateSkillName1 == v.SelectedSkill.ActivateSkillName2));
-                    
-                    //レベルが0以外 or 固定されたら
+                    // レベル1以上か固定されたとき
                     if ((item.SelectedItem.Value.SkillLevel != 0) || item.IsFixed.Value)
                     {
-                        // 極意が発動時
-                        if (item.SelectedSkill.Level >= item.SelectedSkill.MaxLevel1)
+                        foreach (var str in items)
                         {
-                            item.ActiveSecret1 = true;
-                            s.SatisfySecret.Value |= true;
-                        }
-                        else
-                        {
-                            item.ActiveSecret1 = false;
-                            s.SatisfySecret.Value = activeSecretSum;
+                            if (str.Contains("極意"))
+                            {
+                                limitBreakSkills.Single(x => x.SelectedSkill.ActivateSkillName1 == str).IsFixed.Value = !limitBreakSkills.Single(x => x.SelectedSkill.ActivateSkillName1 == str).IsFixed.Value;
+                                limitBreakSkills.Single(x => x.SelectedSkill.ActivateSkillName1 == str).IsFixed.Value = !limitBreakSkills.Single(x => x.SelectedSkill.ActivateSkillName1 == str).IsFixed.Value;
+                            }
                         }
                         item.IsSelected.Value = true;
                     }
                     else
                     {
+                        foreach (var str in items)
+                        {
+                            if (str.Contains("極意"))
+                            {
+                                limitBreakSkills.Single(x => x.SelectedSkill.ActivateSkillName1 == str).IsFixed.Value = !limitBreakSkills.Single(x => x.SelectedSkill.ActivateSkillName1 == str).IsFixed.Value;
+                                limitBreakSkills.Single(x => x.SelectedSkill.ActivateSkillName1 == str).IsFixed.Value = !limitBreakSkills.Single(x => x.SelectedSkill.ActivateSkillName1 == str).IsFixed.Value;
+                            }
+                        }
                         item.IsSelected.Value = false;
-                        item.ActiveSecret1 = false;
-                        s.SatisfySecret.Value = activeSecretSum;
                     }
                 });
-
                 item.IsSelected.Subscribe(i =>
                 {
-                    if (i) item.BackgroundColor.Value = item.BackgroundColor.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E0EFFF"));
+                    if (i)　item.BackgroundColor.Value = item.BackgroundColor.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E0EFFF"));
                     else item.BackgroundColor.Value = Brushes.White;
                 });
             }
 
-            foreach (var item in seriesSkillsActiveSecret2)
+
+            // 極意で上限が解放可能なスキルが選ばれたとき
+            foreach (var item in limitBreakSkills)
             {
-                item.SelectedItem.Subscribe(isSelected =>
+                item.SelectedItem.Subscribe(isselected =>
                 {
-                    var activeSecretSum = seriesSkillsActiveSecret1.Where(v => (item.SelectedSkill.ActivateSkillName1 == v.SelectedSkill.ActivateSkillName1)).Select(v => v.ActiveSecret1)
-                    .Union(seriesSkillsActiveSecret2.Where(v => (item.SelectedSkill.Name != v.SelectedSkill.Name)).Where(v => (item.SelectedSkill.ActivateSkillName1 == v.SelectedSkill.ActivateSkillName2)).Select(v => v.ActiveSecret2))
-                    .Union(seriesSkillsActiveSecret12.Where(v => (item.SelectedSkill.ActivateSkillName1 == v.SelectedSkill.ActivateSkillName1)).Select(v => v.ActiveSecret1))
-                    .Union(seriesSkillsActiveSecret12.Where(v => (item.SelectedSkill.ActivateSkillName1 == v.SelectedSkill.ActivateSkillName2)).Select(v => v.ActiveSecret2))
-                    .DefaultIfEmpty(false).Aggregate((acc, current) => acc || current);
+                    var needSecret = item.SelectedItem.Value.DisplayStr.Contains("極意");
+                    var ActiveSecret = seriesSkillWithSecretDict[item.SelectedSkill.ActivateSkillName1]
+                    .Any(s => s.SelectedItem.Value.DisplayStr.Contains(item.SelectedSkill.ActivateSkillName1));
 
-                    var s = skillsHaveSecret.Single(v => (item.SelectedSkill.ActivateSkillName2 == v.SelectedSkill.ActivateSkillName2));
-                    
-                    //レベルが0以外 or 固定されたら
+                    // レベル1以上か固定されたとき
                     if ((item.SelectedItem.Value.SkillLevel != 0) || item.IsFixed.Value)
                     {
-                        // 極意が発動時
-                        if (item.SelectedSkill.Level >= item.SelectedSkill.MaxLevel2)
+                        // 極意が必要なレベルが選ばれたとき & その極意が一つも発動していなかったら
+                        if (needSecret && !ActiveSecret)
                         {
-                            item.ActiveSecret2 = true;
-                            s.SatisfySecret.Value |= true;
-                        }
-                        else
-                        {
-                            item.ActiveSecret2 = false;
-                            s.SatisfySecret.Value = activeSecretSum;
-                        }
-                        item.IsSelected.Value = true;
-                    }
-                    else
-                    {
-                        item.IsSelected.Value = false;
-                        item.ActiveSecret2 = false;
-                        s.SatisfySecret.Value = activeSecretSum;
-                    }
-                });
-                item.IsFixed.Subscribe(isSelected =>
-                {
-                    var activeSecretSum = seriesSkillsActiveSecret1.Where(v => (item.SelectedSkill.ActivateSkillName1 == v.SelectedSkill.ActivateSkillName1)).Select(v => v.ActiveSecret1)
-                    .Union(seriesSkillsActiveSecret2.Where(v => (item.SelectedSkill.Name != v.SelectedSkill.Name)).Where(v => (item.SelectedSkill.ActivateSkillName1 == v.SelectedSkill.ActivateSkillName2)).Select(v => v.ActiveSecret2))
-                    .Union(seriesSkillsActiveSecret12.Where(v => (item.SelectedSkill.ActivateSkillName1 == v.SelectedSkill.ActivateSkillName1)).Select(v => v.ActiveSecret1))
-                    .Union(seriesSkillsActiveSecret12.Where(v => (item.SelectedSkill.ActivateSkillName1 == v.SelectedSkill.ActivateSkillName2)).Select(v => v.ActiveSecret2))
-                    .DefaultIfEmpty(false).Aggregate((acc, current) => acc || current);
-
-                    var s = skillsHaveSecret.Single(v => (item.SelectedSkill.ActivateSkillName2 == v.SelectedSkill.ActivateSkillName2));
-                    
-                    //レベルが0以外 or 固定されたら
-                    if ((item.SelectedItem.Value.SkillLevel != 0) || item.IsFixed.Value)
-                    {
-                        // 極意が発動時
-                        if (item.SelectedSkill.Level >= item.SelectedSkill.MaxLevel2)
-                        {
-                            item.ActiveSecret2 = true;
-                            s.SatisfySecret.Value |= true;
-                        }
-                        else
-                        {
-                            item.ActiveSecret2 = false;
-                            s.SatisfySecret.Value = activeSecretSum;
-                        }
-                        item.IsSelected.Value = true;
-                    }
-                    else
-                    {
-                        item.IsSelected.Value = false;
-                        item.ActiveSecret2 = false;
-                        s.SatisfySecret.Value = activeSecretSum;
-                    }
-                });
-
-                item.IsSelected.Subscribe(i =>
-                {
-                    if (i) item.BackgroundColor.Value = item.BackgroundColor.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E0EFFF"));
-                    else item.BackgroundColor.Value = Brushes.White;
-                });
-            }
-
-            // どっちも極意
-            foreach (var item in seriesSkillsActiveSecret12)
-            {
-                item.SelectedItem.Subscribe(isSelected =>
-                {
-                    var activeSecretSum = seriesSkillsActiveSecret1.Where(v => (item.SelectedSkill.ActivateSkillName1 == v.SelectedSkill.ActivateSkillName1)).Select(v => v.ActiveSecret1)
-                    .Union(seriesSkillsActiveSecret2.Where(v => (item.SelectedSkill.ActivateSkillName1 == v.SelectedSkill.ActivateSkillName2)).Select(v => v.ActiveSecret2))
-                    .Union(seriesSkillsActiveSecret12.Where(v => (item.SelectedSkill.Name != v.SelectedSkill.Name)).Where(v => (item.SelectedSkill.ActivateSkillName1 == v.SelectedSkill.ActivateSkillName1)).Select(v => v.ActiveSecret1))
-                    .Union(seriesSkillsActiveSecret12.Where(v => (item.SelectedSkill.Name != v.SelectedSkill.Name)).Where(v => (item.SelectedSkill.ActivateSkillName1 == v.SelectedSkill.ActivateSkillName2)).Select(v => v.ActiveSecret2))
-                    .DefaultIfEmpty(false).Aggregate((acc, current) => acc || current);
-
-                    var s1 = skillsHaveSecret.Single(v => (item.SelectedSkill.ActivateSkillName1 == v.SelectedSkill.ActivateSkillName2));
-                    var s2 = skillsHaveSecret.Single(v => (item.SelectedSkill.ActivateSkillName2 == v.SelectedSkill.ActivateSkillName2));
-                    
-                    //レベルが0以外 or 固定されたら
-                    if ((item.SelectedItem.Value.SkillLevel != 0) || item.IsFixed.Value)
-                    {
-                        // 極意が発動時
-                        if (item.SelectedSkill.Level >= item.SelectedSkill.MaxLevel1)
-                        {
-                            // どっちも発動
-                            if (item.SelectedSkill.Level >= item.SelectedSkill.MaxLevel2)
-                            {
-                                item.ActiveSecret1 = true;
-                                item.ActiveSecret2 = true;
-                                s1.SatisfySecret.Value |= true;
-                                s2.SatisfySecret.Value |= true;
-                            }
-                            // レベルが少ない方だけ発動
-                            else
-                            {
-                                item.ActiveSecret1 = true;
-                                item.ActiveSecret2 = false;
-                                s1.SatisfySecret.Value |= true;
-                                s2.SatisfySecret.Value = activeSecretSum;
-                            }
-                        }
-                        // 発動なし
-                        else
-                        {
-                            item.ActiveSecret1 = false;
-                            item.ActiveSecret2 = false;
-                            s1.SatisfySecret.Value = activeSecretSum;
-                            s2.SatisfySecret.Value = activeSecretSum;
-                        }
-                        item.IsSelected.Value = true;
-                    }
-                    else
-                    {
-                        item.IsSelected.Value = false;
-                        item.ActiveSecret1 = false;
-                        item.ActiveSecret2 = false;
-                        s1.SatisfySecret.Value = activeSecretSum;
-                        s2.SatisfySecret.Value = activeSecretSum;
-                    }
-                });
-                item.IsFixed.Subscribe(isSelected =>
-                {
-                    var activeSecretSum = seriesSkillsActiveSecret1.Where(v => (item.SelectedSkill.ActivateSkillName1 == v.SelectedSkill.ActivateSkillName1)).Select(v => v.ActiveSecret1)
-                    .Union(seriesSkillsActiveSecret2.Where(v => (item.SelectedSkill.ActivateSkillName1 == v.SelectedSkill.ActivateSkillName2)).Select(v => v.ActiveSecret2))
-                    .Union(seriesSkillsActiveSecret12.Where(v => (item.SelectedSkill.Name != v.SelectedSkill.Name)).Where(v => (item.SelectedSkill.ActivateSkillName1 == v.SelectedSkill.ActivateSkillName1)).Select(v => v.ActiveSecret1))
-                    .Union(seriesSkillsActiveSecret12.Where(v => (item.SelectedSkill.Name != v.SelectedSkill.Name)).Where(v => (item.SelectedSkill.ActivateSkillName1 == v.SelectedSkill.ActivateSkillName2)).Select(v => v.ActiveSecret2))
-                    .DefaultIfEmpty(false).Aggregate((acc, current) => acc || current);
-
-                    var s1 = skillsHaveSecret.Single(v => (item.SelectedSkill.ActivateSkillName1 == v.SelectedSkill.ActivateSkillName2));
-                    var s2 = skillsHaveSecret.Single(v => (item.SelectedSkill.ActivateSkillName2 == v.SelectedSkill.ActivateSkillName2));
-
-                    //レベルが0以外 or 固定されたら
-                    if ((item.SelectedItem.Value.SkillLevel != 0) || item.IsFixed.Value)
-                    {
-                        // 極意が発動時
-                        if (item.SelectedSkill.Level >= item.SelectedSkill.MaxLevel1)
-                        {
-                            // どっちも発動
-                            if (item.SelectedSkill.Level >= item.SelectedSkill.MaxLevel2)
-                            {
-                                item.ActiveSecret1 = true;
-                                item.ActiveSecret2 = true;
-                                s1.SatisfySecret.Value |= true;
-                                s2.SatisfySecret.Value |= true;
-                            }
-                            // レベルが少ない方だけ発動
-                            else
-                            {
-                                item.ActiveSecret1 = true;
-                                item.ActiveSecret2 = false;
-                                s1.SatisfySecret.Value |= true;
-                                s2.SatisfySecret.Value = activeSecretSum;
-                            }
-                        }
-                        // 発動なし
-                        else
-                        {
-                            item.ActiveSecret1 = false;
-                            item.ActiveSecret2 = false;
-                            s1.SatisfySecret.Value |= false;
-                            s2.SatisfySecret.Value = activeSecretSum;
-                        }
-                        item.IsSelected.Value = true;
-                    }
-                    else
-                    {
-                        item.IsSelected.Value = false;
-                        item.ActiveSecret1 = false;
-                        item.ActiveSecret2 = false;
-                        s1.SatisfySecret.Value |= false;
-                        s2.SatisfySecret.Value = activeSecretSum;
-                    }
-                });
-
-                item.IsSelected.Subscribe(i =>
-                {
-                    if (i) item.BackgroundColor.Value = item.BackgroundColor.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E0EFFF"));
-                    else item.BackgroundColor.Value = Brushes.White;
-                });
-            }
-
-            // 極意があるスキル
-            foreach (var item in skillsHaveSecret)
-            {
-                item.SelectedItem.Subscribe(isSelected =>
-                {
-                    //レベルが0以外 or 固定されたら
-                    if ((item.SelectedItem.Value.SkillLevel != 0) || item.IsFixed.Value)
-                    {
-                        // 対応するシリーズスキル
-                        var s1 = seriesSkillsActiveSecret1.Where(v => (item.SelectedSkill.ActivateSkillName1 == v.SelectedSkill.ActivateSkillName2)).Select(v => v.ActiveSecret1);
-                        var s2 = seriesSkillsActiveSecret2.Where(v => (item.SelectedSkill.ActivateSkillName2 == v.SelectedSkill.ActivateSkillName2)).Select(v => v.ActiveSecret2);
-                        var s121 = seriesSkillsActiveSecret12.Where(v => (item.SelectedSkill.ActivateSkillName1 == v.SelectedSkill.ActivateSkillName2)).Select(v => v.ActiveSecret1);
-                        var s122 = seriesSkillsActiveSecret12.Where(v => (item.SelectedSkill.ActivateSkillName2 == v.SelectedSkill.ActivateSkillName2)).Select(v => v.ActiveSecret2);
-
-
-                        // 極意が必要な場合
-                        if (item.SelectedSkill.Level > item.SelectedSkill.MaxLevel1)
-                        {
-                            // 一つでも極意が発動している場合
-                            if (s1.Union(s2).Union(s121).Union(s122).DefaultIfEmpty(false).Aggregate((acc, current) => acc || current))
-                            {
-                                item.SatisfySecret.Value = true;
-                            }
-                            else
-                            {
-                                item.SatisfySecret.Value = false;
-                            }
+                            item.SatisfySecret.Value = false;
                         }
                         else
                         {
@@ -366,34 +167,23 @@ namespace MHSS.ViewModels.SubView
                     }
                     else
                     {
-                        item.IsSelected.Value = false;
                         item.SatisfySecret.Value = true;
+                        item.IsSelected.Value = false;
                     }
                 });
-                item.IsFixed.Subscribe(isSelected =>
+                item.IsFixed.Subscribe(isselected =>
                 {
-                    //レベルが0以外 or 固定されたら
+                    var needSecret = item.SelectedItem.Value.DisplayStr.Contains("極意");
+                    var ActiveSecret = seriesSkillWithSecretDict[item.SelectedSkill.ActivateSkillName1]
+                    .Any(s => s.SelectedItem.Value.DisplayStr.Contains(item.SelectedSkill.ActivateSkillName1));
+                    
+                    // レベル1以上か固定されたとき
                     if ((item.SelectedItem.Value.SkillLevel != 0) || item.IsFixed.Value)
                     {
-                        // 対応するシリーズスキル
-                        var s1 = seriesSkillsActiveSecret1.Where(v => (item.SelectedSkill.ActivateSkillName1 == v.SelectedSkill.ActivateSkillName2)).Select(v => v.ActiveSecret1);
-                        var s2 = seriesSkillsActiveSecret2.Where(v => (item.SelectedSkill.ActivateSkillName2 == v.SelectedSkill.ActivateSkillName2)).Select(v => v.ActiveSecret2);
-                        var s121 = seriesSkillsActiveSecret12.Where(v => (item.SelectedSkill.ActivateSkillName1 == v.SelectedSkill.ActivateSkillName2)).Select(v => v.ActiveSecret1);
-                        var s122 = seriesSkillsActiveSecret12.Where(v => (item.SelectedSkill.ActivateSkillName2 == v.SelectedSkill.ActivateSkillName2)).Select(v => v.ActiveSecret2);
-
-
-                        // 極意が必要な場合
-                        if (item.SelectedSkill.Level > item.SelectedSkill.MaxLevel1)
+                        // 極意が必要なレベルが選ばれたとき & その極意が一つも発動していなかったら
+                        if (needSecret && !ActiveSecret)
                         {
-                            // 一つでも極意が発動している場合
-                            if (s1.Union(s2).Union(s121).Union(s122).DefaultIfEmpty(false).Aggregate((acc, current) => acc || current))
-                            {
-                                item.SatisfySecret.Value = true;
-                            }
-                            else
-                            {
-                                item.SatisfySecret.Value = false;
-                            }
+                            item.SatisfySecret.Value = false;
                         }
                         else
                         {
@@ -403,47 +193,29 @@ namespace MHSS.ViewModels.SubView
                     }
                     else
                     {
-                        item.IsSelected.Value = false;
                         item.SatisfySecret.Value = true;
+                        item.IsSelected.Value = false;
                     }
-                });
-
-                item.IsSelected.Subscribe(i =>
-                {
-                    if (i)
-                    {
-                        if (item.SatisfySecret.Value)
-                        {
-                            item.BackgroundColor.Value = item.BackgroundColor.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E0EFFF"));
-                        }
-                        else
-                        {
-                            item.BackgroundColor.Value = item.BackgroundColor.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FADBD8"));
-                        }
-                    }
-                    else item.BackgroundColor.Value = Brushes.White;
                 });
                 item.SatisfySecret.Subscribe(i =>
                 {
+                    if (item.IsSelected.Value)
+                    {
+                        if (i) item.BackgroundColor.Value = item.BackgroundColor.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E0EFFF"));
+                        else item.BackgroundColor.Value = item.BackgroundColor.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FADBD8"));
+                    }
+                    else item.BackgroundColor.Value = Brushes.White;
+                });
+                item.IsSelected.Subscribe(i =>
+                {
                     if (i)
                     {
-                        if (item.IsSelected.Value)
-                        {
-                            item.BackgroundColor.Value = item.BackgroundColor.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E0EFFF"));
-                        }
-                        else item.BackgroundColor.Value = Brushes.White;
+                        if (item.SatisfySecret.Value) item.BackgroundColor.Value = item.BackgroundColor.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E0EFFF"));
+                        else item.BackgroundColor.Value = item.BackgroundColor.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FADBD8"));
                     }
-                    else
-                    {
-                        if (item.IsSelected.Value)
-                        {
-                            item.BackgroundColor.Value = item.BackgroundColor.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FADBD8"));
-                        }
-                        else item.BackgroundColor.Value = Brushes.White;
-                    }
+                    else item.BackgroundColor.Value = Brushes.White;
                 });
             }
-
 
 
             // 極意とは関係ないスキル
@@ -490,7 +262,7 @@ namespace MHSS.ViewModels.SubView
             Condition condition = new();
             condition.Skills = SkillLevelSelectorsByCategoryVMs.Value.SelectMany(v => v.SkillsCondition()).ToList();
             bool b = SkillLevelSelectorsByCategoryVMs.Value.Select(s => s.JudgeSecret()).Aggregate(true, (acc, x) => acc && x);
-            condition.Secret = b;
+            condition.SatisfySecret = b;
             return condition;
         }
     }
