@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.IO;
 using System.Data;
@@ -10,6 +11,7 @@ using System.Diagnostics;
 using System.Xml.Linq;
 using MHSS.Models.Data;
 using MHSS.Models.Config;
+using System.Text.Unicode;
 
 namespace MHSS.Models.Utility
 {
@@ -24,6 +26,8 @@ namespace MHSS.Models.Utility
         private const string CsvLeg = "./Models/Data/CSV/MHWs_LEG.csv";
         private const string CsvDeco = "./Models/Data/CSV/MHWs_DECO.csv";
         private const string CsvCharm = "./Models/Data/CSV/MHWs_CHARM.csv";
+
+        private const string JsonDecoCount = "./Models/Data/save/DecoCount.json";
 
         // 武器のファイルパス定数
         private static readonly string[] CsvWeapons =
@@ -204,7 +208,7 @@ namespace MHSS.Models.Utility
             {
                 Deco deco = new()
                 {
-                    HaveCount = 7,
+                    HaveCount = 5,
                     EquipKind = EquipKind.Deco,
                     Name = line[@"名前"],
                     //SeriesName = "",
@@ -237,6 +241,7 @@ namespace MHSS.Models.Utility
 
                 Master.Decos.Add(deco);
             }
+            LoadDecoCount();
         }
 
         /// <summary>
@@ -337,6 +342,56 @@ namespace MHSS.Models.Utility
 
                 armors.Add(armor);
             }
+        }
+
+        /// <summary>
+        /// 装飾品の所持数をロードする
+        /// </summary>
+        private static void LoadDecoCount()
+        {
+            // ファイルがない場合は作成
+            if (!File.Exists(JsonDecoCount))
+            {
+                string defualtStr = JsonSerializer.Serialize(new Dictionary<string, int>());
+                Directory.CreateDirectory(Path.GetDirectoryName(JsonDecoCount));
+                File.WriteAllText(JsonDecoCount, defualtStr);
+            }
+            else
+            {
+                string json = File.ReadAllText(JsonDecoCount);
+                // 何も書かれていない場合は終了
+                if (string.IsNullOrWhiteSpace(json))
+                {
+                    return;
+                }
+                else
+                {
+                    JsonSerializerOptions options = new();
+                    options.Encoder = System.Text.Encodings.Web.JavaScriptEncoder.Create(UnicodeRanges.All);
+                    Dictionary<string, int> decoCounts = JsonSerializer.Deserialize<Dictionary<string, int>>(json, options);
+
+                    foreach (var deco in Master.Decos)
+                    {
+                        deco.HaveCount = decoCounts.TryGetValue(deco.Name, out int count) ? count : 5;
+                    }
+                }
+            }
+        }
+
+
+        public static void SaveDecoCount()
+        {
+            Dictionary<string, int> data = new();
+
+            foreach (var deco in Master.Decos)
+            {
+                data.Add(deco.Name, deco.HaveCount);
+            }
+            JsonSerializerOptions options = new();
+            options.Encoder = System.Text.Encodings.Web.JavaScriptEncoder.Create(UnicodeRanges.All);
+            string json = JsonSerializer.Serialize(data, options);
+
+            File.WriteAllText(JsonDecoCount, json);
         }
     }
 }

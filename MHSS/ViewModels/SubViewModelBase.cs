@@ -20,10 +20,15 @@ namespace MHSS.ViewModels
         /// </summary>
         protected SkillSelectViewModel SkillSelectVM { get => MainWindowVM.SkillSelectVM.Value; }
 
-        ///// <summary>
-        ///// DecoRegistViewModelのインスタンス
-        ///// </summary>
-        //protected DecoRegistViewModel DecoRegistVM { get => MainWindowVM.DecoRegistVM.Value; }
+        /// <summary>
+        /// DecoRegistViewModelのインスタンス
+        /// </summary>
+        protected DecoRegistViewModel DecoRegistVM { get => MainWindowVM.DecoRegistVM.Value; }
+
+        /// <summary>
+        /// WeaponSelectViewModelのインスタンス
+        /// </summary>
+        protected WeaponSelectViewModel WeaponSelectVM { get => MainWindowVM.WeaponSelectVM.Value; }
 
 
 

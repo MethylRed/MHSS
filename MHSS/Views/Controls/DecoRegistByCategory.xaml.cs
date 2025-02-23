@@ -16,18 +16,13 @@ using System.Windows.Shapes;
 namespace MHSS.Views.Controls
 {
     /// <summary>
-    /// DecoRegist.xaml の相互作用ロジック
+    /// DecoRegistByCategory.xaml の相互作用ロジック
     /// </summary>
-    public partial class DecoRegist : UserControl
+    public partial class DecoRegistByCategory : UserControl
     {
-        public DecoRegist()
+        public DecoRegistByCategory()
         {
             InitializeComponent();
-        }
-
-        private void ComboBox_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            e.Handled = true;
         }
     }
 }

@@ -157,25 +157,6 @@ namespace MHSS.Models.Data
                 _ => string.Empty
             };
         }
-
-
-        //public static Dictionary<string, string> MatchSecretSkill = new()
-        //{
-        //    {"火事場力", "火事場力・極意"},
-        //    {"ＫＯ術", },
-        //    {"渾身", },
-        //    {"スタミナ奪取", },
-        //    {"スリンガー装填数ＵＰ", },
-        //    {"整備", },
-        //    {"精霊の加護", },
-        //    {"力の解放", },
-        //    {"挑戦者", },
-        //    {"砲術", },
-        //    {"ボマー", },
-
-        //};
-
-
         static Kind() { }
     }
 }

@@ -21,6 +21,7 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
 using System.Text;
+using MHSS.Views.SubViews;
 //using System.Reactive.Disposables;
 
 namespace MHSS.ViewModels
@@ -110,7 +111,13 @@ namespace MHSS.ViewModels
         /// <summary>
         /// 装飾品登録のViewModel
         /// </summary>
-        public ReactiveCollection<DecoRegistViewModel> DecoRegistVMs { get; } = new();
+        public ReactivePropertySlim<DecoRegistViewModel> DecoRegistVM { get; } = new();
+
+        /// <summary>
+        /// 武器選択のViewModel
+        /// </summary>
+        public ReactivePropertySlim<WeaponSelectViewModel> WeaponSelectVM { get; } = new();
+
 
         /// <summary>
         /// 結果表示のViewModel
@@ -125,6 +132,8 @@ namespace MHSS.ViewModels
         {
             Instance = this;
 
+            AppDomain.CurrentDomain.ProcessExit += (s, e) => CSVLoader.SaveDecoCount();
+
             // データの読み込み
             CSVLoader.LoadCsvSkill();
             CSVLoader.LoadCsvEquip();
@@ -136,7 +145,7 @@ namespace MHSS.ViewModels
             //CSVLoader.LoadCsvCharm();
             //CSVLoader.LoadCsvDeco();
 
-            foreach (var deco in Master.Decos) DecoRegistVMs.Add(new DecoRegistViewModel(deco));
+            //foreach (var deco in Master.Decos) DecoRegistVMs.Add(new DecoRegistItemViewModel(deco));
 
             // 検索ボタンクリックイベントの定義
             SearchCommand = IsBusy.Select(x => !x).ToAsyncReactiveCommand();
@@ -165,6 +174,8 @@ namespace MHSS.ViewModels
 
             // ViewModelのインスタンスを生成
             SkillSelectVM.Value = new();
+            DecoRegistVM.Value = new();
+            WeaponSelectVM.Value = new();
 
             SearchCount.Value = Config.Instance.MaxSearchCount.ToString();
             SearchCount.Value = "1";

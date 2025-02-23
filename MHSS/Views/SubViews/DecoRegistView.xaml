@@ -1,0 +1,58 @@
+﻿<UserControl x:Class="MHSS.Views.SubViews.DecoRegistView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MHSS.Views.SubViews"
+             xmlns:ctrl="clr-namespace:MHSS.Views.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="Gainsboro" />
+            <Setter Property="Foreground" Value="DodgerBlue" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate x:Name="button" TargetType="Button">
+                        <Border x:Name="border" CornerRadius="15" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="LightGray" />
+                                <!-- マウスオーバー時の背景色を変更 -->
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Button Grid.Row="0"
+                Margin="5,0,0,0"
+                x:Name="SolveButton"
+                Command="{Binding SearchCommand}"
+                Height="30" Width="80"
+                Content="リセット"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                FontSize="16"
+                FontWeight="Bold"/> 
+        <ScrollViewer Grid.Row="1" VerticalAlignment="Stretch">
+            <StackPanel Margin="0,0,3,100">
+                <ItemsControl ItemsSource="{Binding DecoRegistByCategoryVMs.Value, Mode=OneWay}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <ctrl:DecoRegistByCategory/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

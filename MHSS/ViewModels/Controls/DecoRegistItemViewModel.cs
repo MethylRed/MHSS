@@ -10,7 +10,7 @@ using MHSS.Models.Data;
 
 namespace MHSS.ViewModels.Controls
 {
-    internal class DecoRegistViewModel// : SubViewModelBase
+    internal class DecoRegistItemViewModel// : SubViewModelBase
     {
         /// <summary>
         /// ComboBoxに表示するアイテムリスト
@@ -35,7 +35,7 @@ namespace MHSS.ViewModels.Controls
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public DecoRegistViewModel(Deco deco)
+        public DecoRegistItemViewModel(Deco deco)
         {
             // これはテスト用
             BackgroundColor.Value = Brushes.Beige;
@@ -44,8 +44,9 @@ namespace MHSS.ViewModels.Controls
             SelectedName.Value = deco.Name;
 
             // ComboBox表示用アイテムを作成
+            // スキルの最大レベルが5っぽいのでとりあえず5でハードコーディングしておく
             ObservableCollection<int> items = new();
-            for (int i = 0; i <= 7; i++)
+            for (int i = 0; i <= 5; i++)
             {
                 items.Add(i);
             }
@@ -60,7 +61,7 @@ namespace MHSS.ViewModels.Controls
             {
                 // ComboBoxの背景色を変える
                 if (count == 0) BackgroundColor.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FADBD8"));
-                else if (count == 7) BackgroundColor.Value = Brushes.Gainsboro;
+                else if (count == 5) BackgroundColor.Value = Brushes.Gainsboro;
                 else BackgroundColor.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E0EFFF"));
 
                 // 所持数を出力する。ファイルへの書き込みはアプリ終了時に行う。

@@ -45,31 +45,15 @@
             <Border Grid.Row="0" Margin="5" BorderBrush="Black" BorderThickness="1" CornerRadius="3">
                 <TabControl Grid.Column="0" Margin="5">
                     <TabItem Header="スキル選択">
-                        <Grid>
-                            <subviews:SkillSelectView DataContext="{Binding SkillSelectVM.Value, Mode=OneWay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-                        </Grid>
+                        <subviews:SkillSelectView DataContext="{Binding SkillSelectVM.Value, Mode=OneWay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                     </TabItem>
                     <TabItem Header="武器選択">
+                        <subviews:WeaponSelectView DataContext="{Binding WeaponSelectVM.Value, Mode=OneWay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                     </TabItem>
                     <TabItem Header="装備固定・除外">
                     </TabItem>
                     <TabItem Header="装飾品登録">
-                        <ScrollViewer Grid.Row="1" VerticalAlignment="Stretch">
-                            <StackPanel Margin="0">
-                                <ItemsControl ItemsSource="{Binding DecoRegistVMs, Mode=OneWay}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <ctrl:DecoRegist HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="15,0,0,0"/>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <WrapPanel Orientation="Horizontal"/>
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                </ItemsControl>
-                            </StackPanel>
-                        </ScrollViewer>
+                        <subviews:DecoRegistView DataContext="{Binding DecoRegistVM.Value, Mode=OneWay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                     </TabItem>
                     <TabItem Header="武器登録">
                     </TabItem>
