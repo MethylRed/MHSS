@@ -24,12 +24,12 @@ namespace MHSS.Models.Data
         public int Level { get; set; } = 0;
 
         /// <summary>
-        /// 発動スキル1(シリーズ・グループスキル)
+        /// 発動スキル1
         /// </summary>
         public string ActivateSkillName1 { get; set; } = string.Empty;
 
         /// <summary>
-        /// 発動スキル2(シリーズ・グループスキル)
+        /// 発動スキル2
         /// </summary>
         public string ActivateSkillName2 { get; set; } = string.Empty;
 

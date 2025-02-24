@@ -29,11 +29,6 @@ namespace MHSS.ViewModels.SubView
         public ReactivePropertySlim<ObservableCollection<string>> ElementSelectItems { get; } = new();
 
         /// <summary>
-        /// 選択された装飾品名
-        /// </summary>
-        public ReactivePropertySlim<string> SelectedName { get; } = new();
-
-        /// <summary>
         /// 選択された武器種
         /// </summary>
         public ReactivePropertySlim<string> SelectedWeaponKind { get; } = new();
@@ -41,7 +36,7 @@ namespace MHSS.ViewModels.SubView
         /// <summary>
         /// 選択されたスキル
         /// </summary>
-        public ReactivePropertySlim<string> SelectedSkill { get; } = new();
+        public ReactivePropertySlim<string> SelectedSkillName { get; } = new();
 
         /// <summary>
         /// 選択された属性
@@ -53,7 +48,14 @@ namespace MHSS.ViewModels.SubView
         /// </summary>
         public ReactivePropertySlim<SolidColorBrush> BackgroundColor { get; } = new(Brushes.White);
 
+        /// <summary>
+        /// 武器が持つスキルのみのリスト
+        /// </summary>
+        //public static List<string> SkillNamesWithWeapon => Master.Weapons.SelectMany(w => w).SelectMany(w => w.Skills).Select(x => x.Name).Distinct().ToList();
 
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
         public WeaponSelectViewModel()
         {
             // 武器種選択ComboBox表示用アイテムを作成
@@ -64,9 +66,44 @@ namespace MHSS.ViewModels.SubView
                 items.Add(Kind.WeaponKindsToString(i));
             }
             WeaponKindSelectItems.Value = items;
-
             // 初期値
             SelectedWeaponKind.Value = WeaponKindSelectItems.Value.First();
+            SelectedWeaponKind.Subscribe(selected =>
+            {
+                // 武器指定なし
+                if (selected == "---")
+                {
+                    items = new();
+                    items.Add("---");
+                }
+                else
+                {
+                    items = new();
+                    items.Add("---");
+                    foreach (var i in SkillNamesWithWeapon(selected))
+                    {
+                        items.Add(i);
+                    }
+                    SkillSelectItems.Value = items;
+                    // 初期値
+                    SelectedSkillName.Value = SkillSelectItems.Value.First();
+                }
+            });
+
+
+
+
+            // スキル選択ComboBox表示用アイテムを作成
+            items = new();
+            items.Add("---");
+            //foreach (var i in SkillNamesWithWeapon)
+            //{
+            //    items.Add(i);
+            //}
+            SkillSelectItems.Value = items;
+            // 初期値
+            SelectedSkillName.Value = SkillSelectItems.Value.First();
+
 
             // 属性選択ComboBox表示用アイテムを作成
             items = new();
@@ -76,9 +113,15 @@ namespace MHSS.ViewModels.SubView
                 items.Add(i);
             }
             ElementSelectItems.Value = items;
-
             // 初期値
             SelectedElement.Value = ElementSelectItems.Value.First();
+        }
+
+
+
+        private List<string> SkillNamesWithWeapon(string weaponKind)
+        {
+            return Master.Weapons[(int)Kind.WeaponNameToKind(weaponKind)].SelectMany(w => w.Skills).Select(x => x.Name).Distinct().ToList();
         }
     }
 }

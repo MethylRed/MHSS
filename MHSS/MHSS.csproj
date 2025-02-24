@@ -84,4 +84,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\Data\image\" />
+  </ItemGroup>
 </Project>

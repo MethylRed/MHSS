@@ -58,12 +58,10 @@ namespace MHSS.Models.Data
         /// </summary>
         public static List<Deco> Decos { get; set; } = new();
 
-
-        Dictionary<string, Equip> dicHead = Master.Heads.ToDictionary(kvp => kvp.Name, kvp => kvp);
-        Dictionary<string, Deco> dicDeco = Master.Decos.ToDictionary(kvp => kvp.Name, kvp => kvp);
-
-        Dictionary<string, Equip> dic => dicHead
-            .Concat(dicDeco.Select(kvp => new KeyValuePair<string, Equip>(kvp.Key, kvp.Value)))
-            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+        /// <summary>
+        /// 武器が持つスキルのみのリスト
+        /// </summary>
+        //public static List<string> SkillNamesWithWeapon => Weapons.SelectMany(w => w).SelectMany(w => w.Skills).Select(x => x.Name).Distinct().ToList();
+        //public static List<Skill> SkillsWithWeapon => Weapons.SelectMany(w => w).SelectMany(w => w.Skills).GroupBy(x => x.Name).Select(g => g.First()).ToList();
     }
 }

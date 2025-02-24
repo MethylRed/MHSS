@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MHSS.Views.SubViews"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="250" d:DesignWidth="360">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="70"/>
@@ -13,7 +13,7 @@
         </Grid.RowDefinitions>
         <Border Height="35" Width="200" VerticalAlignment="Top" HorizontalAlignment="Left">
             <Grid>
-                <TextBlock Text="武器種" VerticalAlignment="Center"/>
+                <TextBlock Text="武器種" Margin="5,0,0,0" VerticalAlignment="Center"/>
                 <ComboBox Margin="50,0,0,0"
                           Grid.Row="0" Background="{Binding BackgroundColor.Value, Mode=OneWay}"
                           BorderThickness="1"
@@ -26,16 +26,21 @@
                           Width="140"/>
             </Grid>
         </Border>
-        <ComboBox Margin="5,40,0,0"
-                  Grid.Row="0" Background="{Binding BackgroundColor.Value, Mode=OneWay}"
-                  BorderThickness="1"
-                  VerticalAlignment="Top" HorizontalAlignment="Left"
-                  ItemsSource="{Binding SkillSelectItems.Value, Mode=OneWay}"
-                  FontSize="14"
-                  SelectedIndex="0"
-                  SelectedItem="{Binding SelectedWeaponKind.Value}"
-                  Height="Auto"
-                  Width="140"/>
+        <Border Height="35" Width="200" Margin="0,35,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
+            <Grid>
+            <TextBlock Text="スキル" Margin="5,0,0,0" VerticalAlignment="Center"/>
+            <ComboBox Margin="50,0,0,0"
+                      Grid.Row="0" Background="{Binding BackgroundColor.Value, Mode=OneWay}"
+                      BorderThickness="1"
+                      VerticalAlignment="Center" HorizontalAlignment="Left"
+                      ItemsSource="{Binding SkillSelectItems.Value, Mode=OneWay}"
+                      FontSize="14"
+                      SelectedIndex="0"
+                      SelectedItem="{Binding SelectedSkillName.Value}"
+                      Height="Auto"
+                      Width="140"/>
+            </Grid>
+        </Border>
         <Border  Height="35" Width="130" Margin="230,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
             <Grid>
                 <TextBlock Text="属性" VerticalAlignment="Center"/>
@@ -46,10 +51,14 @@
                           ItemsSource="{Binding ElementSelectItems.Value, Mode=OneWay}"
                           FontSize="14"
                           SelectedIndex="0"
-                          SelectedItem="{Binding SelectedWeaponKind.Value}"
+                          SelectedItem="{Binding SelectedElement.Value}"
                           Height="Auto"
                           Width="60"/>
             </Grid>
+        </Border>
+        <Border CornerRadius="3" Grid.Row="1" BorderBrush="Black" BorderThickness="1">
+            <ScrollViewer>
+            </ScrollViewer>
         </Border>
     </Grid>
 </UserControl>

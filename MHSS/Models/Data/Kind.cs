@@ -157,6 +157,33 @@ namespace MHSS.Models.Data
                 _ => string.Empty
             };
         }
+
+        /// <summary>
+        /// 武器の種類：文字列に変換
+        /// </summary>
+        /// <param name="kind"></param>
+        /// <returns></returns>
+        public static WeaponKind WeaponNameToKind(string name)
+        {
+            return name switch
+            {
+                "大剣" => WeaponKind.GreatSword,
+                "太刀" => WeaponKind.LondSword,
+                "片手剣" => WeaponKind.SwordAndShield,
+                "双剣" => WeaponKind.DualBlades,
+                "ハンマー" => WeaponKind.Hammer,
+                "狩猟笛" => WeaponKind.HuntingHorn,
+                "ランス" => WeaponKind.Lance,
+                "ガンランス" => WeaponKind.Gunlance,
+                "スラッシュアックス" => WeaponKind.SwitchAxe,
+                "チャージアックス" => WeaponKind.ChargeBlade,
+                "操虫棍" => WeaponKind.InsectGlaive,
+                "ライトボウガン" => WeaponKind.LightBowgun,
+                "ヘビィボウガン" => WeaponKind.HeavyBowgun,
+                "弓" => WeaponKind.Bow,
+            };
+        }
+
         static Kind() { }
     }
 }
