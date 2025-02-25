@@ -42,7 +42,7 @@ namespace MHSS.Models.Utility
             // 「防具スキル装飾品を受け入れる/防具に装着するもの」の2種類用意し、
             // 装備はブール変数、装飾品は上限が所持数の整数変数とする。
             
-            foreach (var equip in Master.AllEquips)
+            foreach (var equip in condition.Equips)
             {
                 // スロットタイプが 2 -> 武器・防具スキル装飾品スロットの区別なし
                 if (equip.SlotType == 2)
@@ -114,7 +114,7 @@ namespace MHSS.Models.Utility
 
             // 両対応装備の個数制約
             // それぞれの「両対応装備/装飾品(武器)」と「両対応装備/装飾品(防具)」の個数変数の和の上限を「1/所持数」に定める。
-            foreach (var equip in Master.AllEquips.Where(d => d.SlotType == 2))
+            foreach (var equip in condition.Equips.Where(d => d.SlotType == 2))
             {
                 if (equip.EquipKind == EquipKind.Deco)
                 {
@@ -129,7 +129,7 @@ namespace MHSS.Models.Utility
 
 
             // 係数の定義
-            foreach (var equip in Master.AllEquips)
+            foreach (var equip in condition.Equips)
             {
                 if (equip.SlotType == 2)
                 {
@@ -219,7 +219,7 @@ namespace MHSS.Models.Utility
             #region Define Objective
             // 防御を最大化
             Objective obj = Solver.Objective();
-            foreach (var equip in Master.AllEquips)
+            foreach (var equip in condition.Equips)
             {
                 if (equip.SlotType == 2)
                 {

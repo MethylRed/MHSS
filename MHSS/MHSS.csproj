@@ -5,6 +5,40 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Models\Data\image\Attack.png" />
+    <None Remove="Views\Controls\Affinity.png" />
+    <None Remove="Views\Controls\Attack.png" />
+    <None Remove="Views\Controls\Blast.png" />
+    <None Remove="Views\Controls\Def.png" />
+    <None Remove="Views\Controls\Dragon.png" />
+    <None Remove="Views\Controls\Fire.png" />
+    <None Remove="Views\Controls\Ice.png" />
+    <None Remove="Views\Controls\None.png" />
+    <None Remove="Views\Controls\Paralysis.png" />
+    <None Remove="Views\Controls\Poison.png" />
+    <None Remove="Views\Controls\Sleep.png" />
+    <None Remove="Views\Controls\Slot.png" />
+    <None Remove="Views\Controls\Thunder.png" />
+    <None Remove="Views\Controls\Water.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Models\Data\image\Attack.png" />
+    <Resource Include="Views\Controls\Affinity.png" />
+    <Resource Include="Views\Controls\Attack.png" />
+    <Resource Include="Views\Controls\Blast.png" />
+    <Resource Include="Views\Controls\Def.png" />
+    <Resource Include="Views\Controls\Dragon.png" />
+    <Resource Include="Views\Controls\Fire.png" />
+    <Resource Include="Views\Controls\Ice.png" />
+    <Resource Include="Views\Controls\None.png" />
+    <Resource Include="Views\Controls\Paralysis.png" />
+    <Resource Include="Views\Controls\Poison.png" />
+    <Resource Include="Views\Controls\Sleep.png" />
+    <Resource Include="Views\Controls\Slot.png" />
+    <Resource Include="Views\Controls\Thunder.png" />
+    <Resource Include="Views\Controls\Water.png" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Csv" Version="2.0.93" />
     <PackageReference Include="Google.OrTools" Version="9.11.4210" />
     <PackageReference Include="Prism.Unity" Version="8.1.97" />
@@ -83,8 +117,5 @@
     <None Update="Models\Data\CSV\Weapon\MHWs_SWORDANDSHIELD.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\Data\image\" />
   </ItemGroup>
 </Project>

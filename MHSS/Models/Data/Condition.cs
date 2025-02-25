@@ -11,7 +11,8 @@ namespace MHSS.Models.Data
     /// </summary>
     public class Condition
     {
-        public List<Equip> equips = new();
+        public List<Equip> Equips = new();
+
         /// <summary>
         /// スキルの条件
         /// </summary>
@@ -60,11 +61,15 @@ namespace MHSS.Models.Data
         /// <param name="other"></param>
         public Condition(Condition other)
         {
+            Equips = new();
+            foreach (var e in other.Equips)
+            {
+                Equips.Add(e);
+            }
             Skills = new List<Skill>();
             foreach (Skill skill in other.Skills)
             {
-                Skill s = new(skill);
-                Skills.Add(s);
+                Skills.Add(skill);
             }
             Def = other.Def;
             ResFire = other.ResFire;

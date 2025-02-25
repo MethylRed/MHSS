@@ -1,7 +1,10 @@
 ﻿using MHSS.Models.Data;
+using MHSS.ViewModels.SubView;
+using MHSS.Views.Controls;
 using Reactive.Bindings;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +13,8 @@ namespace MHSS.ViewModels.Controls
 {
     internal class WeaponSelectItemViewModel : SubViewModelBase
     {
+        public ReactiveCommand ClickCommand { get; } = new();
+
         public ReactivePropertySlim<string> Name { get; set; } = new("");
         public ReactivePropertySlim<string> Attack { get; set; } = new("");
         public ReactivePropertySlim<string> Affinity { get; set; } = new("");
@@ -26,17 +31,27 @@ namespace MHSS.ViewModels.Controls
 
         public WeaponSelectItemViewModel(Weapon weapon)
         {
+            ClickCommand.Subscribe(_ =>
+            {
+                WeaponSelectVM.WeaponSelectItemVM.Value = new(weapon);
+                WeaponSelectVM.Weapon = weapon;
+            });
+
             Name.Value = weapon.Name;
             Attack.Value = $"{weapon.Attack}({weapon.Attack*Kind.WeaponCoefficient(weapon.WeaponKind)})";
             Affinity.Value = $"{weapon.Affinity}%";
             Slots.Value = $"{weapon.Slot1}-{weapon.Slot2}-{weapon.Slot3}";
-            ElementType1.Value = "./Models/Data/image/" + ElementIcon(weapon.ElementType1);
-            ElementValue1.Value = $"{weapon.ElementValue1}";
-            ElementType2.Value = "./Models/Data/image/" + ElementIcon(weapon.ElementType2);
-            ElementValue2.Value = $"{weapon.ElementValue2}";
+            ElementType1.Value = "/Views/Controls/" + ElementIcon(weapon.ElementType1);
+            var ev1 = weapon.ElementValue1 == 0 ? "" : weapon.ElementValue1.ToString();
+            ElementValue1.Value = ev1;
+            ElementType2.Value = "/Views/Controls/" + ElementIcon(weapon.ElementType2);
+            var ev2 = weapon.ElementValue2 == 0 ? "" : weapon.ElementValue2.ToString();
+            ElementValue2.Value = ev2;
             DefBonus.Value = $"{weapon.DefBonus}";
             UniqueStatus.Value = weapon.UniqueStatus;
-            Skills.Value = string.Join("", weapon.Skills.Select(skill => $"{skill.Name}Lv{skill.Level}"));
+            var s = string.Join("", weapon.Skills.Select(skill => $"{skill.Name}Lv{skill.Level}, "));
+            if (s.Count() > 2) s = s.Remove(s.Length - 2, 2);
+            Skills.Value = s;
         }
 
         private string ElementIcon(Element element)

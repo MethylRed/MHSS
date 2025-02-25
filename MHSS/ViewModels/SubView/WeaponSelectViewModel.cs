@@ -21,6 +21,11 @@ namespace MHSS.ViewModels.SubView
         public ReactivePropertySlim<ObservableCollection<WeaponSelectItemViewModel>> WeaponSelectItemVMs { get; } = new(new());
 
         /// <summary>
+        /// 武器選択アイテムのViewModel
+        /// </summary>
+        public ReactivePropertySlim<WeaponSelectItemViewModel> WeaponSelectItemVM { get; } = new();
+
+        /// <summary>
         /// 武器種選択ComboBoxに表示するアイテムリスト
         /// </summary>
         public ReactivePropertySlim<ObservableCollection<string>> WeaponKindSelectItems { get; } = new();
@@ -60,6 +65,8 @@ namespace MHSS.ViewModels.SubView
         /// </summary>
         public ReactivePropertySlim<bool> IsEnabledElementSelect { get; set; } = new(false);
 
+
+        public Weapon Weapon { get; set; } = new();
 
         /// <summary>
         /// 背景色
@@ -199,8 +206,6 @@ namespace MHSS.ViewModels.SubView
                 SelectedSkillName.Value = SkillSelectItems.Value.First();
             });
         }
-
-
 
         private List<string> SkillNamesWithWeapon(string weaponKind)
         {

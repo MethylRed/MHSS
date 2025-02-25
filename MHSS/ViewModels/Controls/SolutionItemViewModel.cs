@@ -37,6 +37,13 @@ namespace MHSS.ViewModels.Controls
 
         public ReactivePropertySlim<ObservableCollection<string>> Deco { get; set; } = new();
 
+        public ReactivePropertySlim<string> Def { get; set; } = new();
+        public ReactivePropertySlim<string> Fire { get; set; } = new();
+        public ReactivePropertySlim<string> Water { get; set; } = new();
+        public ReactivePropertySlim<string> Thunder { get; set; } = new();
+        public ReactivePropertySlim<string> Ice { get; set; } = new();
+        public ReactivePropertySlim<string> Dragon { get; set; } = new();
+
 
         public SolutionItemViewModel(SearchedEquips searchedEquips)
         {
@@ -49,19 +56,36 @@ namespace MHSS.ViewModels.Controls
             Charm.Value = searchedEquips.Charm.Name;
 
             var decos = searchedEquips.Decos.OrderByDescending(d => d.Slot1)
-                                             .GroupBy(x => x)
-                                             .Select(g => new { g.Key.Name, Count = g.Count() })
+                                             //.GroupBy(x => x)
+                                             //.Select(g => new { g.Key.Name, Count = g.Count() })
                                              .ToList();
 
             Deco.Value = new();
-            foreach (var d in searchedEquips.Decos)
-            {
-                Deco.Value.Add(d.Name);
-            }
-            for (int i = Deco.Value.Count(); i < 21; i++)
+            for (int i = 0; i < 21; i++)
             {
                 Deco.Value.Add("");
             }
+            foreach (var d in decos)
+            {
+                for (int i = 0; i < 21; i++)
+                {
+                    if (searchedEquips.Slots[i] >= d.Slot1)
+                    {
+                        if (Deco.Value[i] == "")
+                        {
+                            Deco.Value[i] = d.Name;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            Def.Value = searchedEquips.Def.ToString();
+            Fire.Value = searchedEquips.ResFire.ToString();
+            Water.Value = searchedEquips.ResWater.ToString();
+            Thunder.Value = searchedEquips.ResThunder.ToString();
+            Ice.Value = searchedEquips.ResIce.ToString();
+            Dragon.Value = searchedEquips.ResDragon.ToString();
 
 
             string seriesDisp = "", groupDisp = "";

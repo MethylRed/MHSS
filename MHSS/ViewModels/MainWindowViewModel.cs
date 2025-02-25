@@ -247,7 +247,7 @@ namespace MHSS.ViewModels
 
             // 進捗管理用
             int count = 0;
-            int maxDegreeOfParallelism = Math.Min((Environment.ProcessorCount)/2, 6);
+            int maxDegreeOfParallelism = Math.Min((Environment.ProcessorCount)/2, 1);
             var options = new ParallelOptions { MaxDegreeOfParallelism = maxDegreeOfParallelism };
 
             // 検索結果
@@ -260,7 +260,7 @@ namespace MHSS.ViewModels
                     count++;
                     for (int level = skill.Level + 1; level <= int.Max(skill.MaxLevel1, skill.MaxLevel2); level++)
                     {
-                        Condition condition = new(masterCondition);
+                        Condition condition = GetCondition();
                         condition.Skills.Single(s => s.Name == skill.Name).Level = level;
                         Solve solve = new Solve(condition);
 
@@ -306,6 +306,9 @@ namespace MHSS.ViewModels
             condition.ResThunder = Utility.ParseOrDefaultDouble(ResThunder.Value, double.NegativeInfinity);
             condition.ResIce = Utility.ParseOrDefaultDouble(ResIce.Value, double.NegativeInfinity);
             condition.ResDragon = Utility.ParseOrDefaultDouble(ResDragon.Value, double.NegativeInfinity);
+            //condition.Equips.Add(WeaponSelectVM.Value.Weapon);
+            condition.Equips.AddRange(Master.Heads.Union(Master.Bodies).Union(Master.Arms).Union(Master.Waists)
+                                                    .Union(Master.Legs).Union(Master.Charms).Union(Master.Decos));
 
             return condition;
         }

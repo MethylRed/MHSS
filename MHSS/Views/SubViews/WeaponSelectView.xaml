@@ -9,10 +9,11 @@
              d:DesignHeight="250" d:DesignWidth="360">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="70"/>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="60"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Border Height="35" Width="200" VerticalAlignment="Top" HorizontalAlignment="Left">
+        <Border Height="30" Width="200" VerticalAlignment="Top" HorizontalAlignment="Left">
             <Grid>
                 <TextBlock Text="武器種" Margin="5,0,0,0" VerticalAlignment="Center"/>
                 <ComboBox Margin="50,0,0,0"
@@ -27,7 +28,7 @@
                           Width="140"/>
             </Grid>
         </Border>
-        <Border Height="35" Width="200" Margin="0,35,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
+        <Border Height="30" Width="200" Margin="0,30,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
             <Grid>
             <TextBlock Text="スキル" Margin="5,0,0,0" VerticalAlignment="Center"/>
             <ComboBox Margin="50,0,0,0"
@@ -43,7 +44,7 @@
                       Width="140"/>
             </Grid>
         </Border>
-        <Border  Height="35" Width="130" Margin="230,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
+        <Border  Height="30" Width="130" Margin="230,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
             <Grid>
                 <TextBlock Text="属性" VerticalAlignment="Center"/>
                 <ComboBox x:Name="ElementSelectComboBox"
@@ -60,7 +61,15 @@
                           Width="60"/>
             </Grid>
         </Border>
-        <Border CornerRadius="3" Grid.Row="1" BorderBrush="Black" BorderThickness="1">
+        <!--<ItemsControl ItemsSource="{Binding WeaponSelectItemVM.Value, Mode=OneWay}">-->
+            <!--<ItemsControl.ItemTemplate>-->
+                <!--<DataTemplate>-->
+                    <ctrl:WeaponSelectItem Grid.Row="1" DataContext="{Binding Path=WeaponSelectItemVM.Value, Mode=OneWay}"
+                                           IsEnabled="False"/>
+                <!--</DataTemplate>-->
+            <!--</ItemsControl.ItemTemplate>-->
+        <!--</ItemsControl>-->
+        <Border CornerRadius="3" Grid.Row="2" BorderBrush="Black" BorderThickness="1" Margin="0,5,0,0">
             <ScrollViewer>
                 <StackPanel Margin="0">
                     <ItemsControl ItemsSource="{Binding WeaponSelectItemVMs.Value, Mode=OneWay}">
