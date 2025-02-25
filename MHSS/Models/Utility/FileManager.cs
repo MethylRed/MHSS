@@ -15,7 +15,7 @@ using System.Text.Unicode;
 
 namespace MHSS.Models.Utility
 {
-    public class CSVLoader
+    public class FileManager
     {
         // ファイルパス定数
         private const string CsvSkill = "./Models/Data/CSV/MHWs_SKILL.csv";
@@ -102,10 +102,10 @@ namespace MHSS.Models.Utility
             LoadCsvCharm();
             LoadCsvDeco();
 
-            Master.AllEquips = Master.Heads
-                            .Union(Master.Bodies).Union(Master.Arms).Union(Master.Waists)
-                            .Union(Master.Legs).Union(Master.Charms).Union(Master.Decos)
-                            .Union(Master.Weapons.SelectMany(w => w)).ToList();
+            //Master.AllEquips = Master.Heads
+            //                .Union(Master.Bodies).Union(Master.Arms).Union(Master.Waists)
+            //                .Union(Master.Legs).Union(Master.Charms).Union(Master.Decos)
+            //                .Union(Master.Weapons.SelectMany(w => w)).ToList();
         }
 
         /// <summary>
@@ -208,7 +208,7 @@ namespace MHSS.Models.Utility
             {
                 Deco deco = new()
                 {
-                    HaveCount = 5,
+                    HaveCount = 0,
                     EquipKind = EquipKind.Deco,
                     Name = line[@"名前"],
                     //SeriesName = "",
@@ -272,7 +272,7 @@ namespace MHSS.Models.Utility
                             Slot2 = Utility.ParseOrDefault(line[@"スロット2"]),
                             Slot3 = Utility.ParseOrDefault(line[@"スロット3"]),
                             Def = 0,
-                            //Def = Utility.ParseOrDefault(line[@"防御力ボーナス"]),
+                            DefBonus = Utility.ParseOrDefault(line[@"防御力ボーナス"]),
                             ResFire = 0,
                             ResWater = 0,
                             ResThunder = 0,
@@ -346,13 +346,14 @@ namespace MHSS.Models.Utility
         }
 
         /// <summary>
-        /// 装飾品の所持数をロードする
+        /// 装飾品の所持数をロードする 泣シミュがJSON形式なので合わせる
         /// </summary>
         private static void LoadDecoCount()
         {
             // ファイルがない場合は作成
             if (!File.Exists(JsonDecoCount))
             {
+                // ディレクトリも作成
                 string defualtStr = JsonSerializer.Serialize(new Dictionary<string, int>());
                 Directory.CreateDirectory(Path.GetDirectoryName(JsonDecoCount));
                 File.WriteAllText(JsonDecoCount, defualtStr);
@@ -373,13 +374,15 @@ namespace MHSS.Models.Utility
 
                     foreach (var deco in Master.Decos)
                     {
-                        deco.HaveCount = decoCounts.TryGetValue(deco.Name, out int count) ? count : 5;
+                        deco.HaveCount = decoCounts.TryGetValue(deco.Name, out int count) ? int.Min(count, Config.Config.MaxDecoCount) : 0;
                     }
                 }
             }
         }
 
-
+        /// <summary>
+        /// 装飾品の所持数をセーブする 泣シミュがJSON形式なので合わせる
+        /// </summary>
         public static void SaveDecoCount()
         {
             Dictionary<string, int> data = new();

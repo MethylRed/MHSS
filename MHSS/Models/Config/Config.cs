@@ -21,6 +21,12 @@ namespace MHSS.Models.Config
         }
 
         /// <summary>
+        /// 装飾品の最大所持数
+        /// 現状最大Lvが5なのでハードコーディング
+        /// </summary>
+        public const int MaxDecoCount = 5;
+
+        /// <summary>
         /// ConfigのCSVファイルパス
         /// </summary>
         private const string CsvConfig = "./Models/Config/Config.csv";

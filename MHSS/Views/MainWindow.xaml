@@ -216,7 +216,8 @@
                             <TextBlock Grid.Column="6" Text="護石" FontSize="16"/>
                         </Grid>
                         <Border Grid.Row="1" VerticalAlignment="Stretch" Margin="5,0,5,5" BorderBrush="Gainsboro" BorderThickness="2">
-                            <ScrollViewer Grid.Row="1" VerticalAlignment="Stretch">
+                            <subviews:SolutionView DataContext="{Binding SolutionVM.Value, Mode=OneWay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                            <!--<ScrollViewer Grid.Row="1" VerticalAlignment="Stretch">
                                 <StackPanel Margin="0">
                                     <ItemsControl ItemsSource="{Binding SolutionVMs, Mode=OneWay}">
                                         <ItemsControl.ItemTemplate>
@@ -226,7 +227,7 @@
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
                                 </StackPanel>
-                            </ScrollViewer>
+                            </ScrollViewer>-->
                         </Border>
                         <TextBlock Text="{Binding ShowCount.Value, StringFormat={}{0}件の検索結果}" Grid.Row="2"
                                    Margin="0,0,5,0"

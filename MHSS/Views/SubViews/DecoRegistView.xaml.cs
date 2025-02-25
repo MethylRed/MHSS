@@ -24,5 +24,17 @@ namespace MHSS.Views.SubViews
         {
             InitializeComponent();
         }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            PlaceHolderText.Visibility = string.IsNullOrEmpty(NameTextBox.Text)
+                ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private void SkillNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            PlaceHolderSkillText.Visibility = string.IsNullOrEmpty(SkillNameTextBox.Text)
+                ? Visibility.Visible : Visibility.Collapsed;
+        }
     }
 }

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using MHSS.Models.Data;
+using MHSS.Models.Config;
 
 namespace MHSS.ViewModels.Controls
 {
@@ -46,7 +47,7 @@ namespace MHSS.ViewModels.Controls
             // ComboBox表示用アイテムを作成
             // スキルの最大レベルが5っぽいのでとりあえず5でハードコーディングしておく
             ObservableCollection<int> items = new();
-            for (int i = 0; i <= 5; i++)
+            for (int i = 0; i <= Config.MaxDecoCount; i++)
             {
                 items.Add(i);
             }

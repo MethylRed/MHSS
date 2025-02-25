@@ -30,5 +30,14 @@ namespace MHSS.ViewModels.Controls
             CategoryName = $"Lv{slotSize}装飾品";
             DecoRegistVMs = new(decos.Select(x => new DecoRegistItemViewModel(x)));
         }
+
+
+        public void SetDecoCount(int count)
+        {
+            foreach (var vm in DecoRegistVMs)
+            {
+                vm.SelectedCount.Value = count;
+            }
+        }
     }
 }

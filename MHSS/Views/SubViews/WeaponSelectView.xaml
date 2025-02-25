@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MHSS.Views.SubViews"
+             xmlns:ctrl="clr-namespace:MHSS.Views.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="250" d:DesignWidth="360">
     <Grid>
@@ -37,6 +38,7 @@
                       FontSize="14"
                       SelectedIndex="0"
                       SelectedItem="{Binding SelectedSkillName.Value}"
+                      IsEnabled="{Binding IsEnabledSkillSelect.Value}"
                       Height="Auto"
                       Width="140"/>
             </Grid>
@@ -44,7 +46,8 @@
         <Border  Height="35" Width="130" Margin="230,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
             <Grid>
                 <TextBlock Text="属性" VerticalAlignment="Center"/>
-                <ComboBox Margin="30,0,0,0"
+                <ComboBox x:Name="ElementSelectComboBox"
+                          Margin="30,0,0,0"
                           Grid.Column="0" Background="{Binding BackgroundColor.Value, Mode=OneWay}"
                           BorderThickness="1"
                           VerticalAlignment="Center" HorizontalAlignment="Left"
@@ -52,12 +55,22 @@
                           FontSize="14"
                           SelectedIndex="0"
                           SelectedItem="{Binding SelectedElement.Value}"
+                          IsEnabled="{Binding IsEnabledElementSelect.Value}"
                           Height="Auto"
                           Width="60"/>
             </Grid>
         </Border>
         <Border CornerRadius="3" Grid.Row="1" BorderBrush="Black" BorderThickness="1">
             <ScrollViewer>
+                <StackPanel Margin="0">
+                    <ItemsControl ItemsSource="{Binding WeaponSelectItemVMs.Value, Mode=OneWay}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <ctrl:WeaponSelectItem/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
             </ScrollViewer>
         </Border>
     </Grid>

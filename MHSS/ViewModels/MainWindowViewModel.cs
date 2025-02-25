@@ -1,26 +1,26 @@
 ﻿using System.Reflection;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Linq;
+using System.Reactive.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Documents;
 using Prism.Commands;
 using Prism.Mvvm;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Windows.Documents;
 using Google.OrTools.LinearSolver;
-using System.Linq;
 using Reactive.Bindings;
-using System.Collections.ObjectModel;
+using Reactive.Bindings.Disposables;
+using Reactive.Bindings.Extensions;
 using MHSS.Models.Config;
 using MHSS.Models.Data;
 using MHSS.Models.Utility;
 using MHSS.ViewModels.SubView;
 using MHSS.Views.Controls;
 using MHSS.ViewModels.Controls;
-using Reactive.Bindings.Disposables;
-using Reactive.Bindings.Extensions;
-using System.Reactive.Linq;
-using System.Threading.Tasks;
-using System.Collections.Concurrent;
-using System.Text;
 using MHSS.Views.SubViews;
 //using System.Reactive.Disposables;
 
@@ -118,11 +118,10 @@ namespace MHSS.ViewModels
         /// </summary>
         public ReactivePropertySlim<WeaponSelectViewModel> WeaponSelectVM { get; } = new();
 
-
         /// <summary>
         /// 結果表示のViewModel
         /// </summary>
-        public ReactiveCollection<SolutionViewModel> SolutionVMs { get; } = new();
+        public ReactivePropertySlim<SolutionViewModel> SolutionVM { get; } = new();
 
 
         /// <summary>
@@ -132,11 +131,11 @@ namespace MHSS.ViewModels
         {
             Instance = this;
 
-            AppDomain.CurrentDomain.ProcessExit += (s, e) => CSVLoader.SaveDecoCount();
+            AppDomain.CurrentDomain.ProcessExit += (s, e) => FileManager.SaveDecoCount();
 
             // データの読み込み
-            CSVLoader.LoadCsvSkill();
-            CSVLoader.LoadCsvEquip();
+            FileManager.LoadCsvSkill();
+            FileManager.LoadCsvEquip();
             //CSVLoader.LoadCsvHead();
             //CSVLoader.LoadCsvBody();
             //CSVLoader.LoadCsvArm();
@@ -176,6 +175,7 @@ namespace MHSS.ViewModels
             SkillSelectVM.Value = new();
             DecoRegistVM.Value = new();
             WeaponSelectVM.Value = new();
+            SolutionVM.Value = new(new());
 
             SearchCount.Value = Config.Instance.MaxSearchCount.ToString();
             SearchCount.Value = "1";
@@ -197,7 +197,7 @@ namespace MHSS.ViewModels
             Condition condition = GetCondition();
 
             // 解を表示するVMを初期化
-            System.Windows.Application.Current.Dispatcher.Invoke(() => SolutionVMs.Clear());
+            System.Windows.Application.Current.Dispatcher.Invoke(() => SolutionVM.Value = new(new()));
 
             if (!condition.SatisfySecret) return;
 
@@ -208,6 +208,7 @@ namespace MHSS.ViewModels
             int count = 0;
             ShowCount.Value = "0";
 
+            List<SearchedEquips> equips = new();
             while (count < int.Min(Utility.ParseOrDefault(SearchCount.Value, Config.Instance.MaxSearchCount), Config.Instance.MaxSearchCount))
             {
                 SearchedEquips searchedEquips = Solve.SearchSingle(count);
@@ -220,11 +221,12 @@ namespace MHSS.ViewModels
                 {
                     System.Windows.Application.Current.Dispatcher.Invoke(() =>
                     {
-                        SolutionVMs.Add(new SolutionViewModel(searchedEquips));
+                        equips.Add(searchedEquips);
                         ShowCount.Value = (++count).ToString();
                     });
                 }
             }
+            SolutionVM.Value = new(equips);
             SelectedResultTabIndex.Value = 0;
             Debug.WriteLine("Check is finished.");
         }
@@ -282,6 +284,7 @@ namespace MHSS.ViewModels
                 {
                     sb.Append($"Lv{i}, ");
                 }
+                sb.Remove(sb.Length - 2, 2);
                 sb.Append('\n');
             }
             ForDisplayExtraSkills.Value = sb.ToString();

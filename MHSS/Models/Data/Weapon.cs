@@ -14,7 +14,7 @@ namespace MHSS.Models.Data
         public WeaponKind WeaponKind { get; set; }
 
         /// <summary>
-        /// 攻撃力(本編に準拠して表示攻撃力にする予定)
+        /// 攻撃力(武器倍率)
         /// </summary>
         public int Attack { get; set; }
 
@@ -42,5 +42,15 @@ namespace MHSS.Models.Data
         /// 属性値1(これも表示値の予定)
         /// </summary>
         public int ElementValue2 { get; set; }
+
+        /// <summary>
+        /// 防御力ボーナス
+        /// </summary>
+        public int DefBonus { get; set; }
+
+        /// <summary>
+        /// 武器種固有のステータス(旋律、砲撃タイプ&レベル、ビン等)
+        /// </summary>
+        public string UniqueStatus { get; set; }
     }
 }

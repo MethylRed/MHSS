@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace MHSS.Views.SubViews
+namespace MHSS.Views.Controls
 {
     /// <summary>
-    /// Solution.xaml の相互作用ロジック
+    /// SolutionItem.xaml の相互作用ロジック
     /// </summary>
-    public partial class Solution : UserControl
+    public partial class SolutionItem : UserControl
     {
-        public Solution()
+        public SolutionItem()
         {
             InitializeComponent();
         }

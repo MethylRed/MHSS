@@ -11,6 +11,7 @@ namespace MHSS.Models.Data
     /// </summary>
     public class Condition
     {
+        public List<Equip> equips = new();
         /// <summary>
         /// スキルの条件
         /// </summary>

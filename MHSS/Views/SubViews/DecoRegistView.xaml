@@ -30,20 +30,75 @@
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="60"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Button Grid.Row="0"
-                Margin="5,0,0,0"
-                x:Name="SolveButton"
+        <TextBox Text="{Binding Path=FilterName.Value}" 
+                 Height="20" Width="110"
+                 Margin="5,5,0,0"
+                 x:Name="NameTextBox"
+                 TextChanged="TextBox_TextChanged"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Top"
+                 VerticalContentAlignment="Center"
+                 FontSize="14"/>
+        <TextBlock Text="装飾品名を入力" Height="20" Width="110" 
+                   x:Name="PlaceHolderText"
+                   Margin="8,5,0,0"
+                   Foreground="Gray"
+                   FontSize="14"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Left"
+                   IsHitTestVisible="False"
+                   />
+        <TextBox Text="{Binding Path=FilterSkillName.Value}" 
+                 Height="20" Width="110"
+                 Margin="125,5,0,0"
+                 x:Name="SkillNameTextBox"
+                 TextChanged="SkillNameTextBox_TextChanged"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Top"
+                 VerticalContentAlignment="Center"
+                 FontSize="14"/>
+        <TextBlock Text="スキル名を入力" Height="20" Width="110" 
+                   x:Name="PlaceHolderSkillText"
+                   Margin="128,5,0,0"
+                   Foreground="Gray"
+                   FontSize="14"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Left"
+                   IsHitTestVisible="False"
+                   />
+        <Button Grid.Row="0" Margin="240,0,0,0"
                 Command="{Binding SearchCommand}"
-                Height="30" Width="80"
-                Content="リセット"
+                Height="25" Width="60"
+                Content="検索"
+                HorizontalAlignment="Left"
+                FontSize="14" FontWeight="Bold"/>
+        <Button Grid.Row="0"
+                Margin="305,0,0,0"
+                x:Name="SolveButton"
+                Command="{Binding ClearCommand}"
+                Height="25" Width="60"
+                Content="クリア"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                FontSize="16"
-                FontWeight="Bold"/> 
-        <ScrollViewer Grid.Row="1" VerticalAlignment="Stretch">
+                FontSize="14"
+                FontWeight="Bold"/>
+        <Button Grid.Row="1" Margin="5,0,0,0"
+                Command="{Binding ResetDecoCountCommand}"
+                Height="25" Width="160"
+                Content="全装飾品の所持数を0にする"
+                HorizontalAlignment="Left"
+                FontSize="12"/>
+        <Button Grid.Row="1" Margin="170,0,0,0"
+                Command="{Binding MaxDecoCountCommand}"
+                Height="25" Width="180"
+                Content="全装飾品の所持数を最大にする"
+                HorizontalAlignment="Left"
+                FontSize="12"/>
+        <ScrollViewer Grid.Row="2" VerticalAlignment="Stretch">
             <StackPanel Margin="0,0,3,100">
                 <ItemsControl ItemsSource="{Binding DecoRegistByCategoryVMs.Value, Mode=OneWay}">
                     <ItemsControl.ItemTemplate>

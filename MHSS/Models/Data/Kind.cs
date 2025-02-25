@@ -159,7 +159,7 @@ namespace MHSS.Models.Data
         }
 
         /// <summary>
-        /// 武器の種類：文字列に変換
+        /// 武器の種類：文字列をEnumに変換
         /// </summary>
         /// <param name="kind"></param>
         /// <returns></returns>
@@ -181,6 +181,34 @@ namespace MHSS.Models.Data
                 "ライトボウガン" => WeaponKind.LightBowgun,
                 "ヘビィボウガン" => WeaponKind.HeavyBowgun,
                 "弓" => WeaponKind.Bow,
+                _ => WeaponKind.GreatSword
+            };
+        }
+
+        /// <summary>
+        /// 武器係数
+        /// </summary>
+        /// <param name="kind"></param>
+        /// <returns></returns>
+        public static double WeaponCoefficient(this WeaponKind kind)
+        {
+            return kind switch
+            {
+                WeaponKind.GreatSword => 4.8,
+                WeaponKind.LondSword => 3.3,
+                WeaponKind.SwordAndShield => 1.4,
+                WeaponKind.DualBlades => 1.4,
+                WeaponKind.Hammer => 5.2,
+                WeaponKind.HuntingHorn => 4.2,
+                WeaponKind.Lance => 2.3,
+                WeaponKind.Gunlance => 2.3,
+                WeaponKind.SwitchAxe => 3.5,
+                WeaponKind.ChargeBlade => 3.6,
+                WeaponKind.InsectGlaive => 3.1,
+                WeaponKind.LightBowgun => 1.3,
+                WeaponKind.HeavyBowgun => 1.5,
+                WeaponKind.Bow => 1.2,
+                _ => 1.0
             };
         }
 

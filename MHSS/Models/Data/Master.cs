@@ -14,11 +14,6 @@ namespace MHSS.Models.Data
         public static List<Skill> Skills { get; set; } = new();
 
         /// <summary>
-        /// 全装備
-        /// </summary>
-        public static List<Equip> AllEquips { get; set; } = new();
-
-        /// <summary>
         /// 全武器
         /// </summary>
         public static List<List<Weapon>> Weapons { get; set; } = new();
@@ -57,6 +52,13 @@ namespace MHSS.Models.Data
         /// 全装飾品
         /// </summary>
         public static List<Deco> Decos { get; set; } = new();
+
+        /// <summary>
+        /// 全装備
+        /// </summary>
+        public static List<Equip> AllEquips => Heads.Union(Bodies).Union(Arms).Union(Waists)
+                                                    .Union(Legs).Union(Charms).Union(Decos)
+                                                    .Union(Weapons.SelectMany(w => w)).ToList();
 
         /// <summary>
         /// 武器が持つスキルのみのリスト

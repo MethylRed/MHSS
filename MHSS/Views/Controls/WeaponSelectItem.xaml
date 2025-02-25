@@ -4,9 +4,120 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MHSS.Views.Controls"
+             xmlns:ctrlvm="clr-namespace:MHSS.ViewModels.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
+             d:DataContext="{d:DesignInstance Type=ctrlvm:WeaponSelectItemViewModel}"
+             d:DesignHeight="90" d:DesignWidth="350">
+    <Border CornerRadius="3" BorderBrush="Gainsboro" BorderThickness="1" Background="White" Height="90">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Border Grid.Row="0">
+                <TextBlock Text="{Binding Path=Name.Value}" FontSize="12"
+                           Margin="5,0,0,0"
+                           Height="Auto" Width="150"
+                           VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            </Border>
+            <!--<Image Grid.Row="0" Source="./Models/Data/image/Attack.png"
+                       Width="16" Height="16"
+                       VerticalAlignment="Center" HorizontalAlignment="Left"
+                       Margin="165,0,0,0"/>-->
+            <Image Grid.Row="0" Source="C:\Users\ryosuke.nakajima\Documents\nkjm\MHSS\MHSS\Models\Data\image\Attack.png"
+                   Width="16" Height="16"
+                   VerticalAlignment="Center" HorizontalAlignment="Left"
+                   Margin="165,0,0,0"/>
+            <Border Grid.Row="0">
+                <TextBlock Text="{Binding Path=Attack.Value}" FontSize="12"
+                       Margin="185,0,0,0"
+                       Height="Auto" Width="55"
+                       VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            </Border>
+            <!--<Image Grid.Row="0" Source="./Models/Data/image/Affinity.png"
+                       Width="16" Height="16"
+                       VerticalAlignment="Center" HorizontalAlignment="Left"
+                       Margin="220,0,0,0"/>-->
+            <Image Grid.Row="0" Source="C:\Users\ryosuke.nakajima\Documents\nkjm\MHSS\MHSS\Models\Data\image\Affinity.png"
+                   Width="16" Height="16"
+                   VerticalAlignment="Center" HorizontalAlignment="Left"
+                   Margin="250,0,0,0"/>
+            <Border Grid.Row="0">
+                <TextBlock Text="{Binding Path=Affinity.Value}" FontSize="12"
+                       Margin="270,0,0,0"
+                       Height="Auto" Width="35"
+                       VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            </Border>
             
-    </Grid>
+            <!--<Image Grid.Row="1" Source="./Models/Data/image/Attack.png"
+                       Width="16" Height="16"
+                       VerticalAlignment="Center" HorizontalAlignment="Left"
+                       Margin="5,0,0,0"/>-->
+            <Image Grid.Row="1" Source="C:\Users\ryosuke.nakajima\Documents\nkjm\MHSS\MHSS\Models\Data\image\Fire.png"
+                   Width="16" Height="16"
+                   VerticalAlignment="Center" HorizontalAlignment="Left"
+                   Margin="5,0,0,0"/>
+            <Border Grid.Row="1">
+                <TextBlock Text="{Binding Path=ElementValue1.Value}" FontSize="12"
+                       Margin="25,0,0,0"
+                       Height="Auto" Width="30"
+                       VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            </Border>
+            <!--<Image Grid.Row="1" Source="./Models/Data/image/Attack.png"
+                       Width="16" Height="16"
+                       VerticalAlignment="Center" HorizontalAlignment="Left"
+                       Margin="5,0,0,0"/>-->
+            <Image Grid.Row="1" Source="C:\Users\ryosuke.nakajima\Documents\nkjm\MHSS\MHSS\Models\Data\image\Water.png"
+                   Width="16" Height="16"
+                   VerticalAlignment="Center" HorizontalAlignment="Left"
+                   Margin="55,0,0,0"/>
+            <Border Grid.Row="1">
+                <TextBlock Text="{Binding Path=ElementValue2.Value}" FontSize="12"
+                       Margin="75,0,0,0"
+                       Height="Auto" Width="30"
+                       VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            </Border>
+            <!--<Image Grid.Row="1" Source="./Models/Data/image/Slot.png"
+                       Width="16" Height="16"
+                       VerticalAlignment="Center" HorizontalAlignment="Left"
+                       Margin="105,0,0,0"/>-->
+            <Image Grid.Row="1" Source="C:\Users\ryosuke.nakajima\Documents\nkjm\MHSS\MHSS\Models\Data\image\Affinity.png"
+                   Width="16" Height="16"
+                   VerticalAlignment="Center" HorizontalAlignment="Left"
+                   Margin="105,0,0,0"/>
+            <Border Grid.Row="1">
+                <TextBlock Text="{Binding Path=Slots.Value}" FontSize="12"
+                       Margin="125,0,0,0"
+                       Height="Auto" Width="35"
+                       VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            </Border>
+            <!--<Image Grid.Row="1" Source="./Models/Data/image/Attack.png"
+                       Width="16" Height="16"
+                       VerticalAlignment="Center" HorizontalAlignment="Left"
+                       Margin="105,0,0,0"/>-->
+            <Image Grid.Row="1" Source="C:\Users\ryosuke.nakajima\Documents\nkjm\MHSS\MHSS\Models\Data\image\Def.png"
+                   Width="16" Height="16"
+                   VerticalAlignment="Center" HorizontalAlignment="Left"
+                   Margin="165,0,0,0"/>
+            <Border Grid.Row="1">
+                <TextBlock Text="{Binding Path=DefBonus.Value}" FontSize="12"
+                       Margin="185,0,0,0"
+                       Height="Auto" Width="30"
+                       VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            </Border>
+            <Border Grid.Row="1">
+                <TextBlock Text="猟虫強化【気・力】発動" FontSize="12"
+                       Margin="225,0,0,0"
+                       Height="Auto" Width="Auto"
+                       VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            </Border>
+            <Border Grid.Row="2">
+                <TextBlock Text="ここは武器のスキル" FontSize="12"
+                       Margin="5,0,0,0"
+                       Height="Auto" Width="Auto"
+                       VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            </Border>
+        </Grid>
+    </Border>
 </UserControl>
