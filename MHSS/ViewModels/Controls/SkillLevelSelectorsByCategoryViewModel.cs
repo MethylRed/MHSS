@@ -49,5 +49,13 @@ namespace MHSS.ViewModels.Controls
         {
             return SkillLevelSelectorVMs.Select(s => s.SatisfySecret.Value).Aggregate(true, (acc, x) => acc && x);
         }
+
+        public void Reset()
+        {
+            foreach (var item in SkillLevelSelectorVMs)
+            {
+                item.SelectedItem.Value = item.Items.Value.First();
+            }
+        }
     }
 }

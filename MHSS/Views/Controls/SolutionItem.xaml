@@ -8,14 +8,16 @@
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance Type=ctrl:SolutionItemViewModel}"
              d:DesignHeight="450" d:DesignWidth="800">
-    <Border BorderBrush="Gainsboro" BorderThickness="1">
-        <Expander Grid.Column="0" Margin="0,0,0,0" Height="Auto" Width="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
-                  BorderThickness="0" BorderBrush="Transparent">
+    <Border x:Name="Target" BorderBrush="Gainsboro" BorderThickness="1" Background="white">
+        <Expander x:Name="Expander"
+                  Grid.Column="0" Margin="0,0,0,0" Height="Auto" Width="Auto"
+                  VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                  BorderThickness="0" BorderBrush="Transparent" IsExpanded="True">
             <Expander.Header>
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="30"/>
-                        <RowDefinition Height="20"/>
+                        <RowDefinition Height="25"/>
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0" HorizontalAlignment="{Binding HorizontalAlignment, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentPresenter}}, Mode=OneWayToSource}"
                           Height="30">
@@ -50,7 +52,7 @@
                             <TextBlock Text="{Binding Charm.Value, Mode=OneWay}" FontSize="16" Margin="0,0,10,0"/>
                         </Viewbox>
                     </Grid>
-                    <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1">
+                    <Border Grid.Row="1" BorderBrush="Transparent" BorderThickness="1">
                         <Grid>
                             <Image Grid.Row="0" Source="/Views/Controls/Def.png"
                                    Width="16" Height="16"
@@ -106,6 +108,7 @@
                                            HorizontalAlignment="Left" VerticalAlignment="Center"
                                            Height="Auto"/>
                             </Border>
+                            
                         </Grid>
                         
                     </Border>
@@ -156,16 +159,19 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
+                        
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
+                        
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
+                        
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
@@ -221,7 +227,7 @@
                     <Border Grid.Row="15" Background="White" Margin="20,0,0,0">
                         <TextBlock Text="{Binding Deco.Value[15], Mode=OneWay}" Height="Auto" Width="200" Background="White" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="Black"/>
                     </Border>
-                    <Border Grid.Row="14" Background="White" Margin="20,0,0,0">
+                    <Border Grid.Row="16" Background="White" Margin="20,0,0,0">
                         <TextBlock Text="{Binding Deco.Value[16], Mode=OneWay}" Height="Auto" Width="200" Background="White" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="Black"/>
                     </Border>
                     <Border Grid.Row="17" Background="White" Margin="20,0,0,0">
@@ -237,9 +243,12 @@
                         <TextBlock Text="{Binding Deco.Value[20], Mode=OneWay}" Height="Auto" Width="200" Background="WhiteSmoke" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="Black"/>
                     </Border>
                 </Grid>
-
+                <Button Grid.Column="2" Content="📋" VerticalAlignment="Top" 
+                                    HorizontalAlignment="Right" Width="25" Height="25"
+                                    FontSize="16" Margin="0,0,5,0"
+                                    Click="Button_Click"/>
                 <!--<TextBlock Text="{Binding Deco.Value, Mode=OneWay}" Grid.Column="1" Height="Auto" Width="200" Background="White" FontSize="12" Margin="10,0,0,0" Foreground="Black"/>-->
-                <TextBlock Text="{Binding Skill.Value, Mode=OneWay}" Grid.Column="2" Height="Auto" Width="200" Background="White" FontSize="12" Margin="10,0,0,0" Foreground="Black"/>
+                <TextBlock Text="{Binding Skill.Value, Mode=OneWay}" Grid.Column="2" Height="Auto" Width="200" Background="White" FontSize="14" Margin="10,0,0,0" Foreground="Black"/>
 
 
             </Grid>

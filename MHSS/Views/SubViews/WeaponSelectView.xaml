@@ -7,6 +7,27 @@
              xmlns:ctrl="clr-namespace:MHSS.Views.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="250" d:DesignWidth="360">
+    <UserControl.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="Gainsboro" />
+            <Setter Property="Foreground" Value="DodgerBlue" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate x:Name="button" TargetType="Button">
+                        <Border x:Name="border" CornerRadius="15" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="LightGray" />
+                                <!-- マウスオーバー時の背景色を変更 -->
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="60"/>
@@ -61,14 +82,15 @@
                           Width="60"/>
             </Grid>
         </Border>
-        <!--<ItemsControl ItemsSource="{Binding WeaponSelectItemVM.Value, Mode=OneWay}">-->
-            <!--<ItemsControl.ItemTemplate>-->
-                <!--<DataTemplate>-->
-                    <ctrl:WeaponSelectItem Grid.Row="1" DataContext="{Binding Path=WeaponSelectItemVM.Value, Mode=OneWay}"
-                                           IsEnabled="False"/>
-                <!--</DataTemplate>-->
-            <!--</ItemsControl.ItemTemplate>-->
-        <!--</ItemsControl>-->
+        <Button Grid.Row="0" Margin="0,0,5,0"
+                Command="{Binding ClearCommand}"
+                Height="25" Width="80"
+                Content="固定を解除"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                FontSize="14" FontWeight="Bold"/>
+        <ctrl:WeaponSelectItem Grid.Row="1" DataContext="{Binding Path=WeaponSelectItemVM.Value, Mode=OneWay}"
+                                IsEnabled="False"/>
         <Border CornerRadius="3" Grid.Row="2" BorderBrush="Black" BorderThickness="1" Margin="0,5,0,0">
             <ScrollViewer>
                 <StackPanel Margin="0">

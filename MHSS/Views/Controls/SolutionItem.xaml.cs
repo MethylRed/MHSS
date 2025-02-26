@@ -24,5 +24,17 @@ namespace MHSS.Views.Controls
         {
             InitializeComponent();
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Expander.IsExpanded = true;
+            double width = Target.ActualWidth;
+            double height = Target.ActualHeight;
+
+            RenderTargetBitmap bitmap = new((int)width, (int)height, 96, 96, PixelFormats.Pbgra32);
+            bitmap.Render(Target);
+
+            Clipboard.SetImage(bitmap);
+        }
     }
 }

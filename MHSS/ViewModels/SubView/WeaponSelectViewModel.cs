@@ -1,5 +1,6 @@
 ﻿using MHSS.Models.Data;
 using MHSS.ViewModels.Controls;
+using MHSS.Views.Controls;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
@@ -66,6 +67,8 @@ namespace MHSS.ViewModels.SubView
         public ReactivePropertySlim<bool> IsEnabledElementSelect { get; set; } = new(false);
 
 
+        public ReactiveCommand ClearCommand { get; } = new();
+
         public Weapon Weapon { get; set; } = new();
 
         /// <summary>
@@ -83,6 +86,12 @@ namespace MHSS.ViewModels.SubView
         /// </summary>
         public WeaponSelectViewModel()
         {
+            ClearCommand.Subscribe(() =>
+            {
+                WeaponSelectItemVM.Value = new(new());
+                Weapon = new Weapon();
+            });
+
             // 武器種選択ComboBox表示用アイテムを作成
             ObservableCollection<string> items = new();
             items.Add("---");

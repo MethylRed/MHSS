@@ -21,7 +21,7 @@ namespace MHSS.Models.Data
         /// <summary>
         /// 装備のシリーズ名
         /// </summary>
-        //public string SeriesName { get; set; } = string.Empty;
+        public string SeriesName { get; set; } = string.Empty;
 
 
         /// <summary>
@@ -79,5 +79,33 @@ namespace MHSS.Models.Data
         /// スキル
         /// </summary>
         public List<Skill> Skills { get; set; } = new();
+
+
+        public Equip() { }
+
+        /// <summary>
+        /// コピーコンストラクタ
+        /// </summary>
+        /// <param name="other"></param>
+        public Equip(Equip other)
+        {
+            EquipKind = other.EquipKind;
+            Name = other.Name;
+            SlotType = other.SlotType;
+            Slot1 = other.Slot1;
+            Slot2 = other.Slot2;
+            Slot3 = other.Slot3;
+            Def = other.Def;
+            ResFire = other.ResFire;
+            ResWater = other.ResWater;
+            ResThunder = other.ResThunder;
+            ResIce = other.ResIce;
+            ResDragon = other.ResDragon;
+            Skills = new List<Skill>();
+            foreach (Skill skill in other.Skills)
+            {
+                Skills.Add(skill);
+            }
+        }
     }
 }

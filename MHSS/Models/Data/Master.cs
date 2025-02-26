@@ -60,10 +60,8 @@ namespace MHSS.Models.Data
                                                     .Union(Legs).Union(Charms).Union(Decos)
                                                     .Union(Weapons.SelectMany(w => w)).ToList();
 
-        /// <summary>
-        /// 武器が持つスキルのみのリスト
-        /// </summary>
-        //public static List<string> SkillNamesWithWeapon => Weapons.SelectMany(w => w).SelectMany(w => w.Skills).Select(x => x.Name).Distinct().ToList();
-        //public static List<Skill> SkillsWithWeapon => Weapons.SelectMany(w => w).SelectMany(w => w.Skills).GroupBy(x => x.Name).Select(g => g.First()).ToList();
+        public static List<IGrouping<string, Equip>> ArmorBySeries => Heads.Union(Bodies).Union(Arms).Union(Waists).Union(Legs)
+            .GroupBy(a => a.SeriesName).ToList();
+
     }
 }

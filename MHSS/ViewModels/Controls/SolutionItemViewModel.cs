@@ -79,6 +79,10 @@ namespace MHSS.ViewModels.Controls
                     }
                 }
             }
+            for (int i = 0; i < 21; i++)
+            {
+                Deco.Value[i] = $"【{searchedEquips.Slots[i]}】   {Deco.Value[i]}";
+            }
 
             Def.Value = searchedEquips.Def.ToString();
             Fire.Value = searchedEquips.ResFire.ToString();

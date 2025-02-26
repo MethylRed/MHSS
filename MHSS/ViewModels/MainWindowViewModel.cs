@@ -44,6 +44,11 @@ namespace MHSS.ViewModels
         public AsyncReactiveCommand SearchExtraSkillsCommand { get; }
 
         /// <summary>
+        /// スキル条件リセットコマンド
+        /// </summary>
+        public ReactiveCommand ResetCommand { get; } = new();
+
+        /// <summary>
         /// 表示用検索結果数
         /// </summary>
         public ReactivePropertySlim<string> ShowCount { get; set; } = new("0");
@@ -123,6 +128,11 @@ namespace MHSS.ViewModels
         /// </summary>
         public ReactivePropertySlim<SolutionViewModel> SolutionVM { get; } = new();
 
+        /// <summary>
+        /// 装備の除外固定のViewModel
+        /// </summary>
+        public ReactivePropertySlim<ExcludeLockViewModel> ExcludeLockVM { get; } = new();
+
 
         /// <summary>
         /// コンストラクタ
@@ -143,8 +153,6 @@ namespace MHSS.ViewModels
             //CSVLoader.LoadCsvLeg();
             //CSVLoader.LoadCsvCharm();
             //CSVLoader.LoadCsvDeco();
-
-            //foreach (var deco in Master.Decos) DecoRegistVMs.Add(new DecoRegistItemViewModel(deco));
 
             // 検索ボタンクリックイベントの定義
             SearchCommand = IsBusy.Select(x => !x).ToAsyncReactiveCommand();
@@ -170,15 +178,23 @@ namespace MHSS.ViewModels
                 IsBusy.Value = false;
             }).AddTo(Disposable);
 
-
             // ViewModelのインスタンスを生成
             SkillSelectVM.Value = new();
             DecoRegistVM.Value = new();
             WeaponSelectVM.Value = new();
             SolutionVM.Value = new(new());
+            ExcludeLockVM.Value = new();
+
+            // スキル条件をリセット
+            ResetCommand.Subscribe(() =>
+            {
+                foreach (var item in SkillSelectVM.Value.SkillLevelSelectorsByCategoryVMs.Value)
+                {
+                    item.Reset();
+                }
+            });
 
             SearchCount.Value = Config.Instance.MaxSearchCount.ToString();
-            SearchCount.Value = "1";
             Def.Value = "0";
             ResFire.Value = "";
             ResWater.Value = "";
@@ -247,7 +263,7 @@ namespace MHSS.ViewModels
 
             // 進捗管理用
             int count = 0;
-            int maxDegreeOfParallelism = Math.Min((Environment.ProcessorCount)/2, 1);
+            int maxDegreeOfParallelism = Math.Min((Environment.ProcessorCount)/2, 6);
             var options = new ParallelOptions { MaxDegreeOfParallelism = maxDegreeOfParallelism };
 
             // 検索結果
@@ -260,32 +276,51 @@ namespace MHSS.ViewModels
                     count++;
                     for (int level = skill.Level + 1; level <= int.Max(skill.MaxLevel1, skill.MaxLevel2); level++)
                     {
+                        if ((skill.Category == "シリーズスキル" || skill.Category == "グループスキル") &&
+                             (level != skill.MaxLevel1 && level != skill.MaxLevel2))
+                        {
+                            continue;
+                        }
                         Condition condition = GetCondition();
                         condition.Skills.Single(s => s.Name == skill.Name).Level = level;
                         Solve solve = new Solve(condition);
 
                         Solver.ResultStatus status = solve.Solver.Solve();
-                        
+
                         if (status != Solver.ResultStatus.OPTIMAL) break;
 
-                        skills.Add(new Skill { Name = skill.Name, Level = level });
+                        skills.Add(new Skill { Name = skill.Name, Level = level, 
+                        ActivateSkillName1 = skill.ActivateSkillName1,
+                        ActivateSkillName2 = skill.ActivateSkillName2,
+                        Category = skill.Category});
                     }
                 });
             });
 
             ExtraSkills.Value = new(skills);
 
-            var x = ExtraSkills.Value.GroupBy(s => s.Name).Select(g => new { g.Key, Count = g.Count() });
+            //var x = ExtraSkills.Value.GroupBy(s => s.Name).Select(g => new { g.Key, Count = g.Count() });
+            var y = ExtraSkills.Value.GroupBy(s => s.Name).Reverse();
             StringBuilder sb = new();
-            foreach (var item in x)
+            //foreach (var item in x)
+            //{
+            //    sb.Append($"{item.Key}  ");
+            //    for (int i = 1; i <= item.Count; i++)
+            //    {
+            //        sb.Append($"Lv{i}, ");
+            //    }
+            //    sb.Remove(sb.Length - 2, 2);
+            //    sb.Append('\n');
+            //}
+            foreach (var item in y)
             {
                 sb.Append($"{item.Key}  ");
-                for (int i = 1; i <= item.Count; i++)
+                foreach (var it in item.Reverse())
                 {
-                    sb.Append($"Lv{i}, ");
+                    sb.Append($"Lv{it.Level}, ");
                 }
                 sb.Remove(sb.Length - 2, 2);
-                sb.Append('\n');
+                sb.Append("\n");
             }
             ForDisplayExtraSkills.Value = sb.ToString();
             SelectedResultTabIndex.Value = 1;
@@ -306,7 +341,22 @@ namespace MHSS.ViewModels
             condition.ResThunder = Utility.ParseOrDefaultDouble(ResThunder.Value, double.NegativeInfinity);
             condition.ResIce = Utility.ParseOrDefaultDouble(ResIce.Value, double.NegativeInfinity);
             condition.ResDragon = Utility.ParseOrDefaultDouble(ResDragon.Value, double.NegativeInfinity);
-            //condition.Equips.Add(WeaponSelectVM.Value.Weapon);
+
+            if (WeaponSelectVM.Value.Weapon.Name == "")
+            {
+                if (WeaponSelectVM.Value.SelectedWeaponKind.Value == "---")
+                {
+                    condition.Equips.AddRange(Master.Weapons.SelectMany(w => w));
+                }
+                else
+                {
+                    condition.Equips.AddRange(Master.Weapons[(int)Kind.WeaponNameToKind(WeaponSelectVM.Value.SelectedWeaponKind.Value)]);
+                }
+            }
+            else
+            {
+                condition.Equips.Add(WeaponSelectVM.Value.Weapon);
+            }
             condition.Equips.AddRange(Master.Heads.Union(Master.Bodies).Union(Master.Arms).Union(Master.Waists)
                                                     .Union(Master.Legs).Union(Master.Charms).Union(Master.Decos));
 

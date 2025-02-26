@@ -51,6 +51,7 @@
                         <subviews:WeaponSelectView DataContext="{Binding WeaponSelectVM.Value, Mode=OneWay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                     </TabItem>
                     <TabItem Header="装備固定・除外">
+                        <subviews:ExcludeLockView DataContext="{Binding ExcludeLockVM.Value, Mode=OneWay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                     </TabItem>
                     <TabItem Header="装飾品登録">
                         <subviews:DecoRegistView DataContext="{Binding DecoRegistVM.Value, Mode=OneWay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
@@ -176,7 +177,7 @@
                         <Button Grid.Row="0"
                             Margin="0,0,5,0"
                             x:Name="ResetButton"
-                            Command="{Binding SearchCommand}"
+                            Command="{Binding ResetCommand}"
                             Height="30" Width="80"
                             Content="リセット"
                             HorizontalAlignment="Right"

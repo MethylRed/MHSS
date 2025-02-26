@@ -61,8 +61,8 @@ namespace MHSS.Models.Data
         /// <param name="other"></param>
         public Condition(Condition other)
         {
-            Equips = new();
-            foreach (var e in other.Equips)
+            Equips = new List<Equip>();
+            foreach (Equip e in other.Equips)
             {
                 Equips.Add(e);
             }
