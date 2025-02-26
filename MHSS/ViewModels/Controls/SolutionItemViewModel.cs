@@ -35,6 +35,27 @@ namespace MHSS.ViewModels.Controls
         public ReactivePropertySlim<string> Charm { get; set; } = new(string.Empty);
 
 
+        public ReactivePropertySlim<string> WeaponSkill { get; set; } = new(string.Empty);
+
+
+        public ReactivePropertySlim<string> HeadSkill { get; set; } = new(string.Empty);
+
+
+        public ReactivePropertySlim<string> BodySkill { get; set; } = new(string.Empty);
+
+
+        public ReactivePropertySlim<string> ArmSkill { get; set; } = new(string.Empty);
+
+
+        public ReactivePropertySlim<string> WaistSkill { get; set; } = new(string.Empty);
+
+
+        public ReactivePropertySlim<string> LegSkill { get; set; } = new(string.Empty);
+
+
+        public ReactivePropertySlim<string> CharmSkill { get; set; } = new(string.Empty);
+
+
         public ReactivePropertySlim<ObservableCollection<string>> Deco { get; set; } = new();
 
         public ReactivePropertySlim<string> Def { get; set; } = new();
@@ -92,6 +113,15 @@ namespace MHSS.ViewModels.Controls
             Dragon.Value = searchedEquips.ResDragon.ToString();
 
 
+            WeaponSkill.Value = equipSkillString(searchedEquips.Weapon);
+            HeadSkill.Value = equipSkillString(searchedEquips.Head);
+            BodySkill.Value = equipSkillString(searchedEquips.Body);
+            ArmSkill.Value = equipSkillString(searchedEquips.Arm);
+            WaistSkill.Value = equipSkillString(searchedEquips.Waist);
+            LegSkill.Value = equipSkillString(searchedEquips.Leg);
+            CharmSkill.Value = equipSkillString(searchedEquips.Charm);
+
+
             string seriesDisp = "", groupDisp = "";
             foreach (var skill in searchedEquips.Skills)
             {
@@ -117,6 +147,23 @@ namespace MHSS.ViewModels.Controls
 
             }
             Skill.Value += seriesDisp + groupDisp;
+        }
+
+
+        private string equipSkillString(Equip equip)
+        {
+            StringBuilder sb = new();
+            for (int i = 0; i < equip.Skills.Count(); i++)
+            {
+                sb.Append(equip.Skills[i].Name);
+                sb.Append($"Lv{equip.Skills[i].Level}, ");
+                if (i % 3 == 2)
+                {
+                    sb = sb.Remove(sb.Length - 2, 2);
+                    sb.Append("\n");
+                }
+            }
+            return sb.ToString();
         }
     }
 }

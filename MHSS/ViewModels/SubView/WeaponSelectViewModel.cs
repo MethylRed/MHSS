@@ -88,7 +88,7 @@ namespace MHSS.ViewModels.SubView
         {
             ClearCommand.Subscribe(() =>
             {
-                WeaponSelectItemVM.Value = new(new());
+                WeaponSelectItemVM.Value = new(new(), true);
                 Weapon = new Weapon();
             });
 
@@ -116,11 +116,13 @@ namespace MHSS.ViewModels.SubView
                     if (SelectedWeaponKind.Value == "---") return;
                     var x = SelectedElement.Value == "---"
                     ? Master.Weapons[(int)Kind.WeaponNameToKind(SelectedWeaponKind.Value)]
+                      .Union(Master.AddWeapons[(int)Kind.WeaponNameToKind(SelectedWeaponKind.Value)])
                     : Master.Weapons[(int)Kind.WeaponNameToKind(SelectedWeaponKind.Value)]
+                      .Union(Master.AddWeapons[(int)Kind.WeaponNameToKind(SelectedWeaponKind.Value)])
                           .Where(w => w.Skills.Any(s => s.Name == selected));
                     foreach (var weapon in x)
                     {
-                        WeaponSelectItemVMs.Value.Add(new(weapon));
+                        WeaponSelectItemVMs.Value.Add(new(weapon, true));
                     }
                 }
                 else
@@ -128,14 +130,16 @@ namespace MHSS.ViewModels.SubView
                     if (SelectedWeaponKind.Value == "---") return;
                     var x = SelectedElement.Value == "---"
                     ? Master.Weapons[(int)Kind.WeaponNameToKind(SelectedWeaponKind.Value)]
+                      .Union(Master.AddWeapons[(int)Kind.WeaponNameToKind(SelectedWeaponKind.Value)])
                           .Where(w => w.Skills.Any(s => s.Name == selected))
                     : Master.Weapons[(int)Kind.WeaponNameToKind(SelectedWeaponKind.Value)]
+                      .Union(Master.AddWeapons[(int)Kind.WeaponNameToKind(SelectedWeaponKind.Value)])
                           .Where(w => w.Skills.Any(s => s.Name == selected))
                           .Where(w => w.ElementType1 == (Element)Kind.ElementType[SelectedElement.Value] ||
                                       w.ElementType2 == (Element)Kind.ElementType[SelectedElement.Value]);
                     foreach (var weapon in x)
                     {
-                        WeaponSelectItemVMs.Value.Add(new(weapon));
+                        WeaponSelectItemVMs.Value.Add(new(weapon, true));
                     }
                 }
             });
@@ -158,11 +162,13 @@ namespace MHSS.ViewModels.SubView
                     if (SelectedWeaponKind.Value == "---") return;
                     var x = SelectedSkillName.Value == "---"
                     ? Master.Weapons[(int)Kind.WeaponNameToKind(SelectedWeaponKind.Value)]
+                      .Union(Master.AddWeapons[(int)Kind.WeaponNameToKind(SelectedWeaponKind.Value)])
                     : Master.Weapons[(int)Kind.WeaponNameToKind(SelectedWeaponKind.Value)]
+                      .Union(Master.AddWeapons[(int)Kind.WeaponNameToKind(SelectedWeaponKind.Value)])
                           .Where(w => w.Skills.Any(s => s.Name == selected));
                     foreach (var weapon in x)
                     {
-                        WeaponSelectItemVMs.Value.Add(new(weapon));
+                        WeaponSelectItemVMs.Value.Add(new(weapon, true));
                     }
                 }
                 else
@@ -170,15 +176,17 @@ namespace MHSS.ViewModels.SubView
                     if (SelectedWeaponKind.Value == "---") return;
                     var x = SelectedSkillName.Value == "---"
                     ? Master.Weapons[(int)Kind.WeaponNameToKind(SelectedWeaponKind.Value)]
+                      .Union(Master.AddWeapons[(int)Kind.WeaponNameToKind(SelectedWeaponKind.Value)])
                           .Where(w => w.ElementType1 == (Element)Kind.ElementType[SelectedElement.Value] ||
                                       w.ElementType2 == (Element)Kind.ElementType[SelectedElement.Value])
                     : Master.Weapons[(int)Kind.WeaponNameToKind(SelectedWeaponKind.Value)]
+                      .Union(Master.AddWeapons[(int)Kind.WeaponNameToKind(SelectedWeaponKind.Value)])
                           .Where(w => w.Skills.Any(s => s.Name == selected))
                           .Where(w => w.ElementType1 == (Element)Kind.ElementType[SelectedElement.Value] ||
                                       w.ElementType2 == (Element)Kind.ElementType[SelectedElement.Value]);
                     foreach (var weapon in x)
                     {
-                        WeaponSelectItemVMs.Value.Add(new(weapon));
+                        WeaponSelectItemVMs.Value.Add(new(weapon, true));
                     }
                 }
             });
@@ -204,9 +212,11 @@ namespace MHSS.ViewModels.SubView
                     {
                         items.Add(i);
                     }
-                    foreach (var weapon in Master.Weapons[(int)Kind.WeaponNameToKind(selected)])
+                    foreach (var weapon in Master.Weapons[(int)Kind.WeaponNameToKind(selected)]
+                      .Union(Master.AddWeapons[(int)Kind.WeaponNameToKind(selected)])
+                    )
                     {
-                        WeaponSelectItemVMs.Value.Add(new(weapon));
+                        WeaponSelectItemVMs.Value.Add(new(weapon, true));
                     }
                     IsEnabledSkillSelect.Value = true;
                     IsEnabledElementSelect.Value = true;
@@ -218,7 +228,9 @@ namespace MHSS.ViewModels.SubView
 
         private List<string> SkillNamesWithWeapon(string weaponKind)
         {
-            return Master.Weapons[(int)Kind.WeaponNameToKind(weaponKind)].SelectMany(w => w.Skills).Select(x => x.Name).Distinct().ToList();
+            return Master.Weapons[(int)Kind.WeaponNameToKind(weaponKind)]
+                      .Union(Master.AddWeapons[(int)Kind.WeaponNameToKind(weaponKind)])
+                .SelectMany(w => w.Skills).Select(x => x.Name).Distinct().ToList();
         }
     }
 }

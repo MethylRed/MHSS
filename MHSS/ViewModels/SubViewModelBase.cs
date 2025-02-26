@@ -31,9 +31,14 @@ namespace MHSS.ViewModels
         protected WeaponSelectViewModel WeaponSelectVM { get => MainWindowVM.WeaponSelectVM.Value; }
 
         /// <summary>
-        /// WeaponSelectViewModelのインスタンス
+        /// ExcludeLockViewModelのインスタンス
         /// </summary>
         protected ExcludeLockViewModel ExcludeLockVM { get => MainWindowVM.ExcludeLockVM.Value; }
+
+        /// <summary>
+        /// WeaponRegistViewModelのインスタンス
+        /// </summary>
+        protected WeaponRegistViewModel WeaponRegistVM { get => MainWindowVM.WeaponRegistVM.Value; }
 
 
         /// ReactiveProperty一括破棄用フィールド

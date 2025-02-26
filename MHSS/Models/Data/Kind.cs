@@ -90,6 +90,23 @@ namespace MHSS.Models.Data
         };
 
         /// <summary>
+        /// 属性種類の辞書
+        /// </summary>
+        public static Dictionary<int, string> ElementTypeStr = new()
+        {
+            {0, "無"},
+            {1, "火"},
+            {2, "水"},
+            {3, "雷"},
+            {4, "氷"},
+            {5, "龍"},
+            {6, "毒"},
+            {7, "爆破"},
+            {8, "睡眠"},
+            {9, "麻痺"}
+        };
+
+        /// <summary>
         /// 装備の種類：文字列(日本語)に変換
         /// </summary>
         /// <param name="kind"></param>

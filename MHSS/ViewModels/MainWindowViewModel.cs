@@ -133,6 +133,11 @@ namespace MHSS.ViewModels
         /// </summary>
         public ReactivePropertySlim<ExcludeLockViewModel> ExcludeLockVM { get; } = new();
 
+        /// <summary>
+        /// 武器登録のViewModel
+        /// </summary>
+        public ReactivePropertySlim<WeaponRegistViewModel> WeaponRegistVM { get; } = new();
+
 
         /// <summary>
         /// コンストラクタ
@@ -141,7 +146,13 @@ namespace MHSS.ViewModels
         {
             Instance = this;
 
+            //for (int i = 0; i < 14; i++)
+            //{
+            //    Master.AddWeapons.Add(new());
+            //}
+
             AppDomain.CurrentDomain.ProcessExit += (s, e) => FileManager.SaveDecoCount();
+            AppDomain.CurrentDomain.ProcessExit += (s, e) => FileManager.SaveAddWeapon();
 
             // データの読み込み
             FileManager.LoadCsvSkill();
@@ -184,6 +195,7 @@ namespace MHSS.ViewModels
             WeaponSelectVM.Value = new();
             SolutionVM.Value = new(new());
             ExcludeLockVM.Value = new();
+            WeaponRegistVM.Value = new();
 
             // スキル条件をリセット
             ResetCommand.Subscribe(() =>
@@ -347,10 +359,12 @@ namespace MHSS.ViewModels
                 if (WeaponSelectVM.Value.SelectedWeaponKind.Value == "---")
                 {
                     condition.Equips.AddRange(Master.Weapons.SelectMany(w => w));
+                    condition.Equips.AddRange(Master.AddWeapons.SelectMany(w => w));
                 }
                 else
                 {
                     condition.Equips.AddRange(Master.Weapons[(int)Kind.WeaponNameToKind(WeaponSelectVM.Value.SelectedWeaponKind.Value)]);
+                    condition.Equips.AddRange(Master.AddWeapons[(int)Kind.WeaponNameToKind(WeaponSelectVM.Value.SelectedWeaponKind.Value)]);
                 }
             }
             else

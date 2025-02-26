@@ -9,7 +9,7 @@
         xmlns:ctrl="clr-namespace:MHSS.Views.Controls"
         xmlns:viewmodels="clr-namespace:MHSS.ViewModels"
         d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowViewModel}"
-        Title="MHSS" Height="540" Width="1080" >
+        Title="MHSS" Height="630" Width="1080" >
     <Window.Resources>
             <Style TargetType="Button">
                 <Setter Property="Background" Value="Gainsboro" />
@@ -57,6 +57,7 @@
                         <subviews:DecoRegistView DataContext="{Binding DecoRegistVM.Value, Mode=OneWay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                     </TabItem>
                     <TabItem Header="武器登録">
+                        <subviews:WeaponRegistView DataContext="{Binding WeaponRegistVM.Value, Mode=OneWay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                     </TabItem>
                 </TabControl>
             </Border>

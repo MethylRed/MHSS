@@ -7,7 +7,7 @@
              xmlns:ctrlvm="clr-namespace:MHSS.ViewModels.Controls"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance Type=ctrlvm:WeaponSelectItemViewModel}"
-             d:DesignHeight="90" d:DesignWidth="350">
+             d:DesignHeight="90" d:DesignWidth="350" IsEnabled="{Binding IsEnabled.Value}">
     <UserControl.InputBindings>
         <MouseBinding Gesture="LeftClick" Command="{Binding ClickCommand}"/>
     </UserControl.InputBindings>

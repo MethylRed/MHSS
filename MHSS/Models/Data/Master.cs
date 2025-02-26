@@ -19,6 +19,11 @@ namespace MHSS.Models.Data
         public static List<List<Weapon>> Weapons { get; set; } = new();
 
         /// <summary>
+        /// 登録された武器
+        /// </summary>
+        public static List<List<Weapon>> AddWeapons { get; set; } = new();
+
+        /// <summary>
         /// 全頭防具
         /// </summary>
         public static List<Equip> Heads { get; set; } = new();
@@ -58,7 +63,8 @@ namespace MHSS.Models.Data
         /// </summary>
         public static List<Equip> AllEquips => Heads.Union(Bodies).Union(Arms).Union(Waists)
                                                     .Union(Legs).Union(Charms).Union(Decos)
-                                                    .Union(Weapons.SelectMany(w => w)).ToList();
+                                                    .Union(Weapons.SelectMany(w => w))
+                                                    .Union(AddWeapons.SelectMany(w => w)).ToList();
 
         public static List<IGrouping<string, Equip>> ArmorBySeries => Heads.Union(Bodies).Union(Arms).Union(Waists).Union(Legs)
             .GroupBy(a => a.SeriesName).ToList();

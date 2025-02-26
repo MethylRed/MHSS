@@ -27,13 +27,15 @@ namespace MHSS.ViewModels.Controls
         public ReactivePropertySlim<string> UniqueStatus { get; set; } = new("");
         public ReactivePropertySlim<string> Skills { get; set; } = new("");
 
+        public ReactivePropertySlim<bool> IsEnabled { get; set; } = new(true);
 
 
-        public WeaponSelectItemViewModel(Weapon weapon)
+
+        public WeaponSelectItemViewModel(Weapon weapon, bool isEnabled)
         {
             ClickCommand.Subscribe(_ =>
             {
-                WeaponSelectVM.WeaponSelectItemVM.Value = new(weapon);
+                WeaponSelectVM.WeaponSelectItemVM.Value = new(weapon, false);
                 WeaponSelectVM.Weapon = weapon;
             });
 
@@ -52,6 +54,7 @@ namespace MHSS.ViewModels.Controls
             var s = string.Join("", weapon.Skills.Select(skill => $"{skill.Name}Lv{skill.Level}, "));
             if (s.Count() > 2) s = s.Remove(s.Length - 2, 2);
             Skills.Value = s;
+            IsEnabled.Value = isEnabled;
         }
 
         private string ElementIcon(Element element)
