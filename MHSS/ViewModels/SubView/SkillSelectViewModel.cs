@@ -43,7 +43,7 @@ namespace MHSS.ViewModels.SubView
                 .Select(g => new SkillLevelSelectorsByCategoryViewModel(g.Key, g))
             );
 
-
+            // 全スキル選択VM
             var skillLevelSelectorVMs = SkillLevelSelectorsByCategoryVMs.Value.SelectMany(v => v.SkillLevelSelectorVMs);
 
             // 極意を発動させられるシリーズスキルのSelectorVM
@@ -136,7 +136,7 @@ namespace MHSS.ViewModels.SubView
                 });
                 item.IsSelected.Subscribe(i =>
                 {
-                    if (i)　item.BackgroundColor.Value = item.BackgroundColor.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E0EFFF"));
+                    if (i)　item.BackgroundColor.Value = item.BackgroundColor.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#C4E1FF"));
                     else item.BackgroundColor.Value = Brushes.White;
                 });
             }
@@ -147,7 +147,10 @@ namespace MHSS.ViewModels.SubView
             {
                 item.SelectedItem.Subscribe(isselected =>
                 {
+                    // 極意が必要なレベルかどうか
                     var needSecret = item.SelectedItem.Value.DisplayStr.Contains("極意");
+
+                    // 極意がひとつでも発動しているかどうか
                     var ActiveSecret = seriesSkillWithSecretDict[item.SelectedSkill.ActivateSkillName1]
                     .Any(s => s.SelectedItem.Value.DisplayStr.Contains(item.SelectedSkill.ActivateSkillName1));
 
@@ -201,8 +204,8 @@ namespace MHSS.ViewModels.SubView
                 {
                     if (item.IsSelected.Value)
                     {
-                        if (i) item.BackgroundColor.Value = item.BackgroundColor.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E0EFFF"));
-                        else item.BackgroundColor.Value = item.BackgroundColor.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FADBD8"));
+                        if (i) item.BackgroundColor.Value = item.BackgroundColor.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#C4E1FF"));
+                        else item.BackgroundColor.Value = item.BackgroundColor.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFCCCC"));
                     }
                     else item.BackgroundColor.Value = Brushes.White;
                 });
@@ -210,8 +213,8 @@ namespace MHSS.ViewModels.SubView
                 {
                     if (i)
                     {
-                        if (item.SatisfySecret.Value) item.BackgroundColor.Value = item.BackgroundColor.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E0EFFF"));
-                        else item.BackgroundColor.Value = item.BackgroundColor.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FADBD8"));
+                        if (item.SatisfySecret.Value) item.BackgroundColor.Value = item.BackgroundColor.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#C4E1FF"));
+                        else item.BackgroundColor.Value = item.BackgroundColor.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFCCCC"));
                     }
                     else item.BackgroundColor.Value = Brushes.White;
                 });
@@ -247,7 +250,7 @@ namespace MHSS.ViewModels.SubView
                 });
                 item.IsSelected.Subscribe(i =>
                 {
-                    if (i) item.BackgroundColor.Value = item.BackgroundColor.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E0EFFF"));
+                    if (i) item.BackgroundColor.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#C4E1FF"));
                     else item.BackgroundColor.Value = Brushes.White;
                 });
             }

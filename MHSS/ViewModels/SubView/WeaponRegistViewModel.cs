@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media;
 
 namespace MHSS.ViewModels.SubView
@@ -216,9 +217,26 @@ namespace MHSS.ViewModels.SubView
 
             RegistCommand.Subscribe(() =>
             {
-                WeaponRegistItemVMs.Value.Add(new(GetWeapon(), false));
-                Master.AddWeapons[(int)Kind.WeaponNameToKind(SelectedWeaponKind.Value)].Add(GetWeapon());
+                // 同じ名前の武器があったら
+                if (Master.Weapons.SelectMany(w => w).Union(Master.Weapons.SelectMany(w => w)).Any(w => w.Name == Name.Value))
+                {
+                    MessageBox.Show("この名前の武器は既に存在します。", "エラー", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+                }
+                else if (string.IsNullOrWhiteSpace(Name.Value))
+                {
+                    MessageBox.Show("名前を入力してください。", "エラー", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+                }
+                else
+                {
+                    WeaponRegistItemVMs.Value.Insert(0, new(GetWeapon(), false));
+                    Master.AddWeapons[(int)Kind.WeaponNameToKind(SelectedWeaponKind.Value)].Add(GetWeapon());
+                }
             });
+
+            foreach (var weapon in Master.AddWeapons.SelectMany(w => w))
+            {
+                WeaponRegistItemVMs.Value.Add(new(weapon, false));
+            }
         }
 
         private Weapon GetWeapon()
@@ -240,6 +258,7 @@ namespace MHSS.ViewModels.SubView
                 Slot2 = Utility.ParseOrDefault(Slot2.Value),
                 Slot3 = Utility.ParseOrDefault(Slot3.Value),
                 DefBonus = Utility.ParseOrDefault(DefBonus.Value),
+                UniqueStatus = ""
             };
             List<Skill> skill = new();
             if (!string.IsNullOrWhiteSpace(SelectedSkill1.Value))

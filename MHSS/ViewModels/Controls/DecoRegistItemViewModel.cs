@@ -63,7 +63,7 @@ namespace MHSS.ViewModels.Controls
                 // ComboBoxの背景色を変える
                 if (count == 0) BackgroundColor.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FADBD8"));
                 else if (count == 5) BackgroundColor.Value = Brushes.Gainsboro;
-                else BackgroundColor.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E0EFFF"));
+                else BackgroundColor.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#C4E1FF"));
 
                 // 所持数を出力する。ファイルへの書き込みはアプリ終了時に行う。
                 Master.Decos.Single(d => d.Name == SelectedName.Value).HaveCount = SelectedCount.Value;

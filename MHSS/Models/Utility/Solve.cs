@@ -55,8 +55,16 @@ namespace MHSS.Models.Utility
                     }
                     else
                     {
-                        Variables.Add($"{equip.Name}_Weapon", Solver.MakeBoolVar($"{equip.Name}_Weapon"));
-                        Variables.Add($"{equip.Name}_Armor", Solver.MakeBoolVar($"{equip.Name}_Armor"));
+                        if (equip.IsLock)
+                        {
+                            Variables.Add($"{equip.Name}_Weapon", Solver.MakeIntVar(1.0, 1.0, $"{equip.Name}_Weapon"));
+                            Variables.Add($"{equip.Name}_Armor", Solver.MakeIntVar(1.0, 1.0, $"{equip.Name}_Armor"));
+                        }
+                        else
+                        {
+                            Variables.Add($"{equip.Name}_Weapon", Solver.MakeBoolVar($"{equip.Name}_Weapon"));
+                            Variables.Add($"{equip.Name}_Armor", Solver.MakeBoolVar($"{equip.Name}_Armor"));
+                        }
                     }
                 }
                 else
@@ -67,7 +75,14 @@ namespace MHSS.Models.Utility
                     }
                     else
                     {
-                        Variables.Add(equip.Name, Solver.MakeBoolVar(equip.Name));
+                        if (equip.IsLock)
+                        {
+                            Variables.Add(equip.Name, Solver.MakeIntVar(1.0, 1.0, equip.Name));
+                        }
+                        else
+                        {
+                            Variables.Add(equip.Name, Solver.MakeBoolVar(equip.Name));
+                        }
                     }
                 }
             }

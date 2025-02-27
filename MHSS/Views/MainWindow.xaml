@@ -197,7 +197,7 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="25"/>
                             <RowDefinition Height="*"/>
-                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="50"/>
                         </Grid.RowDefinitions>
                         <Grid Grid.Row="0" Margin="35,5,25,0" Background="White">
                             <Grid.ColumnDefinitions>
@@ -219,17 +219,13 @@
                         </Grid>
                         <Border Grid.Row="1" VerticalAlignment="Stretch" Margin="5,0,5,5" BorderBrush="Gainsboro" BorderThickness="2">
                             <subviews:SolutionView DataContext="{Binding SolutionVM.Value, Mode=OneWay}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-                            <!--<ScrollViewer Grid.Row="1" VerticalAlignment="Stretch">
-                                <StackPanel Margin="0">
-                                    <ItemsControl ItemsSource="{Binding SolutionVMs, Mode=OneWay}">
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <subviews:Solution HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                </StackPanel>
-                            </ScrollViewer>-->
+                        </Border>
+                        <Border Grid.Row="2" CornerRadius="3" Background="{Binding NoticeBackgroundColor.Value}"
+                                Margin="5,0,0,0" Width="Auto" HorizontalAlignment="Left">
+                            <TextBlock Text="{Binding NoticeStr.Value}" FontSize="14"
+                                       Foreground="#8A6D3B"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Left"/>
                         </Border>
                         <TextBlock Text="{Binding ShowCount.Value, StringFormat={}{0}件の検索結果}" Grid.Row="2"
                                    Margin="0,0,5,0"

@@ -22,6 +22,7 @@ using MHSS.ViewModels.SubView;
 using MHSS.Views.Controls;
 using MHSS.ViewModels.Controls;
 using MHSS.Views.SubViews;
+using System.Windows.Media;
 //using System.Reactive.Disposables;
 
 namespace MHSS.ViewModels
@@ -46,14 +47,27 @@ namespace MHSS.ViewModels
         /// <summary>
         /// スキル条件リセットコマンド
         /// </summary>
-        public ReactiveCommand ResetCommand { get; } = new();
+        public AsyncReactiveCommand ResetCommand { get; } = new();
 
         /// <summary>
         /// 表示用検索結果数
         /// </summary>
         public ReactivePropertySlim<string> ShowCount { get; set; } = new("0");
 
+        /// <summary>
+        /// 注意
+        /// </summary>
+        public ReactivePropertySlim<string> NoticeStr { get; set; } = new("");
 
+        /// <summary>
+        /// 背景色
+        /// </summary>
+        public ReactivePropertySlim<SolidColorBrush> NoticeBackgroundColor { get; } = new(Brushes.White);
+
+        /// <summary>
+        /// 追加スキル検索結果
+        /// そのうち、レベルをクリックしたらスキル条件に追加されるようにしたい
+        /// </summary>
         public ReactivePropertySlim<ObservableCollection<Skill>> ExtraSkills { get; set; } = new(new());
         public ReactivePropertySlim<string> ForDisplayExtraSkills { get; set; } = new("");
 
@@ -107,7 +121,6 @@ namespace MHSS.ViewModels
         /// </summary>
         internal static MainWindowViewModel Instance { get; set; }
 
-
         /// <summary>
         /// スキル選択のViewModel
         /// </summary>
@@ -146,11 +159,7 @@ namespace MHSS.ViewModels
         {
             Instance = this;
 
-            //for (int i = 0; i < 14; i++)
-            //{
-            //    Master.AddWeapons.Add(new());
-            //}
-
+            // アプリケーション終了時に実行するメソッドを登録
             AppDomain.CurrentDomain.ProcessExit += (s, e) => FileManager.SaveDecoCount();
             AppDomain.CurrentDomain.ProcessExit += (s, e) => FileManager.SaveAddWeapon();
 
@@ -197,16 +206,24 @@ namespace MHSS.ViewModels
             ExcludeLockVM.Value = new();
             WeaponRegistVM.Value = new();
 
-            // スキル条件をリセット
-            ResetCommand.Subscribe(() =>
+            // スキル条件のリセットコマンドを定義
+            ResetCommand = IsBusy.Select(x => !x).ToAsyncReactiveCommand();
+            ResetCommand.Subscribe(async () =>
             {
-                foreach (var item in SkillSelectVM.Value.SkillLevelSelectorsByCategoryVMs.Value)
+                IsBusy.Value = true;
+                await Task.Run(() =>
                 {
-                    item.Reset();
-                }
+                    foreach (var item in SkillSelectVM.Value.SkillLevelSelectorsByCategoryVMs.Value)
+                    {
+                        item.Reset();
+                    }
+                });
+                IsBusy.Value = false;
             });
 
+            // 画面表示テキストをセット
             SearchCount.Value = Config.Instance.MaxSearchCount.ToString();
+            SearchCount.Value = "10";
             Def.Value = "0";
             ResFire.Value = "";
             ResWater.Value = "";
@@ -221,12 +238,15 @@ namespace MHSS.ViewModels
         /// <returns></returns>
         private void Search()
         {
+            List<SearchedEquips> equips = new();
+            
             // スキルの検索条件を取得
             Condition condition = GetCondition();
 
             // 解を表示するVMを初期化
             System.Windows.Application.Current.Dispatcher.Invoke(() => SolutionVM.Value = new(new()));
 
+            // 極意条件を満たしていない場合終了
             if (!condition.SatisfySecret) return;
 
             // ソルバーを宣言
@@ -236,27 +256,43 @@ namespace MHSS.ViewModels
             int count = 0;
             ShowCount.Value = "0";
 
-            List<SearchedEquips> equips = new();
+            // 検索回数が指定値以下の場合実行
             while (count < int.Min(Utility.ParseOrDefault(SearchCount.Value, Config.Instance.MaxSearchCount), Config.Instance.MaxSearchCount))
             {
+                // 検索
                 SearchedEquips searchedEquips = Solve.SearchSingle(count);
 
+                // 検索結果が無い場合終了
                 if (searchedEquips == null)
                 {
                     break;
                 }
                 else
                 {
+                    // UI操作
                     System.Windows.Application.Current.Dispatcher.Invoke(() =>
                     {
-                        equips.Add(searchedEquips);
                         ShowCount.Value = (++count).ToString();
                     });
+                    equips.Add(searchedEquips);
                 }
             }
+            // 結果を表示
             SolutionVM.Value = new(equips);
             SelectedResultTabIndex.Value = 0;
-            Debug.WriteLine("Check is finished.");
+            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            {
+                NoticeStr.Value = "";
+                NoticeBackgroundColor.Value = Brushes.White;
+                if (count == 0)
+                {
+                    if (condition.Equips.Any(e => e.IsLock))
+                    {
+                        NoticeStr.Value = "装備の除外/固定が設定されています。\n設定を外すことで一致する結果が見つかる可能性があります。";
+                        NoticeBackgroundColor.Value = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FCF8E3"));
+                    }
+                }
+            });
         }
 
         /// <summary>
@@ -267,27 +303,33 @@ namespace MHSS.ViewModels
         {
             Stopwatch sw = Stopwatch.StartNew();
 
+            ConcurrentBag<Skill> resultSkills = new();
+            
             // 元の検索条件を保持
             Condition masterCondition = GetCondition();
-            if (!masterCondition.SatisfySecret) return;
 
-            ConcurrentBag<Skill> skills = new();
+            // 極意条件を満たしていない場合は終了
+            if (!masterCondition.SatisfySecret) return;
 
             // 進捗管理用
             int count = 0;
+
+            // マルチスレッド設定
+            // 環境次第だが、6スレッド以下で実行するようにハードコーディング
+            // たぶん4～6スレッドくらいが一番良い
             int maxDegreeOfParallelism = Math.Min((Environment.ProcessorCount)/2, 6);
             var options = new ParallelOptions { MaxDegreeOfParallelism = maxDegreeOfParallelism };
 
-            // 検索結果
-            //List<Skill> skills = new();
-
             await Task.Run(() =>
             {
+                // 全スキルを走査
                 Parallel.ForEach(masterCondition.Skills, options, skill =>
                 {
                     count++;
+                    // 全レベルを走査
                     for (int level = skill.Level + 1; level <= int.Max(skill.MaxLevel1, skill.MaxLevel2); level++)
                     {
+                        // シリーズ/グループスキルの場合は発動するレベルのときだけ検索する
                         if ((skill.Category == "シリーズスキル" || skill.Category == "グループスキル") &&
                              (level != skill.MaxLevel1 && level != skill.MaxLevel2))
                         {
@@ -297,43 +339,59 @@ namespace MHSS.ViewModels
                         condition.Skills.Single(s => s.Name == skill.Name).Level = level;
                         Solve solve = new Solve(condition);
 
+                        // 検索
                         Solver.ResultStatus status = solve.Solver.Solve();
 
                         if (status != Solver.ResultStatus.OPTIMAL) break;
 
-                        skills.Add(new Skill { Name = skill.Name, Level = level, 
+                        // 結果を格納
+                        resultSkills.Add(new Skill { Name = skill.Name, Level = level, 
                         ActivateSkillName1 = skill.ActivateSkillName1,
                         ActivateSkillName2 = skill.ActivateSkillName2,
+                        MaxLevel1 = skill.MaxLevel1,
+                        MaxLevel2 = skill.MaxLevel2,
                         Category = skill.Category});
                     }
                 });
             });
 
-            ExtraSkills.Value = new(skills);
+            ExtraSkills.Value = new(resultSkills);
 
-            //var x = ExtraSkills.Value.GroupBy(s => s.Name).Select(g => new { g.Key, Count = g.Count() });
-            var y = ExtraSkills.Value.GroupBy(s => s.Name).Reverse();
+            // 検索結果をスキル名でグループ化してスキル条件の順番に並び変える(~10ms)
+            var normalSkills = ExtraSkills.Value.Where(s => s.Category != "シリーズスキル" && s.Category != "グループスキル")
+                .GroupBy(s => s.Name)
+                .OrderBy(g => masterCondition.Skills.Select(s => s.Name).ToList().IndexOf(g.Key));
+            var seriesSkills = ExtraSkills.Value.Where(s => s.Category == "シリーズスキル" || s.Category == "グループスキル")
+                .GroupBy(s => s.Name)
+                .OrderBy(g => masterCondition.Skills.Select(s => s.Name).ToList().IndexOf(g.Key));
+
+            // 表示用文字列を作成
             StringBuilder sb = new();
-            //foreach (var item in x)
-            //{
-            //    sb.Append($"{item.Key}  ");
-            //    for (int i = 1; i <= item.Count; i++)
-            //    {
-            //        sb.Append($"Lv{i}, ");
-            //    }
-            //    sb.Remove(sb.Length - 2, 2);
-            //    sb.Append('\n');
-            //}
-            foreach (var item in y)
+            foreach (var group in normalSkills)
             {
-                sb.Append($"{item.Key}  ");
-                foreach (var it in item.Reverse())
+                sb.Append($"{group.Key}  ");
+                foreach (var it in group.OrderBy(s => s.Level))
                 {
                     sb.Append($"Lv{it.Level}, ");
                 }
                 sb.Remove(sb.Length - 2, 2);
                 sb.Append("\n");
             }
+            foreach (var group in seriesSkills)
+            {
+                foreach (var it in group.OrderBy(s => s.Level))
+                {
+                    if (it.Level == it.MaxLevel1)
+                    {
+                        sb.Append($"{it.ActivateSkillName1}({it.Name}Lv{it.Level})\n");
+                    }
+                    if (it.Level == it.MaxLevel2)
+                    {
+                        sb.Append($"{it.ActivateSkillName2}({it.Name}Lv{it.Level})\n");
+                    }
+                }
+            }
+            // 画面に表示
             ForDisplayExtraSkills.Value = sb.ToString();
             SelectedResultTabIndex.Value = 1;
             sw.Stop();
@@ -354,26 +412,41 @@ namespace MHSS.ViewModels
             condition.ResIce = Utility.ParseOrDefaultDouble(ResIce.Value, double.NegativeInfinity);
             condition.ResDragon = Utility.ParseOrDefaultDouble(ResDragon.Value, double.NegativeInfinity);
 
+            // 武器固定がない場合
             if (WeaponSelectVM.Value.Weapon.Name == "")
             {
+                // 武器種指定がない場合
                 if (WeaponSelectVM.Value.SelectedWeaponKind.Value == "---")
                 {
+                    // 全武器を検索対象にする
                     condition.Equips.AddRange(Master.Weapons.SelectMany(w => w));
                     condition.Equips.AddRange(Master.AddWeapons.SelectMany(w => w));
                 }
                 else
                 {
-                    condition.Equips.AddRange(Master.Weapons[(int)Kind.WeaponNameToKind(WeaponSelectVM.Value.SelectedWeaponKind.Value)]);
-                    condition.Equips.AddRange(Master.AddWeapons[(int)Kind.WeaponNameToKind(WeaponSelectVM.Value.SelectedWeaponKind.Value)]);
+                    // 属性指定がない場合
+                    if (WeaponSelectVM.Value.SelectedElement.Value == "---")
+                    {
+                        // 指定武器種のみすべて追加
+                        condition.Equips.AddRange(Master.Weapons[(int)Kind.WeaponNameToKind(WeaponSelectVM.Value.SelectedWeaponKind.Value)]);
+                        condition.Equips.AddRange(Master.AddWeapons[(int)Kind.WeaponNameToKind(WeaponSelectVM.Value.SelectedWeaponKind.Value)]);
+                    }
+                    else
+                    {
+                        // 指定武器種の内、属性が一致するもののみを追加
+                        condition.Equips.AddRange(Master.Weapons[(int)Kind.WeaponNameToKind(WeaponSelectVM.Value.SelectedWeaponKind.Value)]
+                            .Where(w => (w.ElementType1 == (Element)Kind.ElementType[WeaponSelectVM.Value.SelectedElement.Value]) ||
+                                        (w.ElementType2 == (Element)Kind.ElementType[WeaponSelectVM.Value.SelectedElement.Value])));
+                    }
                 }
             }
             else
             {
+                // 固定された武器だけ追加
                 condition.Equips.Add(WeaponSelectVM.Value.Weapon);
             }
             condition.Equips.AddRange(Master.Heads.Union(Master.Bodies).Union(Master.Arms).Union(Master.Waists)
                                                     .Union(Master.Legs).Union(Master.Charms).Union(Master.Decos));
-
             return condition;
         }
 

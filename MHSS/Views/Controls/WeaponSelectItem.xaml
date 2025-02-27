@@ -11,16 +11,16 @@
     <UserControl.InputBindings>
         <MouseBinding Gesture="LeftClick" Command="{Binding ClickCommand}"/>
     </UserControl.InputBindings>
-    <UserControl.Resources>
+    <!--<UserControl.Resources>
         <Style TargetType="UserControl">
             <Setter Property="BorderBrush" Value="Red"/>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="BorderBrush" Value="#E0EFFF"/>
+                    <Setter Property="BorderBrush" Value="#C4E1FF"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
-    </UserControl.Resources>
+    </UserControl.Resources>-->
     <Border>
         <!--CornerRadius="3" BorderBrush="Gainsboro" BorderThickness="1" Background="White" Height="60"-->
         <Border.Style>
@@ -33,7 +33,7 @@
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="BorderThickness" Value="3"/>
-                <Setter Property="BorderBrush" Value="#E0EFFF"/>
+                <Setter Property="BorderBrush" Value="#C4E1FF"/>
             </Trigger>
             </Style.Triggers>
         </Style>
@@ -50,7 +50,7 @@
                            Height="Auto" Width="150"
                            VerticalAlignment="Center" HorizontalAlignment="Left"/>
             </Border>
-            <Image Grid.Row="0" Source="/Views/Controls/Attack.png"
+            <Image Grid.Row="0" Source="/Views/Controls/image/Attack.png"
                        Width="16" Height="16"
                        VerticalAlignment="Center" HorizontalAlignment="Left"
                        Margin="165,0,0,0"/>
@@ -60,7 +60,7 @@
                        Height="Auto" Width="55"
                        VerticalAlignment="Center" HorizontalAlignment="Left"/>
             </Border>
-            <Image Grid.Row="0" Source="/Views/Controls/Affinity.png"
+            <Image Grid.Row="0" Source="/Views/Controls/image/Affinity.png"
                        Width="16" Height="16"
                        VerticalAlignment="Center" HorizontalAlignment="Left"
                        Margin="260,0,0,0"/>
@@ -90,7 +90,7 @@
                        Height="Auto" Width="30"
                        VerticalAlignment="Center" HorizontalAlignment="Left"/>
             </Border>
-            <Image Grid.Row="1" Source="/Views/Controls/Slot.png"
+            <Image Grid.Row="1" Source="/Views/Controls/image/Slot.png"
                        Width="16" Height="16"
                        VerticalAlignment="Center" HorizontalAlignment="Left"
                        Margin="125,0,0,0"/>
@@ -100,7 +100,7 @@
                        Height="Auto" Width="35"
                        VerticalAlignment="Center" HorizontalAlignment="Left"/>
             </Border>
-            <Image Grid.Row="1" Source="/Views/Controls/Def.png"
+            <Image Grid.Row="1" Source="/Views/Controls/image/Def.png"
                        Width="16" Height="16"
                        VerticalAlignment="Center" HorizontalAlignment="Left"
                        Margin="195,0,0,0"/>
@@ -111,7 +111,7 @@
                        VerticalAlignment="Center" HorizontalAlignment="Left"/>
             </Border>
             <Border Grid.Row="1">
-                <TextBlock Text="猟虫強化【気・力】発動" FontSize="12"
+                <TextBlock Text="{Binding Path=UniqueStatus.Value}" FontSize="12"
                        Margin="250,0,0,0"
                        Height="Auto" Width="Auto"
                        VerticalAlignment="Center" HorizontalAlignment="Left"/>

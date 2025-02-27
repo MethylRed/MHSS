@@ -275,6 +275,7 @@ namespace MHSS.Models.Utility
                         Slot3 = Utility.ParseOrDefault(line[@"スロット3"]),
                         Def = 0,
                         DefBonus = Utility.ParseOrDefault(line[@"防御力ボーナス"]),
+                        UniqueStatus = line[@"特殊ステータス"],
                         ResFire = 0,
                         ResWater = 0,
                         ResThunder = 0,
@@ -406,17 +407,18 @@ namespace MHSS.Models.Utility
         /// </summary>
         private static void LoadAddWeapon()
         {
+            for (int i = 0; i < 14; i++) Master.AddWeapons.Add(new());
+
             // ファイルがない場合は作成
             if (!File.Exists(CsvAddWeapon))
             {
                 // ディレクトリも作成
-                string defualtStr = "種類,名前,レア度,攻撃力,会心率,属性1,属性値1,属性2,属性値2,スロットタイプ,スロット1,スロット2,スロット3,防御力ボーナス,入手時期,スキル系統1,スキル値1,スキル系統2,スキル値2,スキル系統3,スキル値3,スキル系統4,スキル値4,スキル系統5,スキル値5\n";
+                string defualtStr = "種類,名前,レア度,攻撃力,会心率,属性1,属性値1,属性2,属性値2,スロットタイプ,スロット1,スロット2,スロット3,防御力ボーナス.特殊ステータス,入手時期,スキル系統1,スキル値1,スキル系統2,スキル値2,スキル系統3,スキル値3,スキル系統4,スキル値4,スキル系統5,スキル値5\n";
                 Directory.CreateDirectory(Path.GetDirectoryName(CsvAddWeapon));
                 File.WriteAllText(CsvAddWeapon, defualtStr);
             }
             else
             {
-                for (int i = 0; i < 14; i++) Master.AddWeapons.Add(new());
                 string str = File.ReadAllText(CsvAddWeapon);
                 foreach (ICsvLine line in CsvReader.ReadFromText(str))
                 {
@@ -438,6 +440,7 @@ namespace MHSS.Models.Utility
                         Slot3 = Utility.ParseOrDefault(line[@"スロット3"]),
                         Def = 0,
                         DefBonus = Utility.ParseOrDefault(line[@"防御力ボーナス"]),
+                        UniqueStatus = line[@"特殊ステータス"],
                         ResFire = 0,
                         ResWater = 0,
                         ResThunder = 0,
@@ -457,7 +460,7 @@ namespace MHSS.Models.Utility
                         });
                     }
                     w.Skills = skill;
-                    Master.Weapons[Utility.ParseFromCsvLineOrDefault(line, "種類")].Add(w);
+                    Master.AddWeapons[Utility.ParseFromCsvLineOrDefault(line, "種類")].Add(w);
                 }
             }
         }
@@ -481,7 +484,8 @@ namespace MHSS.Models.Utility
                 sb.Append($"{weapon.Slot1},");
                 sb.Append($"{weapon.Slot2},");
                 sb.Append($"{weapon.Slot3},");
-                sb.Append($"{weapon.DefBonus},,");
+                sb.Append($"{weapon.DefBonus},");
+                sb.Append($"{weapon.UniqueStatus},,");
 
                 int i = 0;
                 foreach (var s in weapon.Skills)
@@ -495,8 +499,11 @@ namespace MHSS.Models.Utility
                 }
                 sb = sb.Remove(sb.Length - 1, 1);
 
-                using (StreamWriter writer = new StreamWriter(CsvAddWeapon, append: true))
+
+                using (StreamWriter writer = new StreamWriter(CsvAddWeapon))
                 {
+                    string defualtStr = "種類,名前,レア度,攻撃力,会心率,属性1,属性値1,属性2,属性値2,スロットタイプ,スロット1,スロット2,スロット3,防御力ボーナス,特殊ステータス,入手時期,スキル系統1,スキル値1,スキル系統2,スキル値2,スキル系統3,スキル値3,スキル系統4,スキル値4,スキル系統5,スキル値5";
+                    writer.WriteLine(defualtStr);
                     writer.WriteLine(sb.ToString());
                 }
             }

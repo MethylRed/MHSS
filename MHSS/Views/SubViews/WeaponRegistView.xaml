@@ -81,7 +81,7 @@
                           SelectedItem="{Binding SelectedElement1.Value}"
                           Height="Auto"
                           Width="55"/>
-        <TextBox Grid.Row="2" Text="{Binding Path=ElementValue1.Value}" Margin="110,0,0,0" Width="40" Height="20" HorizontalAlignment="Left" VerticalContentAlignment="Center"/>
+        <TextBox Grid.Row="2" Text="{Binding Path=ElementValue1.Value}" Margin="110,0,0,0" Width="40" Height="20" HorizontalAlignment="Left" VerticalContentAlignment="Center" FontSize="14"/>
 
         <TextBlock Text="属性2" Grid.Row="3" Margin="5,0,0,0" VerticalAlignment="Center"/>
         <ComboBox x:Name="Element2SelectComboBox"

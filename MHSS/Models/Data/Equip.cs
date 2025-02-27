@@ -76,6 +76,16 @@ namespace MHSS.Models.Data
         public int ResDragon { get; set; } = 0;
 
         /// <summary>
+        /// 固定有無
+        /// </summary>
+        public bool IsLock { get; set; } = false;
+
+        /// <summary>
+        /// 除外有無
+        /// </summary>
+        public bool IsExclude { get; set; } = false;
+
+        /// <summary>
         /// スキル
         /// </summary>
         public List<Skill> Skills { get; set; } = new();

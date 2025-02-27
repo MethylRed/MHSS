@@ -66,9 +66,14 @@ namespace MHSS.ViewModels.SubView
         /// </summary>
         public ReactivePropertySlim<bool> IsEnabledElementSelect { get; set; } = new(false);
 
-
+        /// <summary>
+        /// 固定解除コマンド
+        /// </summary>
         public ReactiveCommand ClearCommand { get; } = new();
 
+        /// <summary>
+        /// 固定された武器
+        /// </summary>
         public Weapon Weapon { get; set; } = new();
 
         /// <summary>
@@ -77,18 +82,15 @@ namespace MHSS.ViewModels.SubView
         public ReactivePropertySlim<SolidColorBrush> BackgroundColor { get; } = new(Brushes.White);
 
         /// <summary>
-        /// 武器が持つスキルのみのリスト
-        /// </summary>
-        //public static List<string> SkillNamesWithWeapon => Master.Weapons.SelectMany(w => w).SelectMany(w => w.Skills).Select(x => x.Name).Distinct().ToList();
-
-        /// <summary>
         /// コンストラクタ
         /// </summary>
         public WeaponSelectViewModel()
         {
+            // 固定解除コマンドの定義
             ClearCommand.Subscribe(() =>
             {
                 WeaponSelectItemVM.Value = new(new(), true);
+                Weapon.IsLock = false;
                 Weapon = new Weapon();
             });
 

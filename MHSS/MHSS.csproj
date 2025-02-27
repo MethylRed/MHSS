@@ -6,37 +6,37 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Models\Data\image\Attack.png" />
-    <None Remove="Views\Controls\Affinity.png" />
-    <None Remove="Views\Controls\Attack.png" />
-    <None Remove="Views\Controls\Blast.png" />
-    <None Remove="Views\Controls\Def.png" />
-    <None Remove="Views\Controls\Dragon.png" />
-    <None Remove="Views\Controls\Fire.png" />
-    <None Remove="Views\Controls\Ice.png" />
-    <None Remove="Views\Controls\None.png" />
-    <None Remove="Views\Controls\Paralysis.png" />
-    <None Remove="Views\Controls\Poison.png" />
-    <None Remove="Views\Controls\Sleep.png" />
-    <None Remove="Views\Controls\Slot.png" />
-    <None Remove="Views\Controls\Thunder.png" />
-    <None Remove="Views\Controls\Water.png" />
+    <None Remove="Views\Controls\image\Affinity.png" />
+    <None Remove="Views\Controls\image\Attack.png" />
+    <None Remove="Views\Controls\image\Blast.png" />
+    <None Remove="Views\Controls\image\Def.png" />
+    <None Remove="Views\Controls\image\Dragon.png" />
+    <None Remove="Views\Controls\image\Fire.png" />
+    <None Remove="Views\Controls\image\Ice.png" />
+    <None Remove="Views\Controls\image\None.png" />
+    <None Remove="Views\Controls\image\Paralysis.png" />
+    <None Remove="Views\Controls\image\Poison.png" />
+    <None Remove="Views\Controls\image\Sleep.png" />
+    <None Remove="Views\Controls\image\Slot.png" />
+    <None Remove="Views\Controls\image\Thunder.png" />
+    <None Remove="Views\Controls\image\Water.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Models\Data\image\Attack.png" />
-    <Resource Include="Views\Controls\Affinity.png" />
-    <Resource Include="Views\Controls\Attack.png" />
-    <Resource Include="Views\Controls\Blast.png" />
-    <Resource Include="Views\Controls\Def.png" />
-    <Resource Include="Views\Controls\Dragon.png" />
-    <Resource Include="Views\Controls\Fire.png" />
-    <Resource Include="Views\Controls\Ice.png" />
-    <Resource Include="Views\Controls\None.png" />
-    <Resource Include="Views\Controls\Paralysis.png" />
-    <Resource Include="Views\Controls\Poison.png" />
-    <Resource Include="Views\Controls\Sleep.png" />
-    <Resource Include="Views\Controls\Slot.png" />
-    <Resource Include="Views\Controls\Thunder.png" />
-    <Resource Include="Views\Controls\Water.png" />
+    <Resource Include="Views\Controls\image\Affinity.png" />
+    <Resource Include="Views\Controls\image\Attack.png" />
+    <Resource Include="Views\Controls\image\Blast.png" />
+    <Resource Include="Views\Controls\image\Def.png" />
+    <Resource Include="Views\Controls\image\Dragon.png" />
+    <Resource Include="Views\Controls\image\Fire.png" />
+    <Resource Include="Views\Controls\image\Ice.png" />
+    <Resource Include="Views\Controls\image\None.png" />
+    <Resource Include="Views\Controls\image\Paralysis.png" />
+    <Resource Include="Views\Controls\image\Poison.png" />
+    <Resource Include="Views\Controls\image\Sleep.png" />
+    <Resource Include="Views\Controls\image\Slot.png" />
+    <Resource Include="Views\Controls\image\Thunder.png" />
+    <Resource Include="Views\Controls\image\Water.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Csv" Version="2.0.93" />
