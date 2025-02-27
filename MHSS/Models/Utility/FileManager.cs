@@ -413,7 +413,7 @@ namespace MHSS.Models.Utility
             if (!File.Exists(CsvAddWeapon))
             {
                 // ディレクトリも作成
-                string defualtStr = "種類,名前,レア度,攻撃力,会心率,属性1,属性値1,属性2,属性値2,スロットタイプ,スロット1,スロット2,スロット3,防御力ボーナス.特殊ステータス,入手時期,スキル系統1,スキル値1,スキル系統2,スキル値2,スキル系統3,スキル値3,スキル系統4,スキル値4,スキル系統5,スキル値5\n";
+                string defualtStr = "種類,名前,レア度,攻撃力,会心率,属性1,属性値1,属性2,属性値2,スロットタイプ,スロット1,スロット2,スロット3,防御力ボーナス,特殊ステータス,入手時期,スキル系統1,スキル値1,スキル系統2,スキル値2,スキル系統3,スキル値3,スキル系統4,スキル値4,スキル系統5,スキル値5\n";
                 Directory.CreateDirectory(Path.GetDirectoryName(CsvAddWeapon));
                 File.WriteAllText(CsvAddWeapon, defualtStr);
             }
@@ -470,40 +470,40 @@ namespace MHSS.Models.Utility
         /// </summary>
         public static void SaveAddWeapon()
         {
-            foreach (var weapon in Master.AddWeapons.SelectMany(w => w))
+            using (StreamWriter writer = new StreamWriter(CsvAddWeapon))
             {
-                StringBuilder sb = new();
-                sb.Append($"{(int)weapon.WeaponKind},");
-                sb.Append($"{weapon.Name},0,");
-                sb.Append($"{weapon.Attack},");
-                sb.Append($"{weapon.Affinity},");
-                sb.Append($"{Kind.ElementTypeStr[(int)weapon.ElementType1]},");
-                sb.Append($"{weapon.ElementValue1},");
-                sb.Append($"{Kind.ElementTypeStr[(int)weapon.ElementType2]},");
-                sb.Append($"{weapon.ElementValue2},0,");
-                sb.Append($"{weapon.Slot1},");
-                sb.Append($"{weapon.Slot2},");
-                sb.Append($"{weapon.Slot3},");
-                sb.Append($"{weapon.DefBonus},");
-                sb.Append($"{weapon.UniqueStatus},,");
+                string defualtStr = "種類,名前,レア度,攻撃力,会心率,属性1,属性値1,属性2,属性値2,スロットタイプ,スロット1,スロット2,スロット3,防御力ボーナス,特殊ステータス,入手時期,スキル系統1,スキル値1,スキル系統2,スキル値2,スキル系統3,スキル値3,スキル系統4,スキル値4,スキル系統5,スキル値5";
+                writer.WriteLine(defualtStr);
 
-                int i = 0;
-                foreach (var s in weapon.Skills)
+                foreach (var weapon in Master.AddWeapons.SelectMany(w => w))
                 {
-                    sb.Append($"{s.Name},{s.Level},");
-                    i++;
-                }
-                for (int j = i; j < Config.Config.Instance.MaxWeaponSkillCount; j++)
-                {
-                    sb.Append(",,");
-                }
-                sb = sb.Remove(sb.Length - 1, 1);
+                    StringBuilder sb = new();
+                    sb.Append($"{(int)weapon.WeaponKind},");
+                    sb.Append($"{weapon.Name},0,");
+                    sb.Append($"{weapon.Attack},");
+                    sb.Append($"{weapon.Affinity},");
+                    sb.Append($"{Kind.ElementTypeStr[(int)weapon.ElementType1]},");
+                    sb.Append($"{weapon.ElementValue1},");
+                    sb.Append($"{Kind.ElementTypeStr[(int)weapon.ElementType2]},");
+                    sb.Append($"{weapon.ElementValue2},0,");
+                    sb.Append($"{weapon.Slot1},");
+                    sb.Append($"{weapon.Slot2},");
+                    sb.Append($"{weapon.Slot3},");
+                    sb.Append($"{weapon.DefBonus},");
+                    sb.Append($"{weapon.UniqueStatus},,");
 
+                    int i = 0;
+                    foreach (var s in weapon.Skills)
+                    {
+                        sb.Append($"{s.Name},{s.Level},");
+                        i++;
+                    }
+                    for (int j = i; j < Config.Config.Instance.MaxWeaponSkillCount; j++)
+                    {
+                        sb.Append(",,");
+                    }
+                    sb = sb.Remove(sb.Length - 1, 1);
 
-                using (StreamWriter writer = new StreamWriter(CsvAddWeapon))
-                {
-                    string defualtStr = "種類,名前,レア度,攻撃力,会心率,属性1,属性値1,属性2,属性値2,スロットタイプ,スロット1,スロット2,スロット3,防御力ボーナス,特殊ステータス,入手時期,スキル系統1,スキル値1,スキル系統2,スキル値2,スキル系統3,スキル値3,スキル系統4,スキル値4,スキル系統5,スキル値5";
-                    writer.WriteLine(defualtStr);
                     writer.WriteLine(sb.ToString());
                 }
             }

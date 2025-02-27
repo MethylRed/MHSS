@@ -218,7 +218,7 @@ namespace MHSS.ViewModels.SubView
             RegistCommand.Subscribe(() =>
             {
                 // 同じ名前の武器があったら
-                if (Master.Weapons.SelectMany(w => w).Union(Master.Weapons.SelectMany(w => w)).Any(w => w.Name == Name.Value))
+                if (Master.Weapons.SelectMany(w => w).Union(Master.AddWeapons.SelectMany(w => w)).Any(w => w.Name == Name.Value))
                 {
                     MessageBox.Show("この名前の武器は既に存在します。", "エラー", MessageBoxButton.OKCancel, MessageBoxImage.Warning);
                 }

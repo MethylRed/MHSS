@@ -65,6 +65,16 @@ namespace MHSS.ViewModels
         public ReactivePropertySlim<SolidColorBrush> NoticeBackgroundColor { get; } = new(Brushes.White);
 
         /// <summary>
+        /// 追加スキル検索：プログレスバーの進捗
+        /// </summary>
+        public ReactivePropertySlim<double> ProgressValue { get; set; } = new(0.0);
+
+        /// <summary>
+        /// 追加スキル検索：進捗表示
+        /// </summary>
+        public ReactivePropertySlim<string> ProgressStr { get; set; } = new("");
+
+        /// <summary>
         /// 追加スキル検索結果
         /// そのうち、レベルをクリックしたらスキル条件に追加されるようにしたい
         /// </summary>
@@ -239,7 +249,8 @@ namespace MHSS.ViewModels
         private void Search()
         {
             List<SearchedEquips> equips = new();
-            
+            SelectedResultTabIndex.Value = 0;
+
             // スキルの検索条件を取得
             Condition condition = GetCondition();
 
@@ -279,7 +290,6 @@ namespace MHSS.ViewModels
             }
             // 結果を表示
             SolutionVM.Value = new(equips);
-            SelectedResultTabIndex.Value = 0;
             System.Windows.Application.Current.Dispatcher.Invoke(() =>
             {
                 NoticeStr.Value = "";
@@ -302,6 +312,7 @@ namespace MHSS.ViewModels
         private async Task SearchExtraSkills()
         {
             Stopwatch sw = Stopwatch.StartNew();
+            SelectedResultTabIndex.Value = 1;
 
             ConcurrentBag<Skill> resultSkills = new();
             
@@ -313,6 +324,8 @@ namespace MHSS.ViewModels
 
             // 進捗管理用
             int count = 0;
+            ProgressValue.Value = 0.0;
+            int skillCount = masterCondition.Skills.Count();
 
             // マルチスレッド設定
             // 環境次第だが、6スレッド以下で実行するようにハードコーディング
@@ -326,6 +339,10 @@ namespace MHSS.ViewModels
                 Parallel.ForEach(masterCondition.Skills, options, skill =>
                 {
                     count++;
+                    System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        ProgressValue.Value = (double)count / (double)skillCount * 250;
+                    });
                     // 全レベルを走査
                     for (int level = skill.Level + 1; level <= int.Max(skill.MaxLevel1, skill.MaxLevel2); level++)
                     {
@@ -393,7 +410,6 @@ namespace MHSS.ViewModels
             }
             // 画面に表示
             ForDisplayExtraSkills.Value = sb.ToString();
-            SelectedResultTabIndex.Value = 1;
             sw.Stop();
             Debug.WriteLine(sw.ElapsedMilliseconds);
         }

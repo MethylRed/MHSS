@@ -54,7 +54,7 @@
                     </Grid>
                     <Border Grid.Row="1" BorderBrush="Transparent" BorderThickness="1">
                         <Grid>
-                            <Image Grid.Row="0" Source="/Views/Controls/Def.png"
+                            <Image Grid.Row="0" Source="/Views/Controls/image/Def.png"
                                    Width="16" Height="16"
                                    VerticalAlignment="Center" HorizontalAlignment="Left"
                                    Margin="5,0,0,0"/>
@@ -63,7 +63,7 @@
                                            HorizontalAlignment="Left" VerticalAlignment="Center"
                                            Height="Auto"/>
                             </Border>
-                            <Image Grid.Row="0" Source="/Views/Controls/Fire.png"
+                            <Image Grid.Row="0" Source="/Views/Controls/image/Fire.png"
                                    Width="16" Height="16"
                                    VerticalAlignment="Center" HorizontalAlignment="Left"
                                    Margin="55,0,0,0"/>
@@ -72,7 +72,7 @@
                                            HorizontalAlignment="Left" VerticalAlignment="Center"
                                            Height="Auto"/>
                             </Border>
-                            <Image Grid.Row="0" Source="/Views/Controls/Water.png"
+                            <Image Grid.Row="0" Source="/Views/Controls/image/Water.png"
                                    Width="16" Height="16"
                                    VerticalAlignment="Center" HorizontalAlignment="Left"
                                    Margin="105,0,0,0"/>
@@ -81,7 +81,7 @@
                                            HorizontalAlignment="Left" VerticalAlignment="Center"
                                            Height="Auto"/>
                             </Border>
-                            <Image Grid.Row="0" Source="/Views/Controls/Thunder.png"
+                            <Image Grid.Row="0" Source="/Views/Controls/image/Thunder.png"
                                    Width="16" Height="16"
                                    VerticalAlignment="Center" HorizontalAlignment="Left"
                                    Margin="155,0,0,0"/>
@@ -90,7 +90,7 @@
                                            HorizontalAlignment="Left" VerticalAlignment="Center"
                                            Height="Auto"/>
                             </Border>
-                            <Image Grid.Row="0" Source="/Views/Controls/Ice.png"
+                            <Image Grid.Row="0" Source="/Views/Controls/image/Ice.png"
                                    Width="16" Height="16"
                                    VerticalAlignment="Center" HorizontalAlignment="Left"
                                    Margin="205,0,0,0"/>
@@ -99,7 +99,7 @@
                                            HorizontalAlignment="Left" VerticalAlignment="Center"
                                            Height="Auto"/>
                             </Border>
-                            <Image Grid.Row="0" Source="/Views/Controls/Dragon.png"
+                            <Image Grid.Row="0" Source="/Views/Controls/image/Dragon.png"
                                    Width="16" Height="16"
                                    VerticalAlignment="Center" HorizontalAlignment="Left"
                                    Margin="255,0,0,0"/>

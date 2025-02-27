@@ -227,6 +227,7 @@
                                        VerticalAlignment="Center"
                                        HorizontalAlignment="Left"/>
                         </Border>
+                        
                         <TextBlock Text="{Binding ShowCount.Value, StringFormat={}{0}件の検索結果}" Grid.Row="2"
                                    Margin="0,0,5,0"
                                    HorizontalAlignment="Right" Width="Auto"
@@ -234,9 +235,38 @@
                     </Grid>
                 </TabItem>
                 <TabItem Header="追加スキル検索結果">
-                    <ScrollViewer>
-                        <TextBlock Text="{Binding ForDisplayExtraSkills.Value}"/>
-                    </ScrollViewer>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="50"/>
+                        </Grid.RowDefinitions>
+                        <Border CornerRadius="3" BorderThickness="1" BorderBrush="Gainsboro">
+                            <ScrollViewer>
+                                <TextBlock Margin="10,5,0,5" Text="{Binding ForDisplayExtraSkills.Value}"/>
+                            </ScrollViewer>
+                        </Border>
+                        <ProgressBar Grid.Row="2" Value="{Binding ProgressValue.Value}" Minimum="0" Maximum="100" 
+                                     Height="15" Width="200"
+                                     HorizontalAlignment="Right"
+                                     Margin="0,0,10,0">
+                            <ProgressBar.Style>
+                                <Style TargetType="ProgressBar">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="ProgressBar">
+                                                <Grid>
+                                                    <Border Background="White" CornerRadius="5" BorderBrush="#ACACAC" BorderThickness="1"/>
+                                                    <Border Background="DodgerBlue" CornerRadius="5" BorderThickness="1" Width="{Binding ProgressValue.Value}" HorizontalAlignment="Left">
+                                                        <Rectangle Fill="DodgerBlue" RadiusX="4" RadiusY="4"/>
+                                                    </Border>
+                                                </Grid>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ProgressBar.Style>
+                        </ProgressBar>
+                    </Grid>
                 </TabItem>
             </TabControl>
             
