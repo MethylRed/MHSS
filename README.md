@@ -9,7 +9,7 @@ MHSS.zipファイルをDLして使ってください。
 
 ## 使い方
 MHSS.zipをダウロードし、解凍してください。
-MHSS.exeを実行し、良きスキルシミュライフを！
+MHSS.exeを実行し、良きスキルシミュライフを！  
 詳しくは[USAGE.md](./USAGE.md)を参照ください。
 
 ## 環境
@@ -28,7 +28,7 @@ MHSS.exeを実行し、良きスキルシミュライフを！
 - <span>System.Text.Encodings.Web</span>
 
 ### 開発
-- Visual Studio 2022
+- Visual Studio 2022  
 初めてVisual Studioをインストールし立ち上げるとVisual Studio Installerが立ち上がるかと思います。<b>「.NET デスクトップ開発」</b>をインストールしてください。Visual Studioさえ入ってればビルド等の操作を行えると思います。
 
 ## データ入力に関して
