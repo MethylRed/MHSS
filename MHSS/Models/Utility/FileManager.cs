@@ -472,7 +472,7 @@ namespace MHSS.Models.Utility
         {
             using (StreamWriter writer = new StreamWriter(CsvAddWeapon))
             {
-                string defualtStr = "種類,名前,レア度,攻撃力,会心率,属性1,属性値1,属性2,属性値2,スロットタイプ,スロット1,スロット2,スロット3,防御力ボーナス,特殊ステータス,入手時期,スキル系統1,スキル値1,スキル系統2,スキル値2,スキル系統3,スキル値3,スキル系統4,スキル値4,スキル系統5,スキル値5";
+                string defualtStr = "種類,名前,レア度,攻撃力,会心率,属性1,属性値1,属性2,属性値2,スロット1,スロット2,スロット3,防御力ボーナス,特殊ステータス,入手時期,スキル系統1,スキル値1,スキル系統2,スキル値2,スキル系統3,スキル値3,スキル系統4,スキル値4,スキル系統5,スキル値5";
                 writer.WriteLine(defualtStr);
 
                 foreach (var weapon in Master.AddWeapons.SelectMany(w => w))
@@ -485,7 +485,7 @@ namespace MHSS.Models.Utility
                     sb.Append($"{Kind.ElementTypeStr[(int)weapon.ElementType1]},");
                     sb.Append($"{weapon.ElementValue1},");
                     sb.Append($"{Kind.ElementTypeStr[(int)weapon.ElementType2]},");
-                    sb.Append($"{weapon.ElementValue2},0,");
+                    sb.Append($"{weapon.ElementValue2},");
                     sb.Append($"{weapon.Slot1},");
                     sb.Append($"{weapon.Slot2},");
                     sb.Append($"{weapon.Slot3},");
