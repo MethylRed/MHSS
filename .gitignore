@@ -9,6 +9,7 @@
 *.user
 *.userosscache
 *.sln.docstates
+equipCheck.py
 # *.zip
 
 # User-specific files (MonoDevelop/Xamarin Studio)
