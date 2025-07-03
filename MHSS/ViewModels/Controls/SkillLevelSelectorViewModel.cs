@@ -85,7 +85,7 @@ namespace MHSS.ViewModels.Controls
                 new SkillLevelSelectorItems(" " + s.Name, 0)
             };
             // シリーズスキルのとき
-            if (s.Category == "シリーズスキル")
+            if ((s.Category == "シリーズスキル") || (s.Category == "グループスキル"))
             {
                 items.Add(new SkillLevelSelectorItems($"{s.ActivateSkillName1}({s.Name}+{s.MaxLevel1})", s.MaxLevel1));
                 if (s.ActivateSkillName2 != string.Empty)
@@ -93,7 +93,7 @@ namespace MHSS.ViewModels.Controls
                     items.Add(new SkillLevelSelectorItems($"{s.ActivateSkillName1}&{s.ActivateSkillName2}({s.Name}+{s.MaxLevel2})", s.MaxLevel2));
                 }
             }
-            // シリーズスキル以外の時
+            // シリーズスキル,グループスキル以外の時
             else
             {
                 for (int i = 1; i <= s.MaxLevel1; i++)
