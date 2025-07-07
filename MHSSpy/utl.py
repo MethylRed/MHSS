@@ -190,6 +190,15 @@ def LoadSkillsCondition(fileName: str):
     with open(fileName, newline='', encoding='utf-8') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
-            skills.append(SKill(row['名前'], row['カテゴリ'], int(row['レベル']), "", "", "", "", bool(int(row['固定']))))
+            skills.append(SKill(row['名前'], row['カテゴリ'], int(row['レベル']), row['発動スキル1'], row['発動スキル2'], int(row['上限1']), int(row['上限2']), bool(int(row['固定']))))
     return skills
+
+
+def Slots(slotCount: list[int]):
+    d = [0] * 4
+    d[3] = slotCount[3]
+    d[2] = slotCount[2] - d[3]
+    d[1] = slotCount[1] - d[3] - d[2]
+    d[0] = slotCount[0] - d[3] - d[2] - d[1]
+    return d
 
